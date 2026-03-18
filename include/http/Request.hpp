@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 07:37:49 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 21:09:04 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 22:47:22 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define REQUEST_HPP
 # include <string>
 # include <map>
+# include "Config.hpp"
 # include "StatusCode.hpp"
 
 class Request

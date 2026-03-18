@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 22:05:29 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 23:10:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void Connection::update()
 	switch (status)
 	{
 		case OK:
-			std::cout << "HTTP REQUEST PARSE: SUCCESS" << std::endl;
 			this->handleRequest(status);
 			break;
 		default:
@@ -55,7 +54,7 @@ void	Connection::handleRequest(StatusCode status)
 	if (status == OK)
 	{
 		this->setState(WRITING);
-		this->_response = new StaticResponse(this->_readBuffer);
+		this->_response = new StaticResponse(this->_request);
 		return ;
 	}
 	this->setState(ERROR);
@@ -68,8 +67,6 @@ IResponse *Connection::getResponse()
 		return (_response);
 	throw NoResponseFoundError();
 }
-
-Request &Connection::getRequest() {return (this->_request); }
 
 int Connection::getFd() const { return (this->_fd); }
 

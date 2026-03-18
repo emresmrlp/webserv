@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 21:34:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 22:56:46 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,15 @@ StatusCode  Request::parse(std::string &rawReadBuffer)
     this->_version = line.substr(sp2 + 1);
     if (this->_method.empty() || this->_path.empty() || this->_version.empty())
         return (BAD_REQUEST);
-    if (this->_version != "HTTP/1.1")
-        return (HTTP_VERSION_NOT_SUPPORTED);
+    // TODO: METHOD VALIDATE (NEED CONF FILE)
+    if (this->_method != "GET")
+        return (METHOD_NOT_ALLOWED);
+    // TODO: PATH VALIDATE
     if (this->_path.find("..") != std::string::npos)
         return (FORBIDDEN); // SECURITY REASONS (root access ../)
-    // TODO: PATH VALIDATE
-    // TODO: METHOD VALIDATE (NEED CONF FILE)
+    if (this->_version != "HTTP/1.1")
+        return (HTTP_VERSION_NOT_SUPPORTED);
+    
     std::size_t pos = nextPos + 2;
     while (pos < endOfHeader)
     {

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 22:04:51 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 22:23:43 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ class Connection
 		Connection(int fd);
 		~Connection();
 
-		Request			&getRequest(); //TODO: test case, we need to delete this
 		void			update();
 		int				getFd() const;
 		void			setState(ConnectionState state);
@@ -56,7 +55,7 @@ class Connection
 		IResponse		*_response;
 		std::string		_readBuffer;
 		std::string		_writeBuffer;
-		Request			_request; // TODO: delete this after tests
+		Request			_request;
 };
 
 #endif

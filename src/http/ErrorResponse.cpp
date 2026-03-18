@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 22:09:55 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 23:09:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ std::string ErrorResponse::serialize() const
 	response << HTTP_VERSION << " " << this->_statusCode << " " << this->_statusMessage << "\r\n";
 	response << "Content-Type: text/html\r\n";
 	response << "Content-Length: " << body_oss.str().length() << "\r\n\r\n";
+	//TODO: NEED TO DATE AND CONNECT SECTION
 	response << body_oss.str();
 	return (response.str());
 }
