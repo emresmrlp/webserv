@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 13:29:03 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 16:55:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,25 @@ class Connection
 		Connection(int fd);
 		~Connection();
 
-		Request		&getRequest(); //TODO: test case, we need to delete this
+		Request			&getRequest(); //TODO: test case, we need to delete this
 		void			update();
 		int				getFd() const;
 		void			setState(ConnectionState state);
 		ConnectionState getState() const;
+		void			handleRequest(StatusCode status);
+		IResponse		*getResponse();
 		void			addReadBuffer(const std::string &buffer);
 	private:
 		// private for data security reasons
 		std::string		&getReadBuffer(); // TODO: can we really need to read-write readBuffer on this method?
 		Connection();
 
-		int				_fd;
+		int				_fd; // server
 		ConnectionState	_state;
-		std::string		_readBuffer;
+		IResponse		*_response;
+		std::string		_readBuffer; //server
 		std::string		_writeBuffer;
-		Request			_request;
+		Request			_request; // TODO: delete this after tests
 };
 
 #endif

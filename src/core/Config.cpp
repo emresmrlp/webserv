@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StatusCode.hpp                                     :+:      :+:    :+:   */
+/*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 13:39:52 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 15:05:08 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 16:11:02 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/18 16:14:00 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STATUSCODE_HPP
-# define STATUSCODE_HPP
+#include "Config.hpp"
 
-enum StatusCode
+Config::Config()
 {
-    OK = 200,
-    NOT_FOUND = 404,
-    BAD_REQUEST = 400,
-    HTTP_VERSION_NOT_SUPPORTED = 505,
-    INCOMPLETE = 0 // TODO: TEST DELETE THIS
-};
-
-#endif
+    this->host = "0.0.0.0";
+    this->port = 8080;
+    this->root = "www";
+}

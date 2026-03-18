@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 13:30:09 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 16:43:30 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Request &Request::operator=(const Request &ref)
 	return (*this);
 }
 
-RequestState  Request::parse(std::string &rawReadBuffer)
+StatusCode  Request::parse(std::string &rawReadBuffer)
 {
     std::size_t endOfHeader = rawReadBuffer.find("\r\n\r\n");
     if (endOfHeader == std::string::npos)
@@ -75,9 +75,9 @@ RequestState  Request::parse(std::string &rawReadBuffer)
     if (this->getHeader("host").empty())
         return (BAD_REQUEST);
     if (this->_version != "HTTP/1.1")
-        return (BAD_REQUEST);
+        return (HTTP_VERSION_NOT_SUPPORTED);
     //TODO: config.hpp allowed methods check
-    return (SUCCESS);
+    return (OK);
 }
 
 const std::string &Request::getMethod() const { return (this->_method); }

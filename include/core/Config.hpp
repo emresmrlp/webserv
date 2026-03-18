@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StatusCode.hpp                                     :+:      :+:    :+:   */
+/*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 13:39:52 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 15:05:08 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 16:09:14 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/18 16:54:24 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STATUSCODE_HPP
-# define STATUSCODE_HPP
+#ifndef CONFIG_HPP
+# define CONFIG_HPP
+# include <string>
 
-enum StatusCode
+class Config
 {
-    OK = 200,
-    NOT_FOUND = 404,
-    BAD_REQUEST = 400,
-    HTTP_VERSION_NOT_SUPPORTED = 505,
-    INCOMPLETE = 0 // TODO: TEST DELETE THIS
+    public:
+        Config();
+    private:
+        int         port;
+        std::string host;
+        std::string root;
 };
 
 #endif

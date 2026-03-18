@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Redirect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+        }
+        .code {
+            font-size: 18px;
+            color: #2d7d2b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Authorization Code</h2>
+        <p>If your authorization is successful, your authorization code will be displayed below:</p>
+        <div id="authCodeContainer">
+            <p class="code" id="authCode">Waiting for authorization code...</p>
+        </div>
+    </div>
+
+    <script>
+        // URL'deki parametreleri alır
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // "code" parametresini alır ve ekranda gösterir
+        window.onload = function() {
+            const authCode = getQueryParam('code');
+            if (authCode) {
+                document.getElementById('authCode').textContent = authCode;
+            } else {
+                document.getElementById('authCode').textContent = 'Error: Authorization code not found.';
+            }
+        };
+    </script>
+</body>
+</html>

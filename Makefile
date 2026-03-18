@@ -6,7 +6,7 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/03/18 14:17:58 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/03/18 16:18:28 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ CORE_DIR    =   $(SRC_DIR)core/
 HTTP_DIR    =   $(SRC_DIR)http/
 
 CORE_SRC    =   $(SRC_DIR)main.cpp \
+				$(CORE_DIR)Config.cpp \
 				$(CORE_DIR)Connection.cpp
 
 HTTP_SRC    =   $(HTTP_DIR)Request.cpp \

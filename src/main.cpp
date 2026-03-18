@@ -6,9 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 13:48:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 16:39:11 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <iostream>
+#include "Connection.hpp"
+#include "AResponseBase.hpp"
 
 #include <iostream>
 #include "Connection.hpp"
@@ -27,7 +31,7 @@ int main(int argc, char **argv)
 
     //example HTTP POST request
     std::string rawData = 
-        "POST   /api/upload      HTTP/1.1\r\n"
+        "POST  /api/upload   ssfsfs   HTTP/1.1\r\n"
         "Host: localhost:8002\r\n"
         "Content-Type: application/json\r\n"
         "X-Custom-Header:   Slytherin-Logic\r\n"

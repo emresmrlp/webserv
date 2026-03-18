@@ -6,14 +6,17 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 13:30:11 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 16:38:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Connection.hpp"
+#include "StaticResponse.hpp"
+#include "ErrorResponse.hpp"
 #include <iostream>
 
-Connection::Connection(int fd) : _fd(fd), _state(READING) {}
+Connection::Connection(int fd) : _fd(fd), _state(READING), _response(NULL),
+	_readBuffer(""),  _writeBuffer("") {}
 
 void Connection::addReadBuffer(const std::string &buffer)
 {	
@@ -22,24 +25,33 @@ void Connection::addReadBuffer(const std::string &buffer)
 
 void Connection::update()
 {
-	RequestState	status;
+	StatusCode	status;
 
 	if (this->_state != READING)
 		return ;
 	status = this->_request.parse(this->_readBuffer);
 	switch (status)
 	{
-		case SUCCESS:
+		case OK:
 			std::cout << "HTTP REQUEST PARSE: SUCCESS" << std::endl;
 			this->setState(WRITING);
-			break;
-		case BAD_REQUEST:
-			std::cout << "Error: 400 BAD REQUEST" << std::endl;
+			this->handleRequest(status);
 			break;
 		default:
+			std::cout << "Error code: " << status << std::endl;
 			break;
 	}
-	//header parse ok
+}
+
+void	Connection::handleRequest(StatusCode status)
+{
+	if (status == OK)
+		std::cout << "handle request issue" << std::endl;
+}
+
+IResponse *Connection::getResponse()
+{
+	return (_response);
 }
 
 Request &Connection::getRequest() {return (this->_request); }
