@@ -6,14 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 07:37:49 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 15:03:58 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 21:09:04 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 # include <string>
-# include <sstream>
 # include <map>
 # include "StatusCode.hpp"
 

@@ -6,13 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 16:43:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 21:34:56 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 
-Request::Request() {}
+Request::Request() : _method(""), _path(""), _version(""), _headers() {}
 
 Request::~Request() {}
 
@@ -34,18 +34,27 @@ Request &Request::operator=(const Request &ref)
 StatusCode  Request::parse(std::string &rawReadBuffer)
 {
     std::size_t endOfHeader = rawReadBuffer.find("\r\n\r\n");
-    if (endOfHeader == std::string::npos)
-        return (INCOMPLETE);
-
     std::size_t nextPos = rawReadBuffer.find("\r\n");
     std::string line = rawReadBuffer.substr(0, nextPos);
-    std::stringstream ss(line);
-    if (!(ss >> this->_method >> this->_path >> this->_version))
+    std::size_t sp1 = line.find(' ');
+    if (sp1 == std::string::npos)
         return (BAD_REQUEST);
-    std::string extra;
-    if (ss >> extra)
-        return (BAD_REQUEST); 
-
+    std::size_t sp2 = line.find(' ', sp1 + 1);
+    if (sp2 == std::string::npos)
+        return (BAD_REQUEST);
+    if (line.find(" ", sp2 + 1) != std::string::npos)
+        return (BAD_REQUEST); // 2+ SPACE SITUATION
+    this->_method = line.substr(0, sp1);
+    this->_path = line.substr(sp1 + 1, sp2 - sp1 - 1);
+    this->_version = line.substr(sp2 + 1);
+    if (this->_method.empty() || this->_path.empty() || this->_version.empty())
+        return (BAD_REQUEST);
+    if (this->_version != "HTTP/1.1")
+        return (HTTP_VERSION_NOT_SUPPORTED);
+    if (this->_path.find("..") != std::string::npos)
+        return (FORBIDDEN); // SECURITY REASONS (root access ../)
+    // TODO: PATH VALIDATE
+    // TODO: METHOD VALIDATE (NEED CONF FILE)
     std::size_t pos = nextPos + 2;
     while (pos < endOfHeader)
     {
@@ -74,9 +83,6 @@ StatusCode  Request::parse(std::string &rawReadBuffer)
     }
     if (this->getHeader("host").empty())
         return (BAD_REQUEST);
-    if (this->_version != "HTTP/1.1")
-        return (HTTP_VERSION_NOT_SUPPORTED);
-    //TODO: config.hpp allowed methods check
     return (OK);
 }
 

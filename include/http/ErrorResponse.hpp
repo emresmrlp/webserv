@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 16:21:51 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:08:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # define ERRORRESPONSE_HPP
 # include "AResponseBase.hpp"
 
-class ErrorResponse : AResponseBase
+class ErrorResponse : public AResponseBase
 {
     public:
-        ErrorResponse();
+        ErrorResponse(StatusCode status);
         std::string serialize() const;
 };
 
