@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   ErrorResponse.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/14 15:51:52 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/18 16:21:57 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ErrorResponse.hpp"
 #include <iostream>
 
-int main(int argc, char **argv)
+ErrorResponse::ErrorResponse() { std::cout << "ERROR RESPOSONSE ACTIVE code is: " << this->_statusCode << std::endl;}
+
+std::string ErrorResponse::serialize() const
 {
-    if (argc != 2)
-    {
-        std::cout << "Correct usage: ./webserv [configuration file]" << std::endl;
-        return (1);
-    }
-    std::cout << "File \"" << argv[1] << "\" will be execute soon..." << std::endl;
-    return (0);
+    const std::string empty("");
+    return (empty);
 }
