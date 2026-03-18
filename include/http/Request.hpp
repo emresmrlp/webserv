@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HTTPRequest.hpp                                    :+:      :+:    :+:   */
+/*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 07:37:49 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 09:09:47 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 13:28:22 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HTTPREQUEST_H
-# define HTTPREQUEST_H
-# include "Config.hpp"
+#ifndef REQUEST_HPP
+# define REQUEST_HPP
 # include <string>
+# include <sstream>
 # include <map>
 
-enum    StatusCode
+enum    RequestState
 {
     // v0.1.0 only head parse status
     SUCCESS,
@@ -24,15 +24,15 @@ enum    StatusCode
     BAD_REQUEST
 };
 
-class HTTPRequest
+class Request
 {
     public:
-        HTTPRequest();
-        ~HTTPRequest();
-        HTTPRequest(const HTTPRequest &ref);
-        HTTPRequest &operator=(const HTTPRequest &ref);
+        Request();
+        ~Request();
+        Request(const Request &ref);
+        Request &operator=(const Request &ref);
 
-        StatusCode  parse(std::string &rawReadBuffer);
+        RequestState  parse(std::string &rawReadBuffer);
         const std::string &getMethod() const;
         const std::string &getPath() const;
         const std::string &getVersion() const;

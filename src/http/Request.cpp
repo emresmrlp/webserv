@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HTTPRequest.cpp                                    :+:      :+:    :+:   */
+/*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 09:38:51 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 13:30:09 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/HTTPRequest.hpp"
-#include <sstream>
+#include "Request.hpp"
 
-HTTPRequest::HTTPRequest() {}
+Request::Request() {}
 
-HTTPRequest::~HTTPRequest() {}
+Request::~Request() {}
 
-HTTPRequest::HTTPRequest(const HTTPRequest &ref) : _method(ref._method), _path(ref._path),
+Request::Request(const Request &ref) : _method(ref._method), _path(ref._path),
     _version(ref._version), _headers(ref._headers) {}
 
-HTTPRequest &HTTPRequest::operator=(const HTTPRequest &ref)
+Request &Request::operator=(const Request &ref)
 {
     if (this != &ref)
 	{
@@ -32,7 +31,7 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &ref)
 	return (*this);
 }
 
-StatusCode  HTTPRequest::parse(std::string &rawReadBuffer)
+RequestState  Request::parse(std::string &rawReadBuffer)
 {
     std::size_t endOfHeader = rawReadBuffer.find("\r\n\r\n");
     if (endOfHeader == std::string::npos)
@@ -77,16 +76,17 @@ StatusCode  HTTPRequest::parse(std::string &rawReadBuffer)
         return (BAD_REQUEST);
     if (this->_version != "HTTP/1.1")
         return (BAD_REQUEST);
+    //TODO: config.hpp allowed methods check
     return (SUCCESS);
 }
 
-const std::string &HTTPRequest::getMethod() const { return (this->_method); }
+const std::string &Request::getMethod() const { return (this->_method); }
 
-const std::string &HTTPRequest::getPath() const { return (this->_path); }
+const std::string &Request::getPath() const { return (this->_path); }
 
-const std::string &HTTPRequest::getVersion() const { return (this->_version); }
+const std::string &Request::getVersion() const { return (this->_version); }
 
-const std::string HTTPRequest::getHeader(const std::string &key) const
+const std::string Request::getHeader(const std::string &key) const
 {
     std::string fixedKey = key;
 

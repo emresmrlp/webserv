@@ -6,13 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 09:43:52 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 13:48:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include "../include/Connection.hpp"
-#include "../include/HTTPRequest.hpp"
+#include "Connection.hpp"
+#include "AResponseBase.hpp"
 
 int main(int argc, char **argv)
 {

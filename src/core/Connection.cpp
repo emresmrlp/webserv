@@ -6,11 +6,11 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 09:22:11 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/18 13:30:11 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/Connection.hpp"
+#include "Connection.hpp"
 #include <iostream>
 
 Connection::Connection(int fd) : _fd(fd), _state(READING) {}
@@ -22,7 +22,7 @@ void Connection::addReadBuffer(const std::string &buffer)
 
 void Connection::update()
 {
-	StatusCode	status;
+	RequestState	status;
 
 	if (this->_state != READING)
 		return ;
@@ -42,7 +42,7 @@ void Connection::update()
 	//header parse ok
 }
 
-HTTPRequest &Connection::getRequest() {return (this->_request); }
+Request &Connection::getRequest() {return (this->_request); }
 
 int Connection::getFd() const { return (this->_fd); }
 
@@ -56,21 +56,6 @@ void    Connection::setState(ConnectionState state)
 }
 
 ConnectionState Connection::getState() const { return (this->_state); }
-
-Connection::Connection(const Connection &ref) { *this = ref; }
-
-Connection &Connection::operator=(const Connection &ref)
-{
-	if (this != &ref)
-	{
-		this->_fd = ref._fd;
-		this->_state = ref._state;
-		this->_readBuffer = ref._readBuffer;
-        this->_writeBuffer = ref._writeBuffer;
-        this->_request = ref._request;
-	}
-	return (*this);
-}
 
 Connection::Connection() : _fd(-1), _state(CLOSING) {}
 
