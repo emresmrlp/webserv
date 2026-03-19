@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 08:32:54 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 17:15:52 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,42 @@ const std::string StaticResponse::createBody() const
 {
 	std::string filePath = ROOT;
 	filePath += this->_request.getPath();
-	std::cout << filePath << std::endl;
     return (readFile(filePath));
+}
+
+const std::string StaticResponse::getContentType() const
+{
+    std::string requestPath;
+    std::string contentType;
+
+    requestPath = this->_request.getPath(); 
+    std::string extension;
+
+    extension = requestPath.substr(requestPath.find_last_of(".") + 1);
+    contentType = "text/plain";
+    if (extension == "js")
+        contentType = "text/javascript";
+    else if (extension == "html" ||extension == "htm")
+        contentType = "text/html";
+    else if (extension == "css")
+        contentType = "text/css";
+    else if (extension == "jpg" || extension == "jpeg")
+        contentType = "image/jpeg";
+    else if (extension == "png")
+        contentType = "image/png";
+    return (contentType);
 }
 
 std::string StaticResponse::serialize() const
 {
+    //TODO: setHeader() generic?
     std::ostringstream body_oss;
     body_oss << createBody();
     std::ostringstream response;
     response << HTTP_VERSION << " " << this->_statusCode << " " << this->_statusMessage << CRLF;
     response << "Date: " << this->getCurrentDate() << CRLF;
 	response << "Server: " << SERVER_NAME << CRLF;
-	response << "Content-Type: " << "text/html" << CRLF;
+	response << "Content-Type: " << this->getContentType() << CRLF;
 	response << "Content-Length: " << this->_bodySize << CRLF;
 	response << "Connection: " << "close" << CRLF; // TODO: CHECK THE CONNECTION STATES
     response << CRLF;

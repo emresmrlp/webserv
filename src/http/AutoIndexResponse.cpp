@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IResponse.hpp                                      :+:      :+:    :+:   */
+/*   AutoIndexResponse.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 12:26:56 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 13:12:21 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/19 13:50:12 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IRESPONSE_HPP
-# define IRESPONSE_HPP
-# include <string>
-# include "Config.hpp"
-# include "StatusCode.hpp"
+#include "AutoIndexResponse.hpp"
+#include <iostream>
 
-class IResponse
+AutoIndexResponse::AutoIndexResponse()
 {
-    public:
-        virtual ~IResponse() {};
-        virtual std::string getCurrentDate() const = 0;
-        virtual StatusCode getStatusCode() const = 0;
-        virtual std::string serialize() const = 0;
-};
+	this->_statusCode = OK;
+	this->_statusMessage = this->getStatusMessage(this->_statusCode);
+}
 
-#endif
+std::string AutoIndexResponse::serialize() const
+{
+	std::ostringstream response;
+    response << "autoindex";
+	return (response.str());
+}
