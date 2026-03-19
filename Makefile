@@ -6,7 +6,7 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/03/18 16:18:28 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/03/18 22:55:41 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,12 +27,12 @@ CORE_DIR    =   $(SRC_DIR)core/
 HTTP_DIR    =   $(SRC_DIR)http/
 
 CORE_SRC    =   $(SRC_DIR)main.cpp \
-				$(CORE_DIR)Config.cpp \
 				$(CORE_DIR)Connection.cpp
 
 HTTP_SRC    =   $(HTTP_DIR)Request.cpp \
 				$(HTTP_DIR)AResponseBase.cpp \
-				$(HTTP_DIR)StaticResponse.cpp
+				$(HTTP_DIR)StaticResponse.cpp \
+				$(HTTP_DIR)ErrorResponse.cpp
 
 SRC         =   $(CORE_SRC) $(HTTP_SRC)
 OBJ         =   $(SRC:src/%.cpp=$(OBJ_DIR)%.o)
