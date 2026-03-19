@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 14:01:29 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 17:06:20 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ class StaticResponse : public AResponseBase
         StaticResponse(Request &request, std::size_t bodySize);
         std::string serialize() const;
     private:
+        const std::string getContentType() const;
         const std::string createBody() const;
         Request     &_request;
         std::size_t	_bodySize;
