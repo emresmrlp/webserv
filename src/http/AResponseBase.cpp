@@ -6,12 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 21:26:40 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 05:52:05 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AResponseBase.hpp"
 #include <iostream>
+#include <ctime>
 
 std::string AResponseBase::getStatusMessage(StatusCode statusCode)
 {
@@ -39,6 +40,16 @@ std::string AResponseBase::getStatusMessage(StatusCode statusCode)
 		case 505: return "HTTP Version Not Supported";
 		default:  return "Unknown Status";
 	}
+}
+
+std::string AResponseBase::getCurrentDate() const
+{
+	char	buffer[50];
+	time_t	timestamp;
+
+	timestamp = time(NULL);
+	std::strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", localtime(&timestamp));
+	return (buffer);
 }
 
 StatusCode AResponseBase::getStatusCode() const

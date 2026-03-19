@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 22:59:00 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 08:42:07 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,19 @@ int main(int argc, char **argv)
 
     //example HTTP POST request
     std::string rawData = 
-        "GET /index.html?user=gemini HTTP/1.1\r\n"
+        "GET /redirect.html HTTP/1.1\r\n"
         "Host: localhost:8080\r\n"
-        "User-Agent: Mozilla/5.0 (Macintosh)\r\n"
-        "Accept: text/html,application/xhtml+xml\r\n"
-        "Accept-Language: tr-TR,tr;q=0.9\r\n"
+        "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36\r\n"
+        "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+        "Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7\r\n"
+        "Accept-Encoding: gzip, deflate, br\r\n"
         "Connection: keep-alive\r\n"
-        "X-Custom-Header: Ravenclaw-Logic\r\n"
+        "Upgrade-Insecure-Requests: 1\r\n"
         "\r\n";
     // add rawData to connection readBuffer
+    std::cout << "-----  REQUEST  -----" << std::endl;
+    std::cout << rawData << std::endl;
+    std::cout << "-----  REQUEST END  -----" << std::endl;
     conn.addReadBuffer(rawData);
     // check connection state, header end (\r\n\r\n) (HTTPRequest.parse() is here)
     conn.update();

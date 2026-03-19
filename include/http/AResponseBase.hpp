@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:00:13 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 22:02:39 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 08:12:04 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ class AResponseBase : public IResponse
 	public:
 		virtual ~AResponseBase() {};
 		static  std::string getStatusMessage(StatusCode statusCode);
+		virtual std::string getCurrentDate() const;
 		virtual StatusCode getStatusCode() const;
 		virtual std::string serialize() const = 0;
 };

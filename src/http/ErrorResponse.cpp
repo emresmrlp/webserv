@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 23:09:33 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 08:11:52 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,15 @@ std::string ErrorResponse::serialize() const
 			<< "<div class=\"footer\">Developed by <b>ysumeral, etorun, hhaciogl (C) 2026</b></div>"
 			<< "</div></body></html>";
 	std::ostringstream response;
-	response << HTTP_VERSION << " " << this->_statusCode << " " << this->_statusMessage << "\r\n";
-	response << "Content-Type: text/html\r\n";
-	response << "Content-Length: " << body_oss.str().length() << "\r\n\r\n";
+	response << HTTP_VERSION << " " << this->_statusCode << " " << this->_statusMessage << CRLF;
+	response << "Date: " << this->getCurrentDate() << CRLF;
+	response << "Server: " << SERVER_NAME << CRLF;
+	if (this->_statusCode == METHOD_NOT_ALLOWED)
+		response << "Allow: " << ALLOWED_METHODS << CRLF;
+	response << "Content-Type: " << "text/html" << CRLF;
+	response << "Content-Length: " << body_oss.str().length() << CRLF;
+	response << "Connection: " << "close" << CRLF;
+	response << CRLF;
 	//TODO: NEED TO DATE AND CONNECT SECTION
 	response << body_oss.str();
 	return (response.str());

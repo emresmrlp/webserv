@@ -6,18 +6,19 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 22:56:46 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 08:12:59 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
+#include <string>
 
-Request::Request() : _method(""), _path(""), _version(""), _headers() {}
+Request::Request() : _method(""), _path(""), _version(""), _headers(), _bodySize(0), _body(""), _empty("") {}
 
 Request::~Request() {}
 
 Request::Request(const Request &ref) : _method(ref._method), _path(ref._path),
-    _version(ref._version), _headers(ref._headers) {}
+    _version(ref._version), _headers(ref._headers), _bodySize(0), _body(""), _empty("") {}
 
 Request &Request::operator=(const Request &ref)
 {
@@ -33,8 +34,9 @@ Request &Request::operator=(const Request &ref)
 
 StatusCode  Request::parse(std::string &rawReadBuffer)
 {
-    std::size_t endOfHeader = rawReadBuffer.find("\r\n\r\n");
-    std::size_t nextPos = rawReadBuffer.find("\r\n");
+    
+    std::size_t endOfHeader = rawReadBuffer.find(DOUBLE_CRLF);
+    std::size_t nextPos = rawReadBuffer.find(CRLF);
     std::string line = rawReadBuffer.substr(0, nextPos);
     std::size_t sp1 = line.find(' ');
     if (sp1 == std::string::npos)
@@ -50,14 +52,13 @@ StatusCode  Request::parse(std::string &rawReadBuffer)
     if (this->_method.empty() || this->_path.empty() || this->_version.empty())
         return (BAD_REQUEST);
     // TODO: METHOD VALIDATE (NEED CONF FILE)
-    if (this->_method != "GET")
+    if (this->_method != ALLOWED_METHODS)
         return (METHOD_NOT_ALLOWED);
     // TODO: PATH VALIDATE
     if (this->_path.find("..") != std::string::npos)
         return (FORBIDDEN); // SECURITY REASONS (root access ../)
     if (this->_version != "HTTP/1.1")
         return (HTTP_VERSION_NOT_SUPPORTED);
-    
     std::size_t pos = nextPos + 2;
     while (pos < endOfHeader)
     {
@@ -89,13 +90,19 @@ StatusCode  Request::parse(std::string &rawReadBuffer)
     return (OK);
 }
 
+void Request::setBodySize(std::size_t bodySize)
+{
+    if (bodySize > 0)
+        this->_bodySize = bodySize;
+}
+
 const std::string &Request::getMethod() const { return (this->_method); }
 
 const std::string &Request::getPath() const { return (this->_path); }
 
 const std::string &Request::getVersion() const { return (this->_version); }
 
-const std::string Request::getHeader(const std::string &key) const
+const std::string &Request::getHeader(const std::string &key) const
 {
     std::string fixedKey = key;
 
@@ -104,5 +111,9 @@ const std::string Request::getHeader(const std::string &key) const
     std::map<std::string, std::string>::const_iterator it = _headers.find(fixedKey);
     if (it != _headers.end())
         return (it->second);
-    return ("");
+    return (this->_empty);
 }
+
+const std::size_t &Request::getBodySize() const { return (this->_bodySize); }
+
+const std::string &Request::getBody() const { return (this->_body); }

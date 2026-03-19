@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 23:10:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 08:27:51 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "ErrorResponse.hpp"
 #include "Config.hpp"
 #include <iostream>
+#include <sys/stat.h>
 
 Connection::Connection(int fd) : _fd(fd), _state(READING), _response(NULL),
 	_readBuffer(""),  _writeBuffer("") {}
@@ -35,7 +36,7 @@ void Connection::update()
 	{
 		if (this->_readBuffer.size() > MAX_HEADER_SIZE)
 			this->handleRequest(PAYLOAD_TOO_LARGE);
-		return;
+		return ;
 	}
 	status = this->_request.parse(this->_readBuffer);
 	switch (status)
@@ -48,17 +49,41 @@ void Connection::update()
 			break;
 	}
 }
-
 void	Connection::handleRequest(StatusCode status)
 {
-	if (status == OK)
+	StatusCode currentStatus;
+
+	currentStatus = status;
+	if (currentStatus == OK)
 	{
+		std::size_t bodySize;
+
 		this->setState(WRITING);
-		this->_response = new StaticResponse(this->_request);
-		return ;
+
+
+		struct stat st;
+		std::string filePath = ROOT;
+		filePath += this->_request.getPath();
+		if (stat(filePath.c_str(), &st) == 0)
+		{
+			if (S_ISREG(st.st_mode))
+			{
+				bodySize = st.st_size;
+				this->_response = new StaticResponse(this->_request, bodySize);
+				return ;
+			}
+			else if (S_ISDIR(st.st_mode))
+			{
+				std::cout << "aindex" << std::endl;
+				if (AUTOINDEX)
+					currentStatus = NOT_FOUND;
+			}
+		}
+		else
+       		currentStatus = NOT_FOUND;
 	}
 	this->setState(ERROR);
-	this->_response = new ErrorResponse(status);
+	this->_response = new ErrorResponse(currentStatus);
 }
 
 IResponse *Connection::getResponse()
