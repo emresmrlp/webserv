@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 07:37:49 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 14:22:53 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:16:45 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Request
 		Request(const Request &ref);
 		Request &operator=(const Request &ref);
 
-		RequestParseStatus	parse(std::string &rawReadBuffer);
+		void				parse(std::string &rawReadBuffer);
 		const std::string	&getMethod() const;
 		const std::string	&getPath() const;
 		const std::string	&getVersion() const;
@@ -39,12 +39,15 @@ class Request
 		const std::size_t	&getBodySize() const;
 		const std::string	&getBody() const;
 		StatusCode			getStatusCode() const;
+		RequestParseStatus	getRequestParseStatus() const;
 	private:
+		void syncStatus(StatusCode statusCode, RequestParseStatus requestParseStatus);
 		// first line
 		std::string _method;
 		std::string _path;
 		std::string _version;
 		StatusCode	_statusCode;
+		RequestParseStatus _requestParseStatus;
 		// other lines
 		std::map<std::string, std::string> _headers;
 		std::size_t	_bodySize;

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 14:18:52 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:18:02 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ class Connection
 		~Connection();
 
 		int				getFd() const;
-		void			setState(ConnectionState state);
 		ConnectionState getState() const;
-		void			prepareRequest();
-		void			prepareResponse(StatusCode status);
 		IResponse		*getResponse();
+		void			setState(ConnectionState state);
+		void			prepareRequest();
+		void			prepareResponse();
 		void			addReadBuffer(const std::string &buffer);
 		class NoResponseFoundError : public std::exception
 		{

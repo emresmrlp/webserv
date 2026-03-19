@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 14:18:29 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:18:39 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,16 @@ void Connection::addReadBuffer(const std::string &buffer)
 
 void Connection::prepareRequest()
 {
-	RequestParseStatus requestParseStatus = this->_request.parse(this->_readBuffer);;
-
-	if (requestParseStatus != INCOMPLETE)
-		this->prepareResponse(this->_request.getStatusCode());
+	this->_request.parse(this->_readBuffer);
 }
 
-void	Connection::prepareResponse(StatusCode status)
+void	Connection::prepareResponse()
 {
+	StatusCode status;
+	
+	if (this->_request.getRequestParseStatus() == INCOMPLETE)
+		return ;
+	status = this->_request.getStatusCode();
 	if (status != OK)
 	{
 		this->_response = new ErrorResponse(status);
