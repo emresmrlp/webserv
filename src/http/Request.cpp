@@ -6,14 +6,14 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 08:12:59 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 14:23:29 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Request.hpp"
 #include <string>
 
-Request::Request() : _method(""), _path(""), _version(""), _headers(), _bodySize(0), _body(""), _empty("") {}
+Request::Request() : _method(""), _path(""), _version(""), _statusCode(UNDEFINED), _headers(), _bodySize(0), _body(""), _empty("") {}
 
 Request::~Request() {}
 
@@ -32,33 +32,54 @@ Request &Request::operator=(const Request &ref)
 	return (*this);
 }
 
-StatusCode  Request::parse(std::string &rawReadBuffer)
+//TODO: OPTIMISE PARSER
+RequestParseStatus  Request::parse(std::string &rawReadBuffer) // ONLY GET PARSE (HEADER)
 {
-    
     std::size_t endOfHeader = rawReadBuffer.find(DOUBLE_CRLF);
+    if (endOfHeader == std::string::npos)
+	{
+		if (rawReadBuffer.size() > MAX_HEADER_SIZE)
+		{	
+            this->_statusCode = PAYLOAD_TOO_LARGE;
+            return (ERROR);
+        }
+        return (INCOMPLETE);
+	}
     std::size_t nextPos = rawReadBuffer.find(CRLF);
     std::string line = rawReadBuffer.substr(0, nextPos);
     std::size_t sp1 = line.find(' ');
-    if (sp1 == std::string::npos)
-        return (BAD_REQUEST);
     std::size_t sp2 = line.find(' ', sp1 + 1);
-    if (sp2 == std::string::npos)
-        return (BAD_REQUEST);
-    if (line.find(" ", sp2 + 1) != std::string::npos)
-        return (BAD_REQUEST); // 2+ SPACE SITUATION
+    if (sp1 == std::string::npos || sp2 == std::string::npos
+        || line.find(" ", sp2 + 1) != std::string::npos)
+    {
+        this->_statusCode = BAD_REQUEST;
+        return (ERROR);
+    }
     this->_method = line.substr(0, sp1);
     this->_path = line.substr(sp1 + 1, sp2 - sp1 - 1);
     this->_version = line.substr(sp2 + 1);
     if (this->_method.empty() || this->_path.empty() || this->_version.empty())
-        return (BAD_REQUEST);
+    {
+        this->_statusCode = BAD_REQUEST;
+        return (ERROR);
+    }
     // TODO: METHOD VALIDATE (NEED CONF FILE)
     if (this->_method != ALLOWED_METHODS)
-        return (METHOD_NOT_ALLOWED);
+    {
+        this->_statusCode = METHOD_NOT_ALLOWED;
+        return (ERROR);
+    }
     // TODO: PATH VALIDATE
     if (this->_path.find("..") != std::string::npos)
-        return (FORBIDDEN); // SECURITY REASONS (root access ../)
+    {
+        this->_statusCode = FORBIDDEN;
+        return (ERROR);
+    }
     if (this->_version != "HTTP/1.1")
-        return (HTTP_VERSION_NOT_SUPPORTED);
+    {
+        this->_statusCode = HTTP_VERSION_NOT_SUPPORTED;
+        return (ERROR);
+    }
     std::size_t pos = nextPos + 2;
     while (pos < endOfHeader)
     {
@@ -70,11 +91,17 @@ StatusCode  Request::parse(std::string &rawReadBuffer)
             break ;
         std::size_t sep = line.find(":");
         if (sep == std::string::npos)
-            return (BAD_REQUEST);
+        {
+            this->_statusCode = BAD_REQUEST;
+            return (ERROR);
+        }
         std::string key = line.substr(0, sep);
         std::string value = line.substr(sep + 1);
         if (key.empty() || value.empty())
-            return (BAD_REQUEST);
+        {
+            this->_statusCode = BAD_REQUEST;
+            return (ERROR);
+        }
         for (std::size_t i = 0; i < key.length(); ++i)
             key[i] = std::tolower(static_cast<unsigned char>(key[i]));
         std::size_t firstSpace = value.find_first_not_of(" ");
@@ -86,21 +113,21 @@ StatusCode  Request::parse(std::string &rawReadBuffer)
         pos = nextPos + 2;
     }
     if (this->getHeader("host").empty())
-        return (BAD_REQUEST);
-    return (OK);
-}
-
-void Request::setBodySize(std::size_t bodySize)
-{
-    if (bodySize > 0)
-        this->_bodySize = bodySize;
+    {
+        this->_statusCode = BAD_REQUEST;
+        return (ERROR);
+    }
+    this->_statusCode = OK;
+    return (FINISHED);
 }
 
 const std::string &Request::getMethod() const { return (this->_method); }
 
 const std::string &Request::getPath() const { return (this->_path); }
 
-const std::string &Request::getVersion() const { return (this->_version); }
+const std::string   &Request::getVersion() const { return (this->_version); }
+
+StatusCode          Request::getStatusCode() const { return (this->_statusCode); }
 
 const std::string &Request::getHeader(const std::string &key) const
 {

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 22:23:43 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 14:18:52 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ enum ConnectionState
 	//connection closing (server send process ending)
 	READING,
 	WRITING,
-	ERROR,
 	CLOSING
 };
 
@@ -37,11 +36,11 @@ class Connection
 		Connection(int fd);
 		~Connection();
 
-		void			update();
 		int				getFd() const;
 		void			setState(ConnectionState state);
 		ConnectionState getState() const;
-		void			handleRequest(StatusCode status);
+		void			prepareRequest();
+		void			prepareResponse(StatusCode status);
 		IResponse		*getResponse();
 		void			addReadBuffer(const std::string &buffer);
 		class NoResponseFoundError : public std::exception

@@ -6,12 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 08:27:51 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 14:18:29 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Connection.hpp"
 #include "StaticResponse.hpp"
+#include "AutoIndexResponse.hpp"
 #include "ErrorResponse.hpp"
 #include "Config.hpp"
 #include <iostream>
@@ -25,65 +26,38 @@ void Connection::addReadBuffer(const std::string &buffer)
 	this->_readBuffer += buffer;
 }
 
-void Connection::update()
+void Connection::prepareRequest()
 {
-	StatusCode	status;
+	RequestParseStatus requestParseStatus = this->_request.parse(this->_readBuffer);;
 
-	if (this->_state != READING)
-		return ;
-	std::size_t endOfHeader = this->_readBuffer.find("\r\n\r\n");
-	if (endOfHeader == std::string::npos)
-	{
-		if (this->_readBuffer.size() > MAX_HEADER_SIZE)
-			this->handleRequest(PAYLOAD_TOO_LARGE);
-		return ;
-	}
-	status = this->_request.parse(this->_readBuffer);
-	switch (status)
-	{
-		case OK:
-			this->handleRequest(status);
-			break;
-		default:
-			this->handleRequest(status);
-			break;
-	}
+	if (requestParseStatus != INCOMPLETE)
+		this->prepareResponse(this->_request.getStatusCode());
 }
-void	Connection::handleRequest(StatusCode status)
+
+void	Connection::prepareResponse(StatusCode status)
 {
-	StatusCode currentStatus;
-
-	currentStatus = status;
-	if (currentStatus == OK)
+	if (status != OK)
 	{
-		std::size_t bodySize;
-
+		this->_response = new ErrorResponse(status);
 		this->setState(WRITING);
-
-
-		struct stat st;
-		std::string filePath = ROOT;
-		filePath += this->_request.getPath();
-		if (stat(filePath.c_str(), &st) == 0)
-		{
-			if (S_ISREG(st.st_mode))
-			{
-				bodySize = st.st_size;
-				this->_response = new StaticResponse(this->_request, bodySize);
-				return ;
-			}
-			else if (S_ISDIR(st.st_mode))
-			{
-				std::cout << "aindex" << std::endl;
-				if (AUTOINDEX)
-					currentStatus = NOT_FOUND;
-			}
-		}
-		else
-       		currentStatus = NOT_FOUND;
+		return ;
 	}
-	this->setState(ERROR);
-	this->_response = new ErrorResponse(currentStatus);
+	struct stat st;
+	// TODO: filePath must be fixed with ConfigLocation
+	std::string filePath = ROOT; // TODO
+	filePath += this->_request.getPath(); // TODO
+	if (stat(filePath.c_str(), &st) != 0)
+		this->_response = new ErrorResponse(NOT_FOUND);
+	else if (S_ISREG(st.st_mode))
+		this->_response = new StaticResponse(this->_request, st.st_size);
+	else if (S_ISDIR(st.st_mode))
+	{
+		if (AUTOINDEX)
+			this->_response = new AutoIndexResponse();
+		else
+			this->_response = new ErrorResponse(FORBIDDEN);
+	}
+	this->setState(WRITING);
 }
 
 IResponse *Connection::getResponse()

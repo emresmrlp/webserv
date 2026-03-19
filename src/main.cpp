@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 08:42:07 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/19 14:22:31 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,17 @@ int main(int argc, char **argv)
     std::cout << rawData << std::endl;
     std::cout << "-----  REQUEST END  -----" << std::endl;
     conn.addReadBuffer(rawData);
+    conn.prepareRequest();
     // check connection state, header end (\r\n\r\n) (HTTPRequest.parse() is here)
-    conn.update();
     std::cout << "-----  RESPONSE  -----" << std::endl;
-    std::cout << conn.getResponse()->serialize() << std::endl;
+    try
+    {
+       std::cout << conn.getResponse()->serialize() << std::endl;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
     std::cout << "-----  RESPONSE END  -----" << std::endl;
     return (0);
 }

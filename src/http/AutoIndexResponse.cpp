@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StaticResponse.hpp                                 :+:      :+:    :+:   */
+/*   AutoIndexResponse.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 14:01:29 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/19 13:50:12 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STATICRESPONSE_HPP
-# define STATICRESPONSE_HPP
-# include "AResponseBase.hpp"
+#include "AutoIndexResponse.hpp"
+#include <iostream>
 
-class Request;
-
-class StaticResponse : public AResponseBase
+AutoIndexResponse::AutoIndexResponse()
 {
-    public:
-        StaticResponse(Request &request, std::size_t bodySize);
-        std::string serialize() const;
-    private:
-        const std::string createBody() const;
-        Request     &_request;
-        std::size_t	_bodySize;
-};
+	this->_statusCode = OK;
+	this->_statusMessage = this->getStatusMessage(this->_statusCode);
+}
 
-#endif
+std::string AutoIndexResponse::serialize() const
+{
+	std::ostringstream response;
+    response << "autoindex";
+	return (response.str());
+}
