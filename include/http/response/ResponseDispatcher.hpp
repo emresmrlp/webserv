@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AResponseBase.hpp                                  :+:      :+:    :+:   */
+/*   ResponseDispatcher.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 13:00:13 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 08:12:04 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/22 12:25:40 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/22 17:42:58 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ARESPONSEBASE_HPP
-# define ARESPONSEBASE_HPP
-# include <string>
-# include <sstream>
+#ifndef RESPONSEDISPATCHER_HPP
+# define RESPONSEDISPATCHER_HPP
+# include "Request.hpp"
 # include "IResponse.hpp"
+# include "ResponseFactory.hpp"
 
-class AResponseBase : public IResponse
+namespace http
 {
-	protected:
-		StatusCode	_statusCode;
-		std::string	_statusMessage;
-	public:
-		virtual ~AResponseBase() {};
-		static  std::string getStatusMessage(StatusCode statusCode);
-		virtual std::string getCurrentDate() const;
-		virtual StatusCode getStatusCode() const;
-		virtual std::string serialize() const = 0;
-};
+    class ResponseDispatcher
+    {
+        public:
+            ResponseDispatcher(ResponseFactory &factory);
+            ~ResponseDispatcher();
+            http::IResponse *dispatch(http::Request &request);
+        private:
+            ResponseFactory _factory;
+    };
+}
 
 #endif

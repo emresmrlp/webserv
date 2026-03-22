@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 15:38:33 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/22 21:35:10 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,81 +16,95 @@
 #include "ErrorResponse.hpp"
 #include "Config.hpp"
 #include <iostream>
-#include <sys/stat.h>
+#include "Request.hpp"
+#include "ResponseDispatcher.hpp"
 
-Connection::Connection(int fd) : _fd(fd), _state(READING), _response(NULL),
-	_readBuffer(""),  _writeBuffer("") {}
-
-void Connection::addReadBuffer(const std::string &buffer)
-{	
-	this->_readBuffer += buffer;
-}
-
-void Connection::prepareRequest()
+namespace core
 {
-	this->_request.parse(this->_readBuffer);
-}
+	Connection::Connection(int fd) : _fd(fd), _readBuffer(""),  _writeBuffer(""),
+		_response(NULL), _request(NULL), _dispatcher(_responseFactory), _state(READING) {}
 
-void	Connection::prepareResponse()
-{
-	StatusCode status;
-	
-	if (this->_request.getRequestParseStatus() == INCOMPLETE)
-		return ;
-	status = this->_request.getStatusCode();
-	if (status != OK)
+	void Connection::process()
 	{
-		this->_response = new ErrorResponse(status);
-		this->setState(WRITING);
-		return ;
-	}
-	struct stat st;
-	// TODO: filePath must be fixed with ConfigLocation
-	std::string filePath = ROOT; // TODO
-	filePath += this->_request.getPath(); // TODO
-	if (stat(filePath.c_str(), &st) != 0)
-		this->_response = new ErrorResponse(NOT_FOUND);
-	else if (S_ISREG(st.st_mode))
-		this->_response = new StaticResponse(this->_request, st.st_size);
-	else if (S_ISDIR(st.st_mode))
-	{
-		if (AUTOINDEX)
-			this->_response = new AutoIndexResponse();
+		if (this->_state != READING)
+			return ;
+
+		http::ParseResult parseResult;
+		parseResult = this->_requestBuilder.parse(this->_readBuffer);
+		if (parseResult.parseStatus == http::INCOMPLETE)
+			return ;
+
+		if (parseResult.parseStatus == http::ERROR)
+			this->_response = this->_responseFactory.createErrorResponse(parseResult.httpStatusCode);
 		else
-			this->_response = new ErrorResponse(FORBIDDEN);
+		{
+			this->_request = this->_requestBuilder.build();
+			this->_response = this->_dispatcher.dispatch(*(this->_request));
+		}
+		this->_writeBuffer = this->_response->serialize();
+		this->setState(WRITING);
 	}
-	this->setState(WRITING);
-}
 
-IResponse *Connection::getResponse()
-{
-	if (this->_response != NULL)
-		return (_response);
-	throw NoResponseFoundError();
-}
-
-int Connection::getFd() const { return (this->_fd); }
-
-void    Connection::setState(ConnectionState state)
-{
-	if (this->_state == state)
-		return ;
-	if (this->_state == CLOSING)
-		return ; 
-	this->_state = state;
-}
-
-ConnectionState Connection::getState() const { return (this->_state); }
-
-Connection::~Connection()
-{
-	if (this->_response != NULL) {
-		delete (this->_response);
-		this->_response = NULL;
+	void Connection::appendRequestBuffer(const std::string &buffer)
+	{	
+		this->_readBuffer += buffer;
 	}
-}
 
-const char *Connection::NoResponseFoundError::what() const throw()
-{
-	return "Error: No response found!";
+	void Connection::resetForNextRequest()
+	{
+		this->_readBuffer.clear();
+		this->_writeBuffer.clear();
+
+		if (this->_request)
+		{
+			delete (this->_request);
+			this->_request = NULL;
+		}
+		if (this->_response)
+		{
+			delete (this->_response);
+			this->_response = NULL;
+		}
+		
+		this->_requestBuilder.reset();
+		std::cout << "Connection reset success." << std::endl;
+		this->_state = READING;
+	}
+
+	bool	Connection::hasResponse() const
+	{
+		if (this->_response != NULL)
+			return (true);
+		return (false);
+	}
+
+	int Connection::getFd() const { return (this->_fd); }
+	
+	ConnectionState Connection::getState() const { return (this->_state); }
+
+	const std::string	&Connection::getResponseBuffer() const { return (this->_writeBuffer); }
+	
+	void	Connection::setState(ConnectionState state)
+	{
+		if (this->_state == state)
+			return ;
+		if (this->_state == CLOSING)
+			return ;
+		this->_state = state;
+	}
+	
+	Connection::~Connection()
+	{
+		if (this->_response)
+		{
+			delete (this->_response);
+			this->_response = NULL;
+		}
+		if (this->_request)
+		{
+			delete (this->_request);
+			this->_request = NULL;
+		}
+	}
+
 }

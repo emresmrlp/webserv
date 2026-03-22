@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AutoIndexResponse.cpp                              :+:      :+:    :+:   */
+/*   IResponse.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 13:50:12 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 12:26:56 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/22 08:30:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "AutoIndexResponse.hpp"
-#include <iostream>
+#ifndef IRESPONSE_HPP
+# define IRESPONSE_HPP
+# include <string>
 
-AutoIndexResponse::AutoIndexResponse()
+namespace http
 {
-	this->_statusCode = OK;
-	this->_statusMessage = this->getStatusMessage(this->_statusCode);
+	class IResponse
+	{
+		public:
+			virtual ~IResponse() {};
+			virtual std::string serialize() const = 0;
+	};
 }
 
-std::string AutoIndexResponse::serialize() const
-{
-	std::ostringstream response;
-    response << "autoindex";
-	return (response.str());
-}
+#endif

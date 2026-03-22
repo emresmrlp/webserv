@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ErrorResponse.hpp                                  :+:      :+:    :+:   */
+/*   Util.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/18 20:08:14 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/22 14:40:45 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/22 17:58:17 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERRORRESPONSE_HPP
-# define ERRORRESPONSE_HPP
-# include "AResponseBase.hpp"
+#ifndef UTIL_HPP
+# define UTIL_HPP
+# include <string>
 
-class ErrorResponse : public AResponseBase
+namespace util
 {
-    public:
-        ErrorResponse(StatusCode status);
-        std::string serialize() const;
-};
+	void toLowerCase(std::string &str);
+}
 
 #endif

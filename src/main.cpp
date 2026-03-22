@@ -6,14 +6,12 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 17:17:11 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/22 18:14:58 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include "Connection.hpp"
 #include "AResponseBase.hpp"
-#include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -64,14 +62,12 @@ int main(int argc, char **argv)
         long valread = read(new_socket, buffer, 30000);
         if (valread > 0) 
         {
-            Connection conn(new_socket); 
+            core::Connection conn(new_socket); 
             
             std::string rawData(buffer);
-            conn.addReadBuffer(rawData);
-            
-            conn.prepareRequest();
-            conn.prepareResponse();
-            std::string response = conn.getResponse()->serialize();
+            conn.appendRequestBuffer(rawData);
+            conn.process();
+            std::string response = conn.getResponseBuffer();
             send(new_socket, response.c_str(), response.length(), 0);
         }
         close(new_socket);
@@ -80,6 +76,7 @@ int main(int argc, char **argv)
     close(server_fd);
     return (0);
 }
+
 // int main(int argc, char **argv)
 // {
 //     if (argc != 2)
@@ -89,7 +86,7 @@ int main(int argc, char **argv)
 //     }
 //     (void)argv;
 
-//     Connection conn(42);
+//     core::Connection conn(42);
 //     std::string rawData = 
 //         "GET /index.html HTTP/1.1\r\n"
 //         "Host: localhost:8080\r\n"
@@ -105,18 +102,14 @@ int main(int argc, char **argv)
 //     std::cout << rawData;
 //     std::cout << otherRawData << std::endl;
 //     std::cout << "-----  REQUEST END  -----" << std::endl;
-//     // Add to read buffer.
-//     conn.addReadBuffer(rawData);
-//     conn.addReadBuffer(otherRawData);
-//     // Prepare Request
-//     conn.prepareRequest();
-//     // Prepare Response 
-//     conn.prepareResponse();
+//     conn.appendRequestBuffer(rawData);
+//     conn.appendRequestBuffer(otherRawData);
+//     conn.process();
 //     std::cout << "-----  RESPONSE  -----" << std::endl;
 //     try
 //     {
 //         // Returns your response string
-//         std::cout << conn.getResponse()->serialize() << std::endl;
+//         std::cout << conn.getResponseBuffer() << std::endl;
 //     }
 //     catch(const std::exception& e)
 //     {

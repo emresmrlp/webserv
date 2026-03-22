@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IResponse.hpp                                      :+:      :+:    :+:   */
+/*   ErrorResponse.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 12:26:56 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 13:12:21 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/22 17:28:48 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IRESPONSE_HPP
-# define IRESPONSE_HPP
-# include <string>
-# include "Config.hpp"
-# include "StatusCode.hpp"
+#ifndef ERRORRESPONSE_HPP
+# define ERRORRESPONSE_HPP
+# include "AResponseBase.hpp"
 
-class IResponse
+namespace http
 {
-    public:
-        virtual ~IResponse() {};
-        virtual std::string getCurrentDate() const = 0;
-        virtual StatusCode getStatusCode() const = 0;
-        virtual std::string serialize() const = 0;
-};
-
+    class ErrorResponse : public http::AResponseBase
+    {
+        public:
+            ErrorResponse(http::StatusCode status);
+            ~ErrorResponse();
+            std::string serialize() const;
+        private:
+            void createBody();
+    };
+}
 #endif
