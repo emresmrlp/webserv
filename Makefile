@@ -6,34 +6,43 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/03/19 13:14:46 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/03/22 17:39:08 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-P_BLUE      =	\033[38;5;111m
-P_PURPLE    =	\033[38;5;147m
-P_AQUA      =	\033[38;5;159m
-P_GREEN     =	\033[38;5;120m
-P_PEACH     =	\033[38;5;222m
-RESET       =	\033[0m
-PREFIX      =	$(P_BLUE)(WEBSERV)$(RESET)
+P_BLUE				=	\033[38;5;111m
+P_PURPLE			=	\033[38;5;147m
+P_AQUA				=	\033[38;5;159m
+P_GREEN				=	\033[38;5;120m
+P_PEACH				=	\033[38;5;222m
+RESET				=	\033[0m
+PREFIX				=	$(P_BLUE)(WEBSERV)$(RESET)
+CXX					=	c++
+CXXFLAGS			=	-Wall -Wextra -Werror -std=c++98
+IFLAGS				=	-I include \
+						-I include/core \
+						-I include/http/ \
+						-I include/http/request \
+						-I include/http/response
+SRC_DIR				=	src/
+OBJ_DIR				=	obj/
+CORE_DIR			=	$(SRC_DIR)core/
+HTTP_DIR			=	$(SRC_DIR)http/
+HTTP_REQUEST_DIR	=	$(HTTP_DIR)request/
+HTTP_RESPONSE_DIR	=	$(HTTP_DIR)response/
 
-CXX         =   c++
-CXXFLAGS    =   -Wall -Wextra -Werror -std=c++98
-IFLAGS      =   -I include/core -I include/http
-SRC_DIR     =   src/
-OBJ_DIR     =   obj/
-CORE_DIR    =   $(SRC_DIR)core/
-HTTP_DIR    =   $(SRC_DIR)http/
+CORE_SRC	=	$(SRC_DIR)main.cpp \
+				$(CORE_DIR)Connection.cpp \
+				$(CORE_DIR)Util.cpp
 
-CORE_SRC    =   $(SRC_DIR)main.cpp \
-				$(CORE_DIR)Connection.cpp
-
-HTTP_SRC    =   $(HTTP_DIR)Request.cpp \
-				$(HTTP_DIR)AResponseBase.cpp \
-				$(HTTP_DIR)StaticResponse.cpp \
-				$(HTTP_DIR)AutoIndexResponse.cpp \
-				$(HTTP_DIR)ErrorResponse.cpp
+HTTP_SRC	=	$(HTTP_REQUEST_DIR)Request.cpp \
+				$(HTTP_REQUEST_DIR)RequestBuilder.cpp \
+				$(HTTP_RESPONSE_DIR)ResponseDispatcher.cpp \
+				$(HTTP_RESPONSE_DIR)ResponseFactory.cpp \
+				$(HTTP_RESPONSE_DIR)AResponseBase.cpp \
+				$(HTTP_RESPONSE_DIR)StaticResponse.cpp \
+				$(HTTP_RESPONSE_DIR)ErrorResponse.cpp \
+				$(HTTP_RESPONSE_DIR)AutoIndexResponse.cpp
 
 SRC         =   $(CORE_SRC) $(HTTP_SRC)
 OBJ         =   $(SRC:src/%.cpp=$(OBJ_DIR)%.o)
@@ -57,8 +66,8 @@ $(NAME): $(OBJ)
 	@echo "$(P_BLUE) ██   ██ ██         ██        ██      ██      ██    ██    ██      ██  ██ ██ ██   ██    $(RESET)"
 	@echo "$(P_BLUE) ██   ██ ███████    ██        ███████ ██ ███████    ██    ███████ ██   ████  ██ ██  ██ $(RESET)"
 	@echo ""
-	@echo "                   $(P_AQUA)--- A HIGH-PERFORMANCE HTTP SERVER PROJECT ---$(RESET)"
-	@echo "                  $(P_PEACH)Developed by ysumeral, etorun, hhaciogl (C) 2026$(RESET)"
+	@echo "                   $(P_AQUA)------ A LOW-LEVEL HTTP SERVER PROJECT ------$(RESET)"
+	@echo "                 $(P_PEACH)Developed by ysumeral, etorun, hhaciogl (C) 2026$(RESET)"
 	@echo ""
 	@echo "$(PREFIX) $(P_GREEN)All done, webserv is ready!$(RESET)"
 	@echo "$(PREFIX) $(P_AQUA)Usage: ./webserv <configuration file>$(RESET)"

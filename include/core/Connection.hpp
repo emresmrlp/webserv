@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 15:42:03 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/22 18:03:22 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,45 +16,53 @@
 #ifndef CONNECTION_HPP
 # define CONNECTION_HPP
 # include <string>
-# include "Request.hpp"
-# include "AResponseBase.hpp"
 # include <exception>
-//every connection object is a socket so connection state is equal socket state
-enum ConnectionState
-{
-	//socket reading,
-	//socket writing (http request + http response + server send)
-	//connection closing (server send process ending)
-	READING,
-	WRITING,
-	CLOSING
-};
+# include "RequestBuilder.hpp"
+# include "ResponseFactory.hpp"
+# include "ResponseDispatcher.hpp"
 
-class Connection
+namespace http
 {
-	public:
-		Connection(int fd);
-		~Connection();
+	class Request;
+	class IResponse;
+}
 
-		int				getFd() const;
-		ConnectionState getState() const;
-		IResponse		*getResponse();
-		void			setState(ConnectionState state);
-		void			prepareRequest();
-		void			prepareResponse();
-		void			addReadBuffer(const std::string &buffer);
-		class NoResponseFoundError : public std::exception
-		{
-			public:
-				const char *what() const throw();
-		};
-	private:
-		int				_fd;
-		ConnectionState	_state;
-		IResponse		*_response;
-		std::string		_readBuffer;
-		std::string		_writeBuffer;
-		Request			_request;
-};
+namespace core
+{
+	enum ConnectionState
+	{
+		READING,
+		WRITING,
+		CLOSING
+	};
+
+	class Connection
+	{
+		public:
+			Connection(int fd);
+			~Connection();
+
+			void					process();
+			bool					hasResponse() const;
+			void					resetForNextRequest();
+			void					appendRequestBuffer(const std::string &buffer);
+			
+			int						getFd() const;
+			core::ConnectionState	getState() const;
+			const std::string		&getResponseBuffer() const;
+
+			void					setState(ConnectionState state);
+		private:
+			int							_fd;
+			std::string					_readBuffer;
+			std::string					_writeBuffer;
+			http::IResponse				*_response;
+			http::Request				*_request;
+			http::ResponseDispatcher	_dispatcher;
+			http::RequestBuilder		_requestBuilder;
+			http::ResponseFactory		_responseFactory;
+			core::ConnectionState		_state;
+	};
+}
 
 #endif

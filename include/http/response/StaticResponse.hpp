@@ -1,26 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AutoIndexResponse.hpp                              :+:      :+:    :+:   */
+/*   StaticResponse.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/19 13:13:37 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/22 21:19:28 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AUTOINDEXRESPONSE_HPP
-# define AUTOINDEXRESPONSE_HPP
+#ifndef STATICRESPONSE_HPP
+# define STATICRESPONSE_HPP
 # include "AResponseBase.hpp"
 
-class Request;
-
-class AutoIndexResponse : public AResponseBase
+namespace http
 {
-    public:
-        AutoIndexResponse();
-        std::string serialize() const;
-};
+	class Request;
+	
+	class StaticResponse : public AResponseBase
+	{
+		public:
+			StaticResponse(const http::Request &request, std::size_t bodySize);
+			~StaticResponse();
+			std::string serialize() const;
+		private:
+			const Request	&_request;
+			std::size_t		_bodySize;
+
+			const std::string	getMimeType() const;
+			void				createBody();
+	};
+}
 
 #endif
