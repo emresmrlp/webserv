@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 18:14:58 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/23 12:53:55 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include "Connection.hpp"
 
 #define PORT 8080
