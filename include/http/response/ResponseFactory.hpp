@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseFactory.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:41:51 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 17:23:09 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/23 15:06:06 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

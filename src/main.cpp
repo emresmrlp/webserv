@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 18:14:58 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/23 16:21:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,27 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cstring>
+#include <cstdlib>
+#include <cstdio>
+#include <signal.h>
+#include "ConfigServer.hpp"
+#include "Server.hpp"
 #include "Connection.hpp"
 
 #define PORT 8080
 
 int main(int argc, char **argv)
 {
+    signal(SIGPIPE, SIG_IGN);
     if (argc != 2)
     {
         std::cout << "Correct usage: ./webserv [configuration file]" << std::endl;
         return (1);
     }
     (void)argv;
+    
+    core::Server server;
+    server.init();
 
     int server_fd;
     struct sockaddr_in address;
