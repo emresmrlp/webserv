@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/23 12:53:55 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 13:11:11 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,35 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <signal.h>
+#include "ConfigServer.hpp"
+#include "Server.hpp"
 #include "Connection.hpp"
 
 #define PORT 8080
 
 int main(int argc, char **argv)
 {
+    signal(SIGPIPE, SIG_IGN);
     if (argc != 2)
     {
         std::cout << "Correct usage: ./webserv [configuration file]" << std::endl;
         return (1);
     }
     (void)argv;
+    
+    core::Server server;
+
+    try
+    {
+        server.init();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+   
 
     int server_fd;
     struct sockaddr_in address;
@@ -64,7 +81,7 @@ int main(int argc, char **argv)
         long valread = read(new_socket, buffer, 30000);
         if (valread > 0) 
         {
-            core::Connection conn(new_socket); 
+            core::Connection conn(new_socket, server); 
             
             std::string rawData(buffer);
             conn.appendRequestBuffer(rawData);

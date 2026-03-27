@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AutoIndexResponse.hpp                              :+:      :+:    :+:   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 11:01:38 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/23 15:36:01 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/03/27 16:08:12 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AUTOINDEXRESPONSE_HPP
-# define AUTOINDEXRESPONSE_HPP
-# include "AResponseBase.hpp"
+#ifndef SERVER_HPP
+# define SERVER_HPP
+# include "ConfigServer.hpp"
 
-namespace http
+namespace core
 {
-    class AutoIndexResponse : public http::AResponseBase
-    {
-        public:
-            AutoIndexResponse(core::Server server, http::Request request);
-            ~AutoIndexResponse();
-            std::string serialize() const;
-        private:
-            void createBody();
-    };
+	class Server
+	{
+		public:
+			Server(config::ConfigServer &config);
+			~Server();
+			const config::ConfigServer &getConfig() const;
+		private:
+			config::ConfigServer _config;
+	};
 }
 
 #endif

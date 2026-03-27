@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
+#    By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/03/22 17:39:08 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/03/23 15:37:51 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,18 +20,25 @@ PREFIX				=	$(P_BLUE)(WEBSERV)$(RESET)
 CXX					=	c++
 CXXFLAGS			=	-Wall -Wextra -Werror -std=c++98
 IFLAGS				=	-I include \
+						-I include/config \
 						-I include/core \
-						-I include/http/ \
+						-I include/http \
 						-I include/http/request \
 						-I include/http/response
 SRC_DIR				=	src/
 OBJ_DIR				=	obj/
+CONFIG_DIR			=	$(SRC_DIR)config/
 CORE_DIR			=	$(SRC_DIR)core/
 HTTP_DIR			=	$(SRC_DIR)http/
 HTTP_REQUEST_DIR	=	$(HTTP_DIR)request/
 HTTP_RESPONSE_DIR	=	$(HTTP_DIR)response/
 
+CONFIG_SRC	=	$(CONFIG_DIR)ConfigServer.cpp \
+				$(CONFIG_DIR)ConfigLocation.cpp
+
 CORE_SRC	=	$(SRC_DIR)main.cpp \
+				$(CORE_DIR)Server.cpp \
+				$(CORE_DIR)ServerHandler.cpp \
 				$(CORE_DIR)Connection.cpp \
 				$(CORE_DIR)Util.cpp
 
@@ -44,7 +51,7 @@ HTTP_SRC	=	$(HTTP_REQUEST_DIR)Request.cpp \
 				$(HTTP_RESPONSE_DIR)ErrorResponse.cpp \
 				$(HTTP_RESPONSE_DIR)AutoIndexResponse.cpp
 
-SRC         =   $(CORE_SRC) $(HTTP_SRC)
+SRC         =   $(CONFIG_SRC) $(CORE_SRC) $(HTTP_SRC)
 OBJ         =   $(SRC:src/%.cpp=$(OBJ_DIR)%.o)
 NAME        =   webserv
 

@@ -6,19 +6,19 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 18:47:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 11:56:03 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestBuilder.hpp"
 #include "Request.hpp"
-#include "Config.hpp"
 #include "Util.hpp"
+#include <vector>
 #include <iostream>
 
 namespace http
 {
-	RequestBuilder::RequestBuilder() : _hasBody(false), _state(http::STATE_REQUEST_LINE) {}
+	RequestBuilder::RequestBuilder(core::Server server) : _hasBody(false), _state(http::STATE_REQUEST_LINE), _server(server) {}
 
 	RequestBuilder::~RequestBuilder() {}
 
@@ -42,7 +42,7 @@ namespace http
 		{
 			if (rawReadBuffer.find(DOUBLE_CRLF) == std::string::npos)
 			{
-				if (rawReadBuffer.size() > MAX_HEADER_SIZE)
+				if (rawReadBuffer.size() > this->_server.getConfig().getMaxHeaderSize())
 					return (handleParseResult(PAYLOAD_TOO_LARGE, ERROR));
 				return (handleParseResult(UNDEFINED, INCOMPLETE));
 			}
@@ -134,13 +134,7 @@ namespace http
 		{
             handleParseResult(BAD_REQUEST, ERROR);
 			return (false);
-		}
-        // TODO: METHOD VALIDATE (NEED CONF FILE)
-        if (this->_method != ALLOWED_METHODS)
-		{
-            handleParseResult(METHOD_NOT_ALLOWED, ERROR);
-			return (false);
-		}
+		}		
         // path validate
         if (this->_path.find("/../") != std::string::npos // if "root/../pictures"
 			|| this->_path.substr(0, 3) == "../" // if "../pictures"
@@ -148,6 +142,22 @@ namespace http
 			|| (this->_path.length() >= 3 && this->_path.substr(this->_path.length() - 3) == "/..")) // if "root/pictures/.."
 		{
             handleParseResult(FORBIDDEN, ERROR);
+			return (false);
+		}
+		// method validate
+		std::vector<std::string>::const_iterator it;
+		it = this->_server.getConfig().getLocation(this->_path).getAllowedMethods().begin();
+		std::vector<std::string>::const_iterator itEnd;
+		itEnd = this->_server.getConfig().getLocation(this->_path).getAllowedMethods().end();
+		bool isAllowedMethod = false;
+		while (it != itEnd)
+		{
+			if (*it == this->_method)
+				isAllowedMethod = true;
+		}
+		if (!isAllowedMethod)
+		{
+			handleParseResult(METHOD_NOT_ALLOWED, ERROR);
 			return (false);
 		}
 		// version validate

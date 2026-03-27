@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 21:35:10 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 13:12:21 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,14 @@
 #include "StaticResponse.hpp"
 #include "AutoIndexResponse.hpp"
 #include "ErrorResponse.hpp"
-#include "Config.hpp"
 #include <iostream>
 #include "Request.hpp"
 #include "ResponseDispatcher.hpp"
 
 namespace core
 {
-	Connection::Connection(int fd) : _fd(fd), _readBuffer(""),  _writeBuffer(""),
-		_response(NULL), _request(NULL), _dispatcher(_responseFactory), _state(READING) {}
+	Connection::Connection(int fd, core::Server &server) : _fd(fd), _readBuffer(""),  _writeBuffer(""),
+		_response(NULL), _request(NULL), _server(server), _dispatcher(server, _responseFactory), _state(READING) {}
 
 	void Connection::process()
 	{
@@ -35,7 +34,7 @@ namespace core
 			return ;
 
 		if (parseResult.parseStatus == http::ERROR)
-			this->_response = this->_responseFactory.createErrorResponse(parseResult.httpStatusCode);
+			this->_response = this->_responseFactory.createErrorResponse(this->_server, parseResult.httpStatusCode);
 		else
 		{
 			this->_request = this->_requestBuilder.build();
