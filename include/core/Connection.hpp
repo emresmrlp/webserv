@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 18:03:22 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 12:47:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ namespace core
 	class Connection
 	{
 		public:
-			Connection(int fd);
+			Connection(int fd, core::Server &server);
 			~Connection();
 
 			void					process();
@@ -62,6 +62,7 @@ namespace core
 			http::RequestBuilder		_requestBuilder;
 			http::ResponseFactory		_responseFactory;
 			core::ConnectionState		_state;
+			core::Server				_server;
 	};
 }
 

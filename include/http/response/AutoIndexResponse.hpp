@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 13:59:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 11:01:38 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ namespace http
     class AutoIndexResponse : public http::AResponseBase
     {
         public:
-            AutoIndexResponse();
+            AutoIndexResponse(core::Server server, http::Request request);
             ~AutoIndexResponse();
             std::string serialize() const;
         private:

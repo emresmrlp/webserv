@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 17:26:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 11:47:39 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define REQUESTBUILDER_HPP
 # include <string>
 # include <vector>
+# include "Server.hpp"
 # include "StatusCode.hpp"
 
 namespace http
@@ -46,7 +47,7 @@ namespace http
 	class RequestBuilder
 	{
 		public:
-			RequestBuilder();
+			RequestBuilder(core::Server server);
 			~RequestBuilder();
 
 			http::ParseResult	parse(std::string &rawReadBuffer);
@@ -60,6 +61,7 @@ namespace http
 			std::vector<std::pair<std::string, std::string> >	_headers;
 			std::string											_body;
 
+			core::Server										&_server;
 			bool												_hasBody;
 			ParseState											_state;
 			ParseResult											_parseResult;

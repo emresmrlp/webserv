@@ -6,25 +6,42 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 17:56:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 13:14:30 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ErrorResponse.hpp"
-#include "Config.hpp"
+#include "Util.hpp"
+#include <vector>
 #include <iostream>
+#include <sys/stat.h>
 
 namespace http
 {
-	ErrorResponse::ErrorResponse(StatusCode status)
+	ErrorResponse::ErrorResponse(core::Server server, StatusCode status)
+		: AResponseBase(server)
 	{
 		this->_statusCode = status;
 		this->_statusMessage = this->getStatusMessage(this->_statusCode);
 		this->createBody();
 		this->addHeader("Date", http::AResponseBase::getDate());
-        this->addHeader("Server", SERVER_NAME);
+        this->addHeader("Server", this->_server.getConfig().getSignature());
 		if (this->_statusCode == METHOD_NOT_ALLOWED)
-		 	this->addHeader("Allow",  ALLOWED_METHODS);
+		{
+			std::ostringstream result;
+			std::vector<std::string>::const_iterator it
+				= this->_server.getConfig().getLocation(this->_request.getPath()).getAllowedMethods().begin();
+			std::vector<std::string>::const_iterator itEnd
+				= this->_server.getConfig().getLocation(this->_request.getPath()).getAllowedMethods().end();
+			while (it != itEnd)
+			{
+				result << *it;
+				if (*(it + 1) != *itEnd)
+					result << ", ";
+				it++;
+			}
+			this->addHeader("Allow", result.str());
+		}
 		this->addHeader("Content-Type", "text/html");
         std::ostringstream oss;
         oss << this->_body.length();
@@ -47,7 +64,8 @@ namespace http
 	{
 		std::stringstream body_oss;
 		
-		if (ERROR_PAGE_FOUND)
+		std::string filePath = this->_server.getConfig().getRoot();
+		if (false) // ! ErrorPages on ConfigParse need to handle
 			body_oss << "<!DOCTYPE html><html><body>Custom error page?</body></html>";
 		else
 		{

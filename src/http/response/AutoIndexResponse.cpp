@@ -6,23 +6,22 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 20:07:57 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 11:39:08 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AutoIndexResponse.hpp"
-#include "Config.hpp"
 #include <iostream>
 
 namespace http
 {
-	AutoIndexResponse::AutoIndexResponse()
+	AutoIndexResponse::AutoIndexResponse(core::Server server, http::Request request) : AResponseBase(server, request)
 	{
 		this->_statusCode = OK;
 		this->_statusMessage = this->getStatusMessage(this->_statusCode);
 		this->createBody();
 		this->addHeader("Date", http::AResponseBase::getDate());
-        this->addHeader("Server", SERVER_NAME);
+        this->addHeader("Server", this->_signature);
 		//TODO where is the host
 		this->addHeader("Content-Type", "text/html");
         std::ostringstream oss;

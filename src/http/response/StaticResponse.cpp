@@ -6,12 +6,11 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 21:34:22 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 11:43:29 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "StaticResponse.hpp"
-#include "Config.hpp"
 #include "StatusCode.hpp"
 #include <iostream>
 #include "Request.hpp"
@@ -22,13 +21,13 @@
 
 namespace http
 {
-    StaticResponse::StaticResponse(const Request &request, std::size_t bodySize) : _request(request), _bodySize(bodySize)
+    StaticResponse::StaticResponse(core::Server server, const Request request, std::size_t bodySize) : AResponseBase(server, request), _bodySize(bodySize)
     {
         this->_statusCode = OK;
         this->_statusMessage = this->getStatusMessage(this->_statusCode);
         this->createBody();
         this->addHeader("Date", http::AResponseBase::getDate());
-        this->addHeader("Server", SERVER_NAME);
+        this->addHeader("Server", this->_signature);
 		this->addHeader("Content-Type", this->getMimeType());
         std::ostringstream oss;
         oss << this->_bodySize;
@@ -59,7 +58,7 @@ namespace http
 
     void StaticResponse::createBody()
     {
-        std::string filePath = ROOT;
+        std::string filePath = this->_server.getConfig().getRoot();
         filePath += this->_request.getPath();
         this->setBody(readFile(filePath));
     }

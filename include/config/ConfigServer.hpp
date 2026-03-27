@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:11 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/23 15:45:06 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 16:26:45 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CONFIGSERVER_HPP
 # include <string>
 # include <vector>
+# include <exception>
 # include "ConfigLocation.hpp"
 
 namespace config
@@ -31,16 +32,25 @@ namespace config
 			void setLocations(const std::vector<ConfigLocation>& locations);	
 
 			int getPort() const;
-			const std::string& getHost() const;
-			const std::vector<std::string>& getServerNames() const;
-			const std::string& getRoot() const;
-			const std::vector<ConfigLocation>& getLocations() const;
+			const std::string&					getHost() const;
+			const std::vector<std::string>&		getServerNames() const;
+			const std::string&					getRoot() const;
+			const std::vector<ConfigLocation>&	getLocations() const;
+			const ConfigLocation&				getLocation(std::string path) const;
+			const std::string&					getHttpVersion() const;
+			const std::string&					getSignature() const;
+			const std::size_t					getMaxHeaderSize() const;
+			const std::size_t					getMaxBodySize() const;
 		private:
 			int							_port;
 			std::string					_host;
 			std::vector<std::string>	_serverNames;
 			std::string					_root;
 			std::vector<ConfigLocation> _locations;
+			std::string					_httpVersion;
+			std::string					_signature;
+			std::size_t					_maxHeaderSize;
+			std::size_t					_maxBodySize;
 	};
 }
 

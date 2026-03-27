@@ -6,25 +6,26 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 17:58:04 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 15:21:50 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AResponseBase.hpp"
 #include "Util.hpp"
-#include "Config.hpp"
+#include "Server.hpp"
 #include <iostream>
 #include <ctime>
 
 namespace http
 {
-	AResponseBase::AResponseBase() : _statusCode(http::UNDEFINED),
-		_statusMessage(this->getStatusMessage(this->_statusCode)), _body("") {}
+	AResponseBase::AResponseBase(core::Server &server, http::Request request) : _statusCode(http::UNDEFINED),
+		_statusMessage(this->getStatusMessage(this->_statusCode)), _body("")
+		, _signature(this->_server.getConfig().getSignature(), _server(server), _request(request)) {}
 
 	std::string	AResponseBase::buildHeader() const
 	{
 		std::ostringstream header;
-		header << HTTP_VERSION << " " << this->_statusCode << " " << this->_statusMessage << CRLF; // REQUEST LINE
+		header << this->_server.getConfig().getHttpVersion() << " " << this->_statusCode << " " << this->_statusMessage << CRLF; // REQUEST LINE
 		std::vector<std::pair<std::string, std::string> >::const_iterator it;
 		std::string headerKey;
 		for (it = this->_headers.begin(); it != this->_headers.end(); ++it)

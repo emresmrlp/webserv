@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/23 16:21:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 13:11:11 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,17 @@ int main(int argc, char **argv)
     (void)argv;
     
     core::Server server;
-    server.init();
+
+    try
+    {
+        server.init();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+   
 
     int server_fd;
     struct sockaddr_in address;
@@ -71,7 +81,7 @@ int main(int argc, char **argv)
         long valread = read(new_socket, buffer, 30000);
         if (valread > 0) 
         {
-            core::Connection conn(new_socket); 
+            core::Connection conn(new_socket, server); 
             
             std::string rawData(buffer);
             conn.appendRequestBuffer(rawData);

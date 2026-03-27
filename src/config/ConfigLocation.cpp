@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigLocation.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:23:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/23 15:42:52 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 16:11:15 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ namespace config
 {
 	ConfigLocation::ConfigLocation()
 		: _rootPath(""), _executePath(""), _returnRedirection(""), _autoIndex(false)
-	{
-	}
+	{}
 
 	ConfigLocation::~ConfigLocation() {}
 
