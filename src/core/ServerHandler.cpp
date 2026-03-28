@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 16:28:03 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:24:39 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,46 +17,46 @@
 
 namespace core
 {
-	ServerHandler::ServerHandler()
+	ServerHandler::ServerHandler() {}
+
+	void ServerHandler::createServer(config::ConfigServer &config_one, config::ConfigServer &config_two)
 	{
-		std::vector<config::ConfigServer> serverArray;
-
+		std::cout << "+ ServerHandler -> createServer method called." << std::endl;
 		std::vector<config::ConfigLocation> locationsTest;
-		config::ConfigLocation loc_one;
-		loc_one.setRootPath("www");
-		loc_one.setAutoIndex(true);
-		std::vector<std::string> _methods;
-		_methods.push_back("GET");
-		loc_one.setAllowedMethods(_methods);
-		loc_one.setExecutePath("/index.html");
-		config::ConfigLocation loc_two;
-		loc_two.setRootPath("www2");
-		loc_two.setAutoIndex(true);
-		std::vector<std::string> _methods_two;
-		_methods_two.push_back("GET");
-		loc_two.setAllowedMethods(_methods_two);
-		loc_two.setExecutePath("/index1.html");
-		locationsTest.push_back(loc_one);
-		locationsTest.push_back(loc_two);
-		
-		config::ConfigServer server_one;
-		server_one.setLocations(locationsTest);
-		server_one.setRoot("localhost");
-		server_one.setPort(8080);
-		std::vector<std::string> namesVector;
-		namesVector.push_back("sumeralp.com");
-		server_one.setServerNames(namesVector);
+		config::ConfigLocation default_loc;
+		std::vector<std::string> methods;
 
-		config::ConfigServer server_two;
-		server_two.setLocations(locationsTest);
-		server_two.setRoot("localhost");
-		server_two.setPort(8080);
-		std::vector<std::string> namesVector;
-		namesVector.push_back("sum.com");
-		server_two.setServerNames(namesVector);
+		default_loc.setRootPath("www");
+		default_loc.setAutoIndex(true);
+		methods.push_back("GET");
+		default_loc.setAllowedMethods(methods);
+		default_loc.setExecutePath("/");
+		locationsTest.push_back(default_loc);
 
-		serverArray.push_back(server_one);
-		serverArray.push_back(server_two);
+		config_one.setLocations(locationsTest);
+		config_one.setRoot("www");
+		config_one.setPort(8080);
+		std::vector<std::string> names_one;
+		names_one.push_back("sumeralp.com");
+		config_one.setServerNames(names_one);
+
+		config_two.setLocations(locationsTest);
+		config_two.setRoot("www2");
+		config_two.setPort(8080);
+		std::vector<std::string> names_two;
+		names_two.push_back("sum.com");
+		config_two.setServerNames(names_two);
+
+		this->_servers.clear();
+		this->_servers.push_back(core::Server(config_one));
+		this->_servers.push_back(core::Server(config_two));
+		std::cout << "+ ServerHandler -> Servers created success." << std::endl;
 	}
+
+	const std::vector<core::Server>& ServerHandler::getServers() const
+	{
+		return (this->_servers);
+	}
+
 	ServerHandler::~ServerHandler() {}
 }

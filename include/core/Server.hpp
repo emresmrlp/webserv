@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:36:01 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 16:08:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:35:19 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ namespace core
 	class Server
 	{
 		public:
-			Server(config::ConfigServer &config);
+			Server(const config::ConfigServer &config);
 			~Server();
 			const config::ConfigServer &getConfig() const;
 		private:
-			config::ConfigServer _config;
+			const config::ConfigServer &_config;
 	};
 }
 

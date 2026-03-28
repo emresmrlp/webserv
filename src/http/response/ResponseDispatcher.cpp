@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 12:41:48 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:37:42 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 namespace http
 {
-    ResponseDispatcher::ResponseDispatcher(core::Server &server,  ResponseFactory &factory)
-        : _server(server), _factory(factory) {}
+    ResponseDispatcher::ResponseDispatcher(const config::ConfigServer &config,  ResponseFactory &factory)
+        : _config(config), _factory(factory) {}
 
     ResponseDispatcher::~ResponseDispatcher() {}
 
@@ -29,22 +29,22 @@ namespace http
         http::IResponse *response;
         struct stat st;
 
-        std::string filePath = this->_server.getConfig().getRoot(); // TODO
+        std::string filePath = this->_config.getRoot(); // TODO
         filePath += request.getPath();
-        response = this->_factory.createErrorResponse(this->_server, request, http::FORBIDDEN);
+        response = this->_factory.createErrorResponse(this->_config, request.getPath(), http::FORBIDDEN);
         if (stat(filePath.c_str(), &st) != 0)
         {
             std::cout << "404 File not found: " << request.getPath() << std::endl;
-            response = this->_factory.createErrorResponse(this->_server, request, http::NOT_FOUND);
+            response = this->_factory.createErrorResponse(this->_config, request.getPath(), http::NOT_FOUND);
         }
         else if (S_ISREG(st.st_mode))
-            response = this->_factory.createStaticResponse(this->_server, request, st.st_size);
+            response = this->_factory.createStaticResponse(this->_config, &request, st.st_size);
         else if (S_ISDIR(st.st_mode))
         {
-            if (this->_server.getConfig().getLocation(request.getPath()).getAutoIndex())
-                response = this->_factory.createAutoIndexResponse(this->_server, request);
+            if (this->_config.getLocation(request.getPath()).getAutoIndex())
+                response = this->_factory.createAutoIndexResponse(this->_config, &request);
             else
-                response = this->_factory.createErrorResponse(this->_server, request, http::FORBIDDEN);
+                response = this->_factory.createErrorResponse(this->_config, request.getPath(), http::FORBIDDEN);
         }
         return (response);
     }

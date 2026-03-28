@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 11:43:29 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 18:51:17 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 
 namespace http
 {
-    StaticResponse::StaticResponse(core::Server server, const Request request, std::size_t bodySize) : AResponseBase(server, request), _bodySize(bodySize)
+    StaticResponse::StaticResponse(const config::ConfigServer &config, const Request *request, std::size_t bodySize)
+        : AResponseBase(config, request), _bodySize(bodySize)
     {
         this->_statusCode = OK;
         this->_statusMessage = this->getStatusMessage(this->_statusCode);
@@ -58,8 +59,8 @@ namespace http
 
     void StaticResponse::createBody()
     {
-        std::string filePath = this->_server.getConfig().getRoot();
-        filePath += this->_request.getPath();
+        std::string filePath = this->_config.getRoot();
+        filePath += this->_request->getPath();
         this->setBody(readFile(filePath));
     }
 
@@ -68,7 +69,7 @@ namespace http
         std::string requestPath;
         std::string contentType;
 
-        requestPath = this->_request.getPath(); 
+        requestPath = this->_request->getPath(); 
         std::string extension;
 
         extension = requestPath.substr(requestPath.find_last_of("."));

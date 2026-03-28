@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 13:14:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:37:23 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,21 @@
 
 namespace http
 {
-	ErrorResponse::ErrorResponse(core::Server server, StatusCode status)
-		: AResponseBase(server)
+	ErrorResponse::ErrorResponse(const config::ConfigServer &config, const std::string &path, StatusCode status)
+		: AResponseBase(config, NULL)
 	{
 		this->_statusCode = status;
 		this->_statusMessage = this->getStatusMessage(this->_statusCode);
 		this->createBody();
 		this->addHeader("Date", http::AResponseBase::getDate());
-        this->addHeader("Server", this->_server.getConfig().getSignature());
+        this->addHeader("Server", this->_config.getSignature());
 		if (this->_statusCode == METHOD_NOT_ALLOWED)
 		{
 			std::ostringstream result;
 			std::vector<std::string>::const_iterator it
-				= this->_server.getConfig().getLocation(this->_request.getPath()).getAllowedMethods().begin();
+				= this->_config.getLocation(path).getAllowedMethods().begin();
 			std::vector<std::string>::const_iterator itEnd
-				= this->_server.getConfig().getLocation(this->_request.getPath()).getAllowedMethods().end();
+				= this->_config.getLocation(path).getAllowedMethods().end();
 			while (it != itEnd)
 			{
 				result << *it;
@@ -64,7 +64,7 @@ namespace http
 	{
 		std::stringstream body_oss;
 		
-		std::string filePath = this->_server.getConfig().getRoot();
+		std::string filePath = this->_config.getRoot();
 		if (false) // ! ErrorPages on ConfigParse need to handle
 			body_oss << "<!DOCTYPE html><html><body>Custom error page?</body></html>";
 		else

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 11:56:03 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:20:13 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace http
 {
-	RequestBuilder::RequestBuilder(core::Server server) : _hasBody(false), _state(http::STATE_REQUEST_LINE), _server(server) {}
+	RequestBuilder::RequestBuilder(const config::ConfigServer &config) : _config(config), _hasBody(false), _state(http::STATE_REQUEST_LINE) {}
 
 	RequestBuilder::~RequestBuilder() {}
 
@@ -31,18 +31,21 @@ namespace http
 		}
 		this->_parseResult.httpStatusCode = statusCode;
 		this->_parseResult.parseStatus = parseStatus;
+		std::cout << "+ RequestBuilder -> ParseResult_StatusCode: " << statusCode
+			<< " ParseResult_ParseStatus: " << parseStatus << std::endl;
 		return (this->_parseResult);
 	}
 
 	http::ParseResult   RequestBuilder::parse(std::string &rawReadBuffer)
 	{
+		std::cout << "+ RequestBuilder -> Build starting..." << std::endl;
 		// has header? -> REQUEST or HEADERS state
 		if (this->_state == http::STATE_REQUEST_LINE
 			|| this->_state == http::STATE_HEADERS)
 		{
 			if (rawReadBuffer.find(DOUBLE_CRLF) == std::string::npos)
 			{
-				if (rawReadBuffer.size() > this->_server.getConfig().getMaxHeaderSize())
+				if (rawReadBuffer.size() > this->_config.getMaxHeaderSize())
 					return (handleParseResult(PAYLOAD_TOO_LARGE, ERROR));
 				return (handleParseResult(UNDEFINED, INCOMPLETE));
 			}
@@ -50,6 +53,7 @@ namespace http
 		// line by line parse
 		std::size_t	nextPos;
 		std::string line;
+		std::cout << "+ RequestBuilder -> Line by line starting..." << std::endl;
 		while (!rawReadBuffer.empty())
 		{
 			// find CRLF
@@ -59,6 +63,7 @@ namespace http
 			// request line parse
 			if (this->_state == http::STATE_REQUEST_LINE)
 			{
+				std::cout << "+ RequestBuilder -> Request line parsing..." << std::endl;
 				line = rawReadBuffer.substr(0, nextPos);
 
 				if (!(line.empty()) && (line[0] == ' ' || line[0] == '\t'))
@@ -70,10 +75,12 @@ namespace http
 				// POST method has a body
 				if (this->_method == "POST") // TODO: content length < 0 -> hasbody=false
 					this->_hasBody = true;
+				std::cout << "+ RequestBuilder -> Request line parsed success." << std::endl;
 				this->_state = http::STATE_HEADERS;
 			}
 			else if (this->_state == http::STATE_HEADERS)
 			{
+				std::cout << "+ RequestBuilder -> Headers parsing..." << std::endl;
 				// if first line is CRLF
 				if (nextPos == 0)
 				{
@@ -96,6 +103,7 @@ namespace http
 		}
 		if (this->_state == http::STATE_BODY)
 		{
+			std::cout << "+ RequestBuilder -> Body parsing..." << std::endl;
 			if (!buildBody(rawReadBuffer))
 				return (this->_parseResult);
 			this->_state = http::STATE_WAIT_VALIDATE;
@@ -113,6 +121,7 @@ namespace http
 
 	bool RequestBuilder::buildRequestLine(std::string &line)
 	{
+		std::cout << "+ RequestBuilder -> buildRequestLine method starting..." << std::endl;
         std::size_t sp1 = line.find(' ');
         std::size_t sp2 = line.find(' ', sp1 + 1);
 
@@ -128,6 +137,8 @@ namespace http
         this->_method = line.substr(0, sp1);
         this->_path = line.substr(sp1 + 1, sp2 - sp1 - 1);
         this->_version = line.substr(sp2 + 1);
+		std::cout << "+ RequestBuilder -> buildRequestLine -> method: " << _method <<
+			" path: " << _path << " version: " << _version << std::endl;
 
 		//request line attr controls
         if (this->_method.empty() || this->_path.empty() || this->_version.empty())
@@ -146,14 +157,15 @@ namespace http
 		}
 		// method validate
 		std::vector<std::string>::const_iterator it;
-		it = this->_server.getConfig().getLocation(this->_path).getAllowedMethods().begin();
+		it = this->_config.getLocation(this->_path).getAllowedMethods().begin();
 		std::vector<std::string>::const_iterator itEnd;
-		itEnd = this->_server.getConfig().getLocation(this->_path).getAllowedMethods().end();
+		itEnd = this->_config.getLocation(this->_path).getAllowedMethods().end();
 		bool isAllowedMethod = false;
 		while (it != itEnd)
 		{
 			if (*it == this->_method)
 				isAllowedMethod = true;
+			it++;
 		}
 		if (!isAllowedMethod)
 		{

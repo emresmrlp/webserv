@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 12:25:40 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 12:41:22 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:37:40 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@
 
 namespace http
 {
-    class ResponseDispatcher
-    {
-        public:
-            ResponseDispatcher(core::Server &server, ResponseFactory &factory);
-            ~ResponseDispatcher();
-            http::IResponse *dispatch(http::Request &request);
-        private:
-            core::Server    _server;
-            ResponseFactory _factory;
-    };
+	class ResponseDispatcher
+	{
+		public:
+			ResponseDispatcher(const config::ConfigServer &config, ResponseFactory &factory);
+			~ResponseDispatcher();
+			http::IResponse *dispatch(http::Request &request);
+		private:
+			const config::ConfigServer	&_config;
+			ResponseFactory				&_factory;
+	};
 }
 
 #endif
