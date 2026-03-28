@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 11:47:39 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:36:31 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ namespace http
 	{
 		http::ParseStatus	parseStatus;
 		http::StatusCode	httpStatusCode;
+		std::string			errorPath;
 	};
 
 	class Request;
@@ -47,7 +48,7 @@ namespace http
 	class RequestBuilder
 	{
 		public:
-			RequestBuilder(core::Server server);
+			RequestBuilder(const config::ConfigServer &config);
 			~RequestBuilder();
 
 			http::ParseResult	parse(std::string &rawReadBuffer);
@@ -61,7 +62,7 @@ namespace http
 			std::vector<std::pair<std::string, std::string> >	_headers;
 			std::string											_body;
 
-			core::Server										&_server;
+			const config::ConfigServer							&_config;
 			bool												_hasBody;
 			ParseState											_state;
 			ParseResult											_parseResult;

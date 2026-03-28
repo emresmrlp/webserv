@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 11:39:08 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:37:06 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 namespace http
 {
-	AutoIndexResponse::AutoIndexResponse(core::Server server, http::Request request) : AResponseBase(server, request)
+	AutoIndexResponse::AutoIndexResponse(const config::ConfigServer &config, const http::Request *request) : AResponseBase(config, request)
 	{
 		this->_statusCode = OK;
 		this->_statusMessage = this->getStatusMessage(this->_statusCode);

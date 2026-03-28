@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/22 17:21:28 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 18:47:43 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,11 @@ namespace http
 		return (true);
 	}
 
-    const std::string &Request::getMethod() const { return (this->_method); }
+    const std::string	&Request::getMethod() const { return (this->_method); }
 
-    const std::string &Request::getPath() const { return (this->_path); }
+    const std::string	&Request::getPath() const { return (this->_path); }
 
-    const std::string   &Request::getVersion() const { return (this->_version); }
+    const std::string	&Request::getVersion() const { return (this->_version); }
 
-    const std::string &Request::getBody() const { return (this->_body); }
+    const std::string	&Request::getBody() const { return (this->_body); }
 }

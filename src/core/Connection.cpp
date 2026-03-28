@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 13:12:21 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:11:25 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,23 @@
 
 namespace core
 {
-	Connection::Connection(int fd, core::Server &server) : _fd(fd), _readBuffer(""),  _writeBuffer(""),
-		_response(NULL), _request(NULL), _server(server), _dispatcher(server, _responseFactory), _state(READING) {}
+	Connection::Connection(int fd, const config::ConfigServer &config) : _fd(fd), _readBuffer(""),  _writeBuffer(""),
+		_response(NULL), _request(NULL), _dispatcher(config, _responseFactory), _requestBuilder(config), _state(READING), _config(config) {}
 
 	void Connection::process()
 	{
+		std::cout << "+ Connection -> process called. State: " << this->_state << std::endl;
 		if (this->_state != READING)
 			return ;
 
 		http::ParseResult parseResult;
-		parseResult = this->_requestBuilder.parse(this->_readBuffer);
+		parseResult = this->_requestBuilder.parse(this->_readBuffer); //! parseResult.errorPath initalize
+		std::cout << "+ Connection -> RequestBuilder process result: " << parseResult.parseStatus << std::endl;
 		if (parseResult.parseStatus == http::INCOMPLETE)
 			return ;
 
 		if (parseResult.parseStatus == http::ERROR)
-			this->_response = this->_responseFactory.createErrorResponse(this->_server, parseResult.httpStatusCode);
+			this->_response = this->_responseFactory.createErrorResponse(this->_config, parseResult.errorPath, parseResult.httpStatusCode);
 		else
 		{
 			this->_request = this->_requestBuilder.build();

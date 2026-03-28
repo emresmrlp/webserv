@@ -6,20 +6,21 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 16:26:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 11:35:37 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ConfigServer.hpp"
+#include <iostream> // ! delete
 
 namespace config
 {
 	ConfigServer::ConfigServer()
 		: _port(0), _host(""), _root(""), _httpVersion("HTTP/1.1"),
 		_maxHeaderSize(8000), _maxBodySize(10000)
-		{
-			this->_signature = "Webserv0.2.0";
-		}
+	{
+		this->_signature = "Webserv0.2.0";
+	}
 
 	ConfigServer::~ConfigServer() {}
 
@@ -53,21 +54,41 @@ namespace config
 		return _locations;
 	}
 
-	const ConfigLocation& ConfigServer::getLocation(std::string path) const
+	const config::ConfigLocation& ConfigServer::getLocation(std::string path) const
 	{
+		if (path.empty())
+			path = "/";
 		std::vector<config::ConfigLocation>::const_iterator it = _locations.begin();
 		while (it != _locations.end())
 		{
-			if (it->getExecutePath() == path)
+			if (it->getExecutePath() == path || ("/" + it->getExecutePath()) == path)
 				return (*it);
 			it++;
 		}
-		throw std::runtime_error("Error: Location not found");
+
+		size_t last_slash = path.find_last_of('/');
+		if (last_slash == std::string::npos || path == "/")
+			return (getLocation("/")); 
+
+		std::string parent_path = path.substr(0, last_slash);
+		if (parent_path.empty())
+			parent_path = "/";
+		return (getLocation(parent_path));
 	}
 	
 	const std::string &ConfigServer::getSignature() const
 	{
 		return _signature;
+	}
+
+	std::size_t	ConfigServer::getMaxHeaderSize() const
+	{
+		return _maxHeaderSize;
+	}
+
+	std::size_t	ConfigServer::getMaxBodySize() const
+	{
+		return _maxBodySize;
 	}
 
 	void ConfigServer::setPort(int port)

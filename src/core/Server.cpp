@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:32 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 16:08:07 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/28 10:35:38 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,12 @@
 
 namespace core
 {
-	Server::Server(config::ConfigServer &config) : _config(config) {}
+	Server::Server(const config::ConfigServer &config) : _config(config) {}
 
-	Server::~Server()
-	{
-		if (this->_config)
-		{
-			delete (this->_config);
-			this->_config = NULL;
-		}
-	}
+	Server::~Server() {}
 
 	const config::ConfigServer &Server::getConfig() const
 	{
-		return (*(this->_config));
+		return (this->_config);
 	}
 }

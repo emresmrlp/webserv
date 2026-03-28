@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:07:42 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 12:48:24 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 18:51:31 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@ namespace http
 
     ResponseFactory::~ResponseFactory() {}
 
-    http::IResponse *ResponseFactory::createAutoIndexResponse(core::Server &server, http::Request &request)
+    http::IResponse *ResponseFactory::createAutoIndexResponse(const config::ConfigServer &config, http::Request *request)
     {
-        return (new AutoIndexResponse(server, request));
+        return (new AutoIndexResponse(config, request));
     }
 
-    http::IResponse *ResponseFactory::createErrorResponse(core::Server &server, http::Request &request, http::StatusCode statusCode)
+    http::IResponse *ResponseFactory::createErrorResponse(const config::ConfigServer &config, const std::string &path, http::StatusCode statusCode)
     {
-        return (new ErrorResponse(server, request, statusCode));
+        return (new ErrorResponse(config, path, statusCode));
     }
 
-    http::IResponse *ResponseFactory::createStaticResponse(core::Server &server, http::Request &request, std::size_t bodySize)
+    http::IResponse *ResponseFactory::createStaticResponse(const config::ConfigServer &config, http::Request *request, std::size_t bodySize)
     {
-        return (new StaticResponse(server, request, bodySize));
+        return (new StaticResponse(config, request, bodySize));
     }
 }

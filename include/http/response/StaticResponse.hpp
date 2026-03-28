@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 11:38:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/03/27 18:51:39 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace http
 	class StaticResponse : public AResponseBase
 	{
 		public:
-			StaticResponse(core::Server server, http::Request request, std::size_t bodySize);
+			StaticResponse(const config::ConfigServer &config, const http::Request *request, std::size_t bodySize);
 			~StaticResponse();
 			std::string serialize() const;
 		private:
