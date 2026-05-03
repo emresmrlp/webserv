@@ -6,27 +6,34 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:23 by beldemir          #+#    #+#             */
-/*   Updated: 2026/04/11 19:49:08 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/03 17:22:34 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Token.hpp"
+#ifndef PARSER_HPP
+# define PARSER_HPP
 
-namespace	config
+# include "Token.hpp"
+# include "ConfigServer.hpp"
+# include <vector>
+# include <string>
+
+namespace   config
 {
-	class	Parser
-	{
-		private:
-			const	std::vector<Token>&	_tokens;
-			size_t	_pos;
-		public:
-			Parser(); // uses the default.conf file in ../../conf/default.conf
-			Parser(const Parser& other);
-			Parser&	operator=(const Parser& other);
-			~Parser();
+    class   Parser
+    {
+        private:
+            const std::vector<config::Token>&   _tokens;
+            size_t                              _pos;
 
-			Parser(std::string filename);
+            config::Token   curr(void);
+            ConfigServer    parseServer(void);
+            ConfigLocation  parseLocation(void);
 
-			std::vector<Token>	getTokens(void) const;
-	};
+        public:
+            Parser(const std::vector<config::Token>& tokens);
+            std::vector<ConfigServer>   parse(void);
+    };
 }
+
+#endif

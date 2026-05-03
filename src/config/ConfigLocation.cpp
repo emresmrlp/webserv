@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigLocation.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:23:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 16:11:15 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/03 18:19:27 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,14 @@ namespace config
 		_returnRedirection = returnRedirection;
 	}
 
-	void ConfigLocation::setAllowedMethods(const std::vector<std::string>& allowedMethods) {
-		_allowedMethods = allowedMethods;
+	void	ConfigLocation::addAllowedMethod(const std::string& allowedMethod)
+	{
+		_allowedMethods.push_back(allowedMethod);
 	}
+
+	/*void ConfigLocation::setAllowedMethods(const std::vector<std::string>& allowedMethods) {
+		_allowedMethods = allowedMethods;
+	}*/
 
 	void ConfigLocation::setAutoIndex(bool autoIndex) {
 		_autoIndex = autoIndex;

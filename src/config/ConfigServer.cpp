@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/28 11:35:37 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/03 18:07:24 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,18 +101,28 @@ namespace config
 		_host = host;
 	}
 
-	void ConfigServer::setServerNames(const std::vector<std::string>& serverNames)
+	void	ConfigServer::addServerName(const std::string& serverName)
+	{
+		_serverNames.push_back(serverName);
+	}
+
+	/*void ConfigServer::setServerNames(const std::vector<std::string>& serverNames)
 	{
 		_serverNames = serverNames;
-	}
+	}*/
 
 	void ConfigServer::setRoot(const std::string& root)
 	{
 		_root = root;
 	}
 
-	void ConfigServer::setLocations(const std::vector<ConfigLocation>& locations)
+	void	ConfigServer::addLocation(const ConfigLocation& location)
+	{
+		_locations.push_back(location);
+	}
+
+	/*void ConfigServer::setLocations(const std::vector<ConfigLocation>& locations)
 	{
 		_locations = locations;
-	}
+	}*/
 }
