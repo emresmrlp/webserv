@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:11 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/04/11 21:21:53 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/19 14:15:57 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ namespace config
 		return false;
 	}
 
-	std::vector<Token>	Tokenize(std::string filename)
+	std::vector<Token>	tokenize(std::string filename)
 	{
 		std::vector<Token>	tokens;
 		std::string			line;
@@ -108,8 +108,7 @@ namespace config
 					tokens.push_back(Token(KEYWORD, word, currLine));
 				else if (expecting)
 				{
-					// the logic for "i was expecting a keyword but you didn't gave me one!"
-					std::cerr << "Error at line " << currLine << " : Expected a keyword but you gave " << word << " :(" << std::endl;
+					std::cerr << "Error at line " << currLine << " : Expected a keyword but you gave " << word << "." << std::endl;
 					return std::vector<Token>();
 				}
 				else

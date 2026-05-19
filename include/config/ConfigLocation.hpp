@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:18:05 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/03 18:18:26 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/19 14:26:06 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,36 @@ namespace config
 {
 	class ConfigLocation
 	{
+		private:
+			std::string					_executePath;
+			std::string					_rootPath;
+			std::string					_returnRedirection; // NONE (?) ### ERRORPAGES NONE TOO
+			std::vector<std::string>	_allowedMethods; // NO-LIMIT YET, IT SHOULD LIMIT ONLY FOR GET SET POST etc.
+			bool						_autoIndex;
 		public:
 			ConfigLocation();
 			~ConfigLocation();
 
-			void setRootPath(const std::string& rootPath);
-			void setExecutePath(const std::string& executePath);
-			void setReturnRedirection(const std::string& returnRedirection);
-			void addAllowedMethod(const std::string& allowedMethod);
-			// void setAllowedMethods(const std::vector<std::string>& allowedMethods);
-			void setAutoIndex(bool autoIndex);
-			const std::string& getRootPath() const;
-			const std::string& getExecutePath() const;
-			const std::string& getReturnRedirection() const;
-			const std::vector<std::string>& getAllowedMethods() const;
-			bool getAutoIndex() const;
-		private:
-			std::string					_rootPath;
-			std::string					_executePath;
-			std::string					_returnRedirection;
-			std::vector<std::string>	_allowedMethods;
-			bool						_autoIndex;
-	};
+			// SETTER FUNCTIONS
+			bool setExecutePath(const std::string& executePath);
+			bool setRootPath(const std::string& rootPath);
+			bool setReturnRedirection(const std::string& returnRedirection);
+			bool setAutoIndex(std::string str);
+
+			bool addAllowedMethod(const std::string& method);
+
+			
+			// GETTER FUNCTIONS
+			const std::string&				getExecutePath()		const;
+			const std::string&				getRootPath()			const;
+			const std::string&				getReturnRedirection()	const;
+			bool							getAutoIndex()			const;
+
+			const std::vector<std::string>&	getAllowedMethods()		const;
+
+
+			void print() const;
+		};
 }
 
 #endif

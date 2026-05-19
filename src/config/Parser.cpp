@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:19 by beldemir          #+#    #+#             */
-/*   Updated: 2026/05/03 18:19:58 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/19 15:11:32 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,141 +14,174 @@
 
 namespace	config
 {
-	Parser::Parser(const std::vector<config::Token>& tokens) 
-		: _tokens(tokens), _pos(0) {}
+	Parser::Parser(std::string filename) 
+		: _filename(filename), _pos(0) {}
 
-	config::Token	Parser::curr(void)
+	config::TokenType	Parser::thisType(void)		const
 	{
-		if (_pos >= _tokens.size())
-			return (_tokens.back());
-		return (_tokens[_pos]);
+		if (_pos >= _tokens.size())	return (_tokens.back().getType());
+		else						return (_tokens[_pos].getType());
 	}
 
-	ConfigLocation  Parser::parseLocation(void)
+	std::string	Parser::thisStr(void)				const
+	{
+		if (_pos >= _tokens.size())	return (_tokens.back().getStr());
+		else 						return (_tokens[_pos].getStr());
+	}
+
+	int	Parser::thisLine(void)				const
+	{
+		if (_pos >= _tokens.size())	return (_tokens.back().getLine());
+		else 						return (_tokens[_pos].getLine());
+	}
+
+	bool	Parser::isStr(std::string	str)		const
+	{
+		if (thisStr() == str)	return (true);
+		else					return (false);
+	}
+
+	bool	Parser::isType(config::TokenType type)	const
+	{
+		if (thisType() == type)	return (true);
+		else					return (false);
+	}
+
+	void	Parser::next(void) { if (_pos < _tokens.size()) _pos++; }
+
+	bool  Parser::parseLocation(void)
 	{
 		ConfigLocation	loc;
 
-		// Path assignment (e.g., "/")
-		if (curr().getType() == VALUE)
+		if (isType(VALUE) || thisStr()[0] == '/')
+			loc.setExecutePath(thisStr()), next();
+		else
+			return (false);
+
+		if (!isType(OPEN_BLOCK))
+			return (false);
+
+		next();
+
+		while (!isType(CLOSE_BLOCK) && !isType(END_OF_FILE))
 		{
-			loc.setExecutePath(curr().getStr());
-			_pos++;
-		}
-
-		// Handle potential modifiers like "-" or "index" in your conf
-		while (curr().getType() == VALUE)
-			_pos++;
-		// YUNUS'A SOR O "/ - index" KULLANIMI NE IFADE EDIYOR?
-
-		if (curr().getType() != OPEN_BLOCK)
-			return (loc); // ERROR: OPEN BLOCK YOK
-		
-		_pos++; // skip "{"
-
-		while (curr().getType() != CLOSE_BLOCK && curr().getType() != END_OF_FILE)
-		{
-			if (curr().getType() == KEYWORD)
+			if (isType(KEYWORD))
 			{
-				std::string key = curr().getStr();
-				_pos++;
-				
+				std::string	key = thisStr();
+				next();
+
+				if (!isType(VALUE))
+					return (false);
+
 				if (key == "allowed_methods")
-				{
-					while (curr().getType() == VALUE)
-					{
-						loc.addAllowedMethod(curr().getStr());
-						_pos++;
-					}
-				}
+					while (isType(VALUE))
+						loc.addAllowedMethod(thisStr()), next();
 				else if (key == "root")
+					loc.setRootPath(thisStr()), next();
+				/*else if (key == "index")
+					loc.setRootPath(thisStr()), next();
+				*/else if (key == "autoindex")
 				{
-					if (curr().getType() == VALUE)
-					{
-						loc.setRootPath(curr().getStr());
-						_pos++;
-					}
+					if (!loc.setAutoIndex(thisStr()))
+						return (false);
+					next();
 				}
-				// Handle index, autoindex etc. here
 			}
-			if (curr().getType() == SEMICOLON)
-				_pos++;
-			else if (curr().getType() != CLOSE_BLOCK)
-				_pos++; // Safeguard to prevent infinite loop
+			if (isType(SEMICOLON))
+				next();
+			else if (!isType(CLOSE_BLOCK))
+				next();
 		}
-		_pos++; // skip "}"
-		return (loc);
+		next();
+		_locationBuffer = loc;
+		return (true);
 	}
 	
-	ConfigServer    Parser::parseServer(void)
+	bool    Parser::parseServer(void)
 	{
 		ConfigServer    server;
 
-		if (curr().getType() != OPEN_BLOCK)
-			return (server); // ERROR: OPEN BLOCK YOK
-		_pos++;
+		if (!isType(OPEN_BLOCK))
+			return (false);
 
-		while (curr().getType() != CLOSE_BLOCK && curr().getType() != END_OF_FILE)
+		next();
+
+		while (!isType(CLOSE_BLOCK) && !isType(END_OF_FILE))
 		{
-			if (curr().getType() == KEYWORD)
+			if (isType(KEYWORD))
 			{
-				std::string key = curr().getStr();
-				_pos++;
+				std::string key = thisStr();
+				next();
 
-				if (curr().getType() != VALUE)
-					return ; // ERROR: 
+				if (!isType(VALUE))
+					return (false);
 
 				if (key == "location")
 				{
-					server.addLocation(parseLocation());
+					if (!parseLocation())
+						return (false);
+					server.addLocation(_locationBuffer);
 					continue ;
 				}
 				else if (key == "listen")
 				{
-					while (curr().getType() == VALUE)
+					while (isType(VALUE))
 					{
-						// Logic for port/host/default_server extraction
-						// e.g., server.setPort(atoi(curr().getStr().c_str()));
-						_pos++;
+						if (!server.addListen(thisStr()))
+							return (false);
+						next();
 					}
 				}
 				else if (key == "server_name")
-				{
-					while (curr().getType() == VALUE)
-					{
-						server.addServerName(curr().getStr());
-						_pos++;
-					}
-				}
+					while (isType(VALUE))
+						server.addServerName(thisStr()), next();
 				else if (key == "root")
+					server.setRoot(thisStr()), next();
+				else if (key == "client_max_header_size")
 				{
-					server.setRoot(curr().getStr());
-					_pos++;
+					if (!server.setMaxHeaderSize(thisStr()))
+						return (false);
+					next();
+				}
+				else if (key == "client_max_body_size")
+				{
+					if (!server.setMaxBodySize(thisStr()))
+						return (false);
+					next();
 				}
 			}
-			if (curr().getType() == SEMICOLON)
-				_pos++;
-			else if (curr().getType() != CLOSE_BLOCK && curr().getType() != KEYWORD)
-				_pos++;
+			if (isType(SEMICOLON))
+				next();
+			else if (!isType(CLOSE_BLOCK))
+				next();
 		}
-		_pos++; // skip "}"
-		return (server);
+		next();
+		_serverBuffer = server;
+		return (true);
 	}
 
-	std::vector<ConfigServer>   Parser::parse(void)
+	bool	Parser::parse(void)
 	{
-		std::vector<ConfigServer> servers;
-
+		_tokens = tokenize(_filename);
+		if (_tokens.empty())
+			return (false);
 		_pos = 0;
-		while (_pos < _tokens.size() && curr().getType() != END_OF_FILE)
+		while (!isType(END_OF_FILE) && _pos < _tokens.size())
 		{
-			if (curr().getType() == KEYWORD && curr().getStr() == "server")
+			if (isType(KEYWORD) && thisStr() == "server")
 			{
-				_pos++;
-				servers.push_back(parseServer());
+				next();
+				if (!parseServer())
+				{
+					std::cerr << "Error at line " << thisLine() << ": couldn't parse it." << std::endl;
+					return (false);
+				}
+				_serverBuffer.print();
+				_servers.push_back(_serverBuffer);
 			}
 			else
-				_pos++; // Skip anything not a server block at top level
+				next();
 		}
-		return (servers);
+		return (true);
 	}
 }

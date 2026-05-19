@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:23 by beldemir          #+#    #+#             */
-/*   Updated: 2026/05/03 17:22:34 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/19 13:24:52 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,36 @@
 # include "ConfigServer.hpp"
 # include <vector>
 # include <string>
+# include <cstdlib>
 
-namespace   config
+namespace	config
 {
-    class   Parser
-    {
-        private:
-            const std::vector<config::Token>&   _tokens;
-            size_t                              _pos;
+	class	Parser
+	{
+		private:
+			std::string							_filename;
+			std::vector<config::Token>			_tokens;
+			size_t								_pos;
+			ConfigLocation						_locationBuffer;
+			ConfigServer						_serverBuffer;
+			std::vector<ConfigServer>			_servers;
 
-            config::Token   curr(void);
-            ConfigServer    parseServer(void);
-            ConfigLocation  parseLocation(void);
+			config::TokenType	thisType(void)					const;
+			std::string			thisStr(void)					const;
+			int					thisLine(void)					const;
 
-        public:
-            Parser(const std::vector<config::Token>& tokens);
-            std::vector<ConfigServer>   parse(void);
-    };
+			bool				isStr(std::string str)			const;
+			bool				isType(config::TokenType type)	const;
+
+			void				next(void);
+
+			bool				parseServer(void);
+			bool				parseLocation(void);
+
+		public:
+			Parser(std::string filename);
+			bool	parse(void);
+	};
 }
 
 #endif
