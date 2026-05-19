@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:19 by beldemir          #+#    #+#             */
-/*   Updated: 2026/05/19 15:11:32 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/19 16:59:09 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,7 @@ namespace	config
 						loc.addAllowedMethod(thisStr()), next();
 				else if (key == "root")
 					loc.setRootPath(thisStr()), next();
-				/*else if (key == "index")
-					loc.setRootPath(thisStr()), next();
-				*/else if (key == "autoindex")
+				else if (key == "autoindex")
 				{
 					if (!loc.setAutoIndex(thisStr()))
 						return (false);
@@ -137,6 +135,14 @@ namespace	config
 						server.addServerName(thisStr()), next();
 				else if (key == "root")
 					server.setRoot(thisStr()), next();
+				else if (key == "error_page")
+				{
+					std::string	errorNo = thisStr();
+					next();
+					if (!server.addErrorPage(errorNo, thisStr()))
+						return (false);
+					next();
+				}
 				else if (key == "client_max_header_size")
 				{
 					if (!server.setMaxHeaderSize(thisStr()))
@@ -150,6 +156,9 @@ namespace	config
 					next();
 				}
 			}
+			else
+				return (false);
+
 			if (isType(SEMICOLON))
 				next();
 			else if (!isType(CLOSE_BLOCK))

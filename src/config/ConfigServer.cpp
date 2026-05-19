@@ -6,18 +6,18 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/19 15:06:07 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/19 16:54:57 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/config/ConfigServer.hpp"
-#include <iostream>
+#include <iostream> // !delete
 
 namespace config
 {
 	ConfigServer::ConfigServer()
 		: _root("/"), _httpVersion("HTTP/1.1"),
-		_maxHeaderSize(8000), _maxBodySize(8000), _signature("Webserv0.2.0") { }
+		_maxHeaderSize(1048576), _maxBodySize(1048576), _signature("YECS-BME Adi Ortakligi") { }
 	
 	ConfigServer::~ConfigServer() { }
 
@@ -53,7 +53,7 @@ namespace config
 	}
 
 	// SETTER FUNCTIONS
-	bool	ConfigServer::setRoot(const std::string& root) { _root = root; return true;}
+	void	ConfigServer::setRoot(const std::string& root) { _root = root; }
 	//bool	ConfigServer::setHttpVersion(const std::string& version) { _httpVersion = version; }
 	//bool	ConfigServer::setSignature(const std::string& signature) { _httpVersion = signature; }
 	bool	ConfigServer::setMaxHeaderSize(const std::string& str)
@@ -95,41 +95,29 @@ namespace config
 		}
 		return (true);
 	}
-
+	bool	ConfigServer::addErrorPage(std::string no, std::string loc)
+	{
+		int	errorNo = std::atoi(no.c_str());
+		if ((errorNo >= 400 && errorNo <= 417) ||
+			(errorNo >= 500 && errorNo <= 504))
+			_errorPages[errorNo] = loc;
+		else
+			return (false);
+		return (true);
+	}
 
 	// GETTER FUNCTIONS
 	const std::string&	ConfigServer::getRoot() const { return _root; }
 	const std::string&	ConfigServer::getHttpVersion() const { return _httpVersion; }
 	const std::string&	ConfigServer::getSignature() const { return _signature; }
-	std::size_t	ConfigServer::getMaxHeaderSize() const { return _maxHeaderSize; }
-	std::size_t	ConfigServer::getMaxBodySize() const { return _maxBodySize; }
-	/*
-	const config::ConfigLocation& ConfigServer::getLocation(std::string path) const
-	{
-		if (path.empty())
-			path = "/";
-		std::vector<config::ConfigLocation>::const_iterator it = _locations.begin();
-		while (it != _locations.end())
-		{
-			if (it->getExecutePath() == path || ("/" + it->getExecutePath()) == path)
-				return (*it);
-			it++;
-		}
-
-		size_t last_slash = path.find_last_of('/');
-		if (last_slash == std::string::npos || path == "/")
-			return (getLocation("/")); 
-
-		std::string parent_path = path.substr(0, last_slash);
-		if (parent_path.empty())
-			parent_path = "/";
-		return (getLocation(parent_path));
-	}
-	*/
+	const long&			ConfigServer::getMaxHeaderSize() const { return _maxHeaderSize; }
+	const long&			ConfigServer::getMaxBodySize() const { return _maxBodySize; }
+	const std::string&	ConfigServer::getErrorPage(int number) const { return _errorPages.find(number)->second; }
 
 	const std::vector<std::string>& ConfigServer::getServerNames() const { return _serverNames; }
 	const std::vector<ConfigLocation>& ConfigServer::getLocations() const { return _locations; }
 	const std::vector<ListenTarget>& ConfigServer::getListens() const { return _listens; }
+	const std::map<int, std::string>& ConfigServer::getErrorPages() const { return _errorPages; }
 
 	
 	void ConfigServer::print() const
@@ -149,6 +137,9 @@ namespace config
         std::cout << "HTTP Version:       " << this->_httpVersion << "\n";
         std::cout << "Signature:          " << this->_signature << "\n";
         std::cout << "Root:               " << this->_root << "\n";
+		for (std::map<int, std::string>::const_iterator it = _errorPages.begin(); it != _errorPages.end(); ++it) {
+			std::cout << "Error Page " << it->first << ":     " << it->second << std::endl;
+		}
         std::cout << "Max Header Size:    " << this->_maxHeaderSize << " bytes\n";
         std::cout << "Max Body Size:      " << this->_maxBodySize << " bytes\n";
         
