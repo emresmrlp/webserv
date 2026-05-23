@@ -11,102 +11,23 @@
 /* ************************************************************************** */
 
 #include "../../include/config/ConfigServer.hpp"
+#include "../../include/config/ConfigServerBuilder.hpp"
 #include <iostream> // !delete
 
 namespace config
 {
-	ConfigServer::ConfigServer()
-		: _root("/"), _httpVersion("HTTP/1.1"),
-		_maxHeaderSize(1048576), _maxBodySize(1048576), _signature("YECS-BME Adi Ortakligi") { }
+	ConfigServer::ConfigServer(const ConfigServerBuilder& builder) :
+		_root(builder._root),
+		_httpVersion(builder._httpVersion),
+		_signature(builder._signature),
+		_maxHeaderSize(builder._maxHeaderSize),
+		_maxBodySize(builder._maxBodySize),
+		_serverNames(builder._serverNames),
+		_locations(builder._locations),
+		_listens(builder._listens),
+		_errorPages(builder._errorPages)
+	{ }
 	
-	ConfigServer::~ConfigServer() { }
-
-	long    ConfigServer::parseByte(std::string str)    const
-	{
-		if (str.empty())
-			return 1024 * 1024;
-
-		char    unit = std::toupper(str[str.length() - 1]);
-		long    multiplier = 1;
-
-		if (unit == 'K') multiplier = 1024;
-		else if (unit == 'M') multiplier = 1024 * 1024;
-		else if (unit == 'G') multiplier = 1024 * 1024 * 1024;
-		else if (!std::isdigit(unit)) return -1;
-			
-		if (unit == 'K' || unit == 'M' || unit == 'G') 
-			str.resize(str.length() - 1);
-
-		if (str.empty())
-			return -1;
-
-		for (size_t i = 0; i < str.length(); ++i)
-			if (!std::isdigit(str[i]))
-				return -1;
-
-		long    num = std::atol(str.c_str());
-
-		if (num <= 0)
-			return 1024 * 1024;
-
-		return num * multiplier;
-	}
-
-	// SETTER FUNCTIONS
-	void	ConfigServer::setRoot(const std::string& root) { _root = root; }
-	//bool	ConfigServer::setHttpVersion(const std::string& version) { _httpVersion = version; }
-	//bool	ConfigServer::setSignature(const std::string& signature) { _httpVersion = signature; }
-	bool	ConfigServer::setMaxHeaderSize(const std::string& str)
-		{ _maxHeaderSize = parseByte(str); if (_maxHeaderSize == -1) return false;  return true; }
-	bool	ConfigServer::setMaxBodySize(const std::string& str)
-		{ _maxBodySize = parseByte(str); if (_maxBodySize == -1) return false;  return true; }
-
-	void	ConfigServer::addServerName(const std::string& serverName) { _serverNames.push_back(serverName); }
-	void	ConfigServer::addLocation(const ConfigLocation& location) { _locations.push_back(location); }
-	bool	ConfigServer::addListen(std::string str)
-	{
-		if (str == "default_server")
-		{
-			if (_listens.empty())
-				return (false);
-			(_listens.back()).isDefault = true;
-		}
-		else
-		{
-			ListenTarget    newListen;
-			std::size_t     colonPos = str.find(':');
-
-			newListen.isDefault = false;
-			if (colonPos != std::string::npos)
-			{
-				newListen.host = str.substr(0, colonPos);
-				newListen.port = std::atoi(str.substr(colonPos + 1).c_str());
-			}
-			else
-			{
-				newListen.host = "0.0.0.0";
-				newListen.port = std::atoi(str.c_str());
-			}
-
-			if (newListen.port <= 0 || newListen.port > 65535)
-				return (false);
-
-			_listens.push_back(newListen);
-		}
-		return (true);
-	}
-	bool	ConfigServer::addErrorPage(std::string no, std::string loc)
-	{
-		int	errorNo = std::atoi(no.c_str());
-		if ((errorNo >= 400 && errorNo <= 417) ||
-			(errorNo >= 500 && errorNo <= 504))
-			_errorPages[errorNo] = loc;
-		else
-			return (false);
-		return (true);
-	}
-
-	// GETTER FUNCTIONS
 	const std::string&	ConfigServer::getRoot() const { return _root; }
 	const std::string&	ConfigServer::getHttpVersion() const { return _httpVersion; }
 	const std::string&	ConfigServer::getSignature() const { return _signature; }

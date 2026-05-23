@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../../include/config/Parser.hpp"
+#include "../../include/config/ConfigServerBuilder.hpp"
+#include "../../include/config/ConfigLocationBuilder.hpp"
 
 namespace	config
 {
@@ -49,17 +51,17 @@ namespace	config
 
 	void	Parser::next(void) { if (_pos < _tokens.size()) _pos++; }
 
-	bool  Parser::parseLocation(void)
+	ConfigLocation  Parser::parseLocation(void)
 	{
-		ConfigLocation	loc;
+		ConfigLocationBuilder	locationBuilder;
 
-		if (isType(VALUE) || thisStr()[0] == '/')
-			loc.setExecutePath(thisStr()), next();
+		if (isType(VALUE) && thisStr()[0] == '/')
+			locationBuilder.setExecutePath(thisStr()), next();
 		else
-			return (false);
+			throw std::runtime_error(EXPECTED_PATH);
 
 		if (!isType(OPEN_BLOCK))
-			return (false);
+			throw std::runtime_error(EXPECTED_OPEN_BLOCK);
 
 		next();
 
@@ -71,19 +73,15 @@ namespace	config
 				next();
 
 				if (!isType(VALUE))
-					return (false);
+					throw std::runtime_error(EXPECTED_VALUE);
 
 				if (key == "allowed_methods")
 					while (isType(VALUE))
-						loc.addAllowedMethod(thisStr()), next();
+						locationBuilder.addAllowedMethod(thisStr()), next();
 				else if (key == "root")
-					loc.setRootPath(thisStr()), next();
+					locationBuilder.setRootPath(thisStr()), next();
 				else if (key == "autoindex")
-				{
-					if (!loc.setAutoIndex(thisStr()))
-						return (false);
-					next();
-				}
+					locationBuilder.setAutoIndex(thisStr()), next();
 			}
 			if (isType(SEMICOLON))
 				next();
@@ -91,16 +89,15 @@ namespace	config
 				next();
 		}
 		next();
-		_locationBuffer = loc;
-		return (true);
+		return (locationBuilder.build());
 	}
 	
-	bool    Parser::parseServer(void)
+	ConfigServer    Parser::parseServer(void)
 	{
-		ConfigServer    server;
+		ConfigServerBuilder	serverBuilder;
 
 		if (!isType(OPEN_BLOCK))
-			return (false);
+			throw std::runtime_error(EXPECTED_OPEN_BLOCK);
 
 		next();
 
@@ -112,52 +109,34 @@ namespace	config
 				next();
 
 				if (!isType(VALUE))
-					return (false);
+					throw std::runtime_error(EXPECTED_VALUE);
 
 				if (key == "location")
 				{
-					if (!parseLocation())
-						return (false);
-					server.addLocation(_locationBuffer);
+					serverBuilder.addLocation(parseLocation());
 					continue ;
 				}
 				else if (key == "listen")
-				{
 					while (isType(VALUE))
-					{
-						if (!server.addListen(thisStr()))
-							return (false);
-						next();
-					}
-				}
+						(serverBuilder.addListen(thisStr()), next());
 				else if (key == "server_name")
 					while (isType(VALUE))
-						server.addServerName(thisStr()), next();
+						serverBuilder.addServerName(thisStr()), next();
 				else if (key == "root")
-					server.setRoot(thisStr()), next();
+					serverBuilder.setRoot(thisStr()), next();
 				else if (key == "error_page")
 				{
 					std::string	errorNo = thisStr();
 					next();
-					if (!server.addErrorPage(errorNo, thisStr()))
-						return (false);
-					next();
+					serverBuilder.addErrorPage(errorNo, thisStr()), next();
 				}
 				else if (key == "client_max_header_size")
-				{
-					if (!server.setMaxHeaderSize(thisStr()))
-						return (false);
-					next();
-				}
+					serverBuilder.setMaxHeaderSize(thisStr()), next();
 				else if (key == "client_max_body_size")
-				{
-					if (!server.setMaxBodySize(thisStr()))
-						return (false);
-					next();
-				}
+					serverBuilder.setMaxBodySize(thisStr()), next();
 			}
 			else
-				return (false);
+				throw std::runtime_error(EXPECTED_VALUE);
 
 			if (isType(SEMICOLON))
 				next();
@@ -165,32 +144,36 @@ namespace	config
 				next();
 		}
 		next();
-		_serverBuffer = server;
-		return (true);
+		return (serverBuilder.build());
 	}
 
-	bool	Parser::parse(void)
+	void	Parser::parse(void)
 	{
-		_tokens = tokenize(_filename);
-		if (_tokens.empty())
-			return (false);
-		_pos = 0;
-		while (!isType(END_OF_FILE) && _pos < _tokens.size())
+		try
 		{
-			if (isType(KEYWORD) && thisStr() == "server")
+			_tokens = tokenize(_filename);
+			if (_tokens.empty())
+				throw std::invalid_argument("No tokens in file");
+			_pos = 0;
+			while (!isType(END_OF_FILE) && _pos < _tokens.size())
 			{
-				next();
-				if (!parseServer())
+				if (isType(KEYWORD) && thisStr() == "server")
 				{
-					std::cerr << "Error at line " << thisLine() << ": couldn't parse it." << std::endl;
-					return (false);
+					next();
+					_servers.push_back(parseServer());
+					_servers.at(_servers.size() - 1).print();
 				}
-				_serverBuffer.print();
-				_servers.push_back(_serverBuffer);
+				else
+					next();
 			}
-			else
-				next();
+			return ;
 		}
-		return (true);
+		catch (std::exception &e)
+		{
+			std::cerr << "Parse error on line " << thisLine() << ": " << e.what() << std::endl;
+		}
 	}
+
+
+	const	std::vector<ConfigServer>&	Parser::getServers() const { return (_servers); }
 }

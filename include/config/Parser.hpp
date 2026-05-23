@@ -17,7 +17,12 @@
 # include "ConfigServer.hpp"
 # include <vector>
 # include <string>
+# include <exception>
 # include <cstdlib>
+
+# define EXPECTED_OPEN_BLOCK "Expected {"
+# define EXPECTED_VALUE "Expected a value"
+# define EXPECTED_PATH "Expected a path starting with '/'"
 
 namespace	config
 {
@@ -27,8 +32,6 @@ namespace	config
 			std::string							_filename;
 			std::vector<config::Token>			_tokens;
 			size_t								_pos;
-			ConfigLocation						_locationBuffer;
-			ConfigServer						_serverBuffer;
 			std::vector<ConfigServer>			_servers;
 
 			config::TokenType	thisType(void)					const;
@@ -40,12 +43,14 @@ namespace	config
 
 			void				next(void);
 
-			bool				parseServer(void);
-			bool				parseLocation(void);
+			ConfigServer		parseServer(void);
+			ConfigLocation		parseLocation(void);
 
 		public:
 			Parser(std::string filename);
-			bool	parse(void);
+			void	parse(void);
+
+			const	std::vector<ConfigServer>&	getServers() const;
 	};
 }
 

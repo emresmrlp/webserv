@@ -18,10 +18,20 @@
 # include <cstdlib>
 # include <cctype>
 # include <map>
+# include <stdexcept>
+# include <algorithm>
+# include <iostream>
+# include <sstream>
 # include "ConfigLocation.hpp"
 
 namespace config
 {
+	class	ConfigLocation;
+
+	class	ConfigLocationBuilder;
+
+	class	ConfigServerBuilder;
+
 	struct	ListenTarget
 	{
 		std::string	host;
@@ -29,39 +39,22 @@ namespace config
 		bool		isDefault;
 	};
 
-	class ConfigServer
+	class	ConfigServer
 	{
 		private:
 			std::string					_root;
-			std::string					_httpVersion; // NONE
-			std::string					_signature; // NONE
+			std::string					_httpVersion;
+			std::string					_signature;
 			long						_maxHeaderSize;
 			long						_maxBodySize;
 			std::vector<std::string>	_serverNames;
-			std::vector<ConfigLocation> _locations;
+			std::vector<ConfigLocation>	_locations;
 			std::vector<ListenTarget>	_listens;
 			std::map<int, std::string>	_errorPages;
 
 		public:
-			ConfigServer();
-			~ConfigServer();
+			ConfigServer(const ConfigServerBuilder& builder);
 
-			long	parseByte(std::string str)	const;
-
-			// SETTER FUNCTIONS
-			void	setRoot(const std::string& root);
-			// bool	setHttpVersion(const std::string& version);
-			// bool	setSignature(const std::string& signature);
-			bool	setMaxHeaderSize(const std::string& str);
-			bool	setMaxBodySize(const std::string& str);
-			
-			void	addServerName(const std::string& serverName);
-			void	addLocation(const ConfigLocation& location);
-			bool	addListen(std::string str);
-			bool	addErrorPage(std::string no, std::string loc);
-
-
-			// GETTER FUNCTIONS
 			int									getPort()					const;
 			const std::string&					getHost()					const;
 			const std::string&					getRoot()					const;

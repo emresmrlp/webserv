@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ConfigLocation.hpp                                 :+:      :+:    :+:   */
+/*   ConfigLocationBuilder.hpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,34 +10,40 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONFIGLOCATION_HPP
-# define CONFIGLOCATION_HPP
+#ifndef CONFIGLOCATIONBUILDER_HPP
+# define CONFIGLOCATIONBUILDER_HPP
 # include <string>
 # include <vector>
+# include <stdexcept>
+# include <algorithm>
+# include <iostream>
 
 namespace config
 {
-	class	ConfigLocationBuilder;
-	class	ConfigLocation
+	class	ConfigLocation;
+
+	class	ConfigLocationBuilder
 	{
+		friend class ConfigLocation;
+
 		private:
 			std::string					_executePath;
 			std::string					_rootPath;
 			std::string					_returnRedirection; // NONE (?) ### ERRORPAGES NONE TOO
 			//std::string					_uploadPath; // ???
 			//std::vector<std::string>		_cgiExt; // ???
-			std::vector<std::string>	_allowedMethods; // NO-LIMIT YET, IT SHOULD LIMIT ONLY FOR GET SET POST etc.
 			bool						_autoIndex;
+			std::vector<std::string>	_allowedMethods;
 		public:
-			ConfigLocation(const ConfigLocationBuilder& builder);
+			ConfigLocationBuilder();
 
-			const std::string&				getExecutePath()		const;
-			const std::string&				getRootPath()			const;
-			const std::string&				getReturnRedirection()	const;
-			bool							getAutoIndex()			const;
-			const std::vector<std::string>&	getAllowedMethods()		const;
+			ConfigLocationBuilder& setExecutePath(const std::string& executePath);
+			ConfigLocationBuilder& setRootPath(const std::string& rootPath);
+			ConfigLocationBuilder& setReturnRedirection(const std::string& returnRedirection);
+			ConfigLocationBuilder& setAutoIndex(const std::string& str);
+			ConfigLocationBuilder& addAllowedMethod(const std::string& method);
 
-			void print() const;
+			ConfigLocation	build(void);
 	};
 }
 
