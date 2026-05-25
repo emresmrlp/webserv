@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/28 11:20:41 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/25 16:30:43 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@
 #include "Server.hpp"
 #include "ServerHandler.hpp"
 #include "Connection.hpp"
-
-#define PORT 8080
+#include "Parser.hpp"
 
 int main(int argc, char **argv)
 {
@@ -36,13 +35,28 @@ int main(int argc, char **argv)
     }
     (void)argv;
     
+    core::ServerHandler serverHandler;
+    config::Parser parser(argv[1]);
+
+    try {
+        parser.parse();
+        
+        // Grab the read-only vector of servers
+        const std::vector<config::ConfigServer>& servers = parser.getServers();
+        
+        std::cout << "Successfully loaded " << servers.size() << " servers!" << std::endl;
+        
+        // Pass 'servers' into your ServerManager/Cluster logic here...
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Fatal Error: " << e.what() << std::endl;
+        return 1;
+    }
+
     try
     {
-        core::ServerHandler serverHandler;
-        config::ConfigServer config_one;
-        config::ConfigServer config_two;
-    
-        serverHandler.createServer(config_one, config_two);
+        config::ConfigServer config_one = parser.getServers()[0];
+        config::ConfigServer config_two = parser.getServers()[0];
         int server_fd;
         struct sockaddr_in address;
         int opt = 1;
@@ -55,7 +69,7 @@ int main(int argc, char **argv)
         setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = INADDR_ANY;
-        address.sin_port = htons(PORT);
+        address.sin_port = htons(8080); //? need to add config port
         if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
             perror("Bind failed");
             exit(EXIT_FAILURE);
@@ -107,11 +121,24 @@ int main(int argc, char **argv)
 
 
 //     core::ServerHandler serverHandler;
-//     config::ConfigServer config_one;
-//     config::ConfigServer config_two;
+//     config::Parser parser(argv[1]);
+
+//     try {
+//         parser.parse();
+        
+//         // Grab the read-only vector of servers
+//         const std::vector<config::ConfigServer>& servers = parser.getServers();
+        
+//         std::cout << "Successfully loaded " << servers.size() << " servers!" << std::endl;
+        
+//         // Pass 'servers' into your ServerManager/Cluster logic here...
+        
+//     } catch (const std::exception& e) {
+//         std::cerr << "Fatal Error: " << e.what() << std::endl;
+//         return 1;
+//     }
     
-//     serverHandler.createServer(config_one, config_two);
-//     core::Connection conn(42, config_one);
+//     core::Connection conn(42, parser.getServers()[0]);
 //     std::string rawData = 
 //         "GET /index.html HTTP/1.1\r\n"
 //         "Host: localhost:8080\r\n"

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/28 10:37:42 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/25 16:21:22 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ namespace http
             response = this->_factory.createStaticResponse(this->_config, &request, st.st_size);
         else if (S_ISDIR(st.st_mode))
         {
-            if (this->_config.getLocation(request.getPath()).getAutoIndex())
+            if (this->_config.getLocations()[0].getAutoIndex()) //(request.getPath()).getAutoIndex())
                 response = this->_factory.createAutoIndexResponse(this->_config, &request);
             else
                 response = this->_factory.createErrorResponse(this->_config, request.getPath(), http::FORBIDDEN);

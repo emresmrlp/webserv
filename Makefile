@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysumeral <ysumeral@student.42istanbul.com. +#+  +:+       +#+         #
+#    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/03/23 15:37:51 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/05/25 16:40:16 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,12 @@ HTTP_REQUEST_DIR	=	$(HTTP_DIR)request/
 HTTP_RESPONSE_DIR	=	$(HTTP_DIR)response/
 
 CONFIG_SRC	=	$(CONFIG_DIR)ConfigServer.cpp \
-				$(CONFIG_DIR)ConfigLocation.cpp
-
+				$(CONFIG_DIR)ConfigServerBuilder.cpp \
+				$(CONFIG_DIR)ConfigLocation.cpp \
+				$(CONFIG_DIR)ConfigLocationBuilder.cpp \
+				$(CONFIG_DIR)Parser.cpp \
+				$(CONFIG_DIR)Token.cpp 
+	
 CORE_SRC	=	$(SRC_DIR)main.cpp \
 				$(CORE_DIR)Server.cpp \
 				$(CORE_DIR)ServerHandler.cpp \
@@ -74,7 +78,7 @@ $(NAME): $(OBJ)
 	@echo "$(P_BLUE) ██   ██ ███████    ██        ███████ ██ ███████    ██    ███████ ██   ████  ██ ██  ██ $(RESET)"
 	@echo ""
 	@echo "                   $(P_AQUA)------ A LOW-LEVEL HTTP SERVER PROJECT ------$(RESET)"
-	@echo "                 $(P_PEACH)Developed by ysumeral, etorun, hhaciogl (C) 2026$(RESET)"
+	@echo "                     $(P_PEACH)Developed by ysumeral, beldemir (C) 2026$(RESET)"
 	@echo ""
 	@echo "$(PREFIX) $(P_GREEN)All done, webserv is ready!$(RESET)"
 	@echo "$(PREFIX) $(P_AQUA)Usage: ./webserv <configuration file>$(RESET)"

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/28 11:20:13 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/25 16:20:53 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,9 +157,9 @@ namespace http
 		}
 		// method validate
 		std::vector<std::string>::const_iterator it;
-		it = this->_config.getLocation(this->_path).getAllowedMethods().begin();
+		it = this->_config.getLocations()[0].getAllowedMethods().begin();  //(this->_path).getAllowedMethods().begin();
 		std::vector<std::string>::const_iterator itEnd;
-		itEnd = this->_config.getLocation(this->_path).getAllowedMethods().end();
+		itEnd = this->_config.getLocations()[0].getAllowedMethods().end();  //(this->_path).getAllowedMethods().end();
 		bool isAllowedMethod = false;
 		while (it != itEnd)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/19 16:54:57 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/05/25 16:15:32 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ namespace config
 	const std::string&	ConfigServer::getRoot() const { return _root; }
 	const std::string&	ConfigServer::getHttpVersion() const { return _httpVersion; }
 	const std::string&	ConfigServer::getSignature() const { return _signature; }
-	const long&			ConfigServer::getMaxHeaderSize() const { return _maxHeaderSize; }
-	const long&			ConfigServer::getMaxBodySize() const { return _maxBodySize; }
+	std::size_t 		ConfigServer::getMaxHeaderSize() const { return _maxHeaderSize; }
+	std::size_t 		ConfigServer::getMaxBodySize() const { return _maxBodySize; }
 	const std::string&	ConfigServer::getErrorPage(int number) const { return _errorPages.find(number)->second; }
 
 	const std::vector<std::string>& ConfigServer::getServerNames() const { return _serverNames; }

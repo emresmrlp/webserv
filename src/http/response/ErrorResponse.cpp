@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/28 10:37:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/25 16:22:35 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ namespace http
 	ErrorResponse::ErrorResponse(const config::ConfigServer &config, const std::string &path, StatusCode status)
 		: AResponseBase(config, NULL)
 	{
+		(void)path; // ! delete this
 		this->_statusCode = status;
 		this->_statusMessage = this->getStatusMessage(this->_statusCode);
 		this->createBody();
@@ -30,9 +31,9 @@ namespace http
 		{
 			std::ostringstream result;
 			std::vector<std::string>::const_iterator it
-				= this->_config.getLocation(path).getAllowedMethods().begin();
+				= this->_config.getLocations()[0].getAllowedMethods().begin(); //(path).getAllowedMethods().begin();
 			std::vector<std::string>::const_iterator itEnd
-				= this->_config.getLocation(path).getAllowedMethods().end();
+				= this->_config.getLocations()[0].getAllowedMethods().end(); //(path).getAllowedMethods().end();
 			while (it != itEnd)
 			{
 				result << *it;
