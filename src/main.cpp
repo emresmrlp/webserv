@@ -38,25 +38,26 @@ int main(int argc, char **argv)
     core::ServerHandler serverHandler;
     config::Parser parser(argv[1]);
 
-    try {
+    try
+    {
         parser.parse();
-        
-        // Grab the read-only vector of servers
         const std::vector<config::ConfigServer>& servers = parser.getServers();
-        
         std::cout << "Successfully loaded " << servers.size() << " servers!" << std::endl;
-        
-        // Pass 'servers' into your ServerManager/Cluster logic here...
-        
-    } catch (const std::exception& e) {
-        std::cerr << "Fatal Error: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Parse error: " << e.what() << std::endl;
         return 1;
     }
 
     try
     {
+        if (parser.getServers().empty()) {
+            std::cerr << "Fatal Error: No valid server blocks found in config file." << std::endl;
+            return 1;
+        }
+        
         config::ConfigServer config_one = parser.getServers()[0];
-        config::ConfigServer config_two = parser.getServers()[0];
         int server_fd;
         struct sockaddr_in address;
         int opt = 1;

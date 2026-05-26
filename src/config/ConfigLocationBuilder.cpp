@@ -18,16 +18,29 @@ namespace config
 	ConfigLocationBuilder::ConfigLocationBuilder() :
 		_executePath(""),
 		_rootPath(""),
-		_returnRedirection(""),
-		_autoIndex(false)
+		_uploadPath("/tmp"),
+		_returnRedirection(std::make_pair(0, "/")),
+		_autoIndex(false),
+		_hasRedirection(false)
 	{}
 
 	ConfigLocationBuilder& ConfigLocationBuilder::setExecutePath(const std::string& executePath)
 		{ _executePath = executePath; return (*this); }
 	ConfigLocationBuilder& ConfigLocationBuilder::setRootPath(const std::string& rootPath)
 		{ _rootPath = rootPath; return (*this); }
-	ConfigLocationBuilder& ConfigLocationBuilder::setReturnRedirection(const std::string& returnRedirection)
-		{ _returnRedirection = returnRedirection; return (*this); }
+	ConfigLocationBuilder& ConfigLocationBuilder::setUploadPath(const std::string& uploadPath)
+		{ _uploadPath = uploadPath; return (*this); }
+
+	ConfigLocationBuilder& ConfigLocationBuilder::setReturnRedirection(int code, const std::string& url)
+	{
+		if (_hasRedirection)	
+			throw std::invalid_argument("Invalid redirection usage: more than 1 redirection cannot be set");
+		if (code < 300 || code > 399)
+        	throw std::invalid_argument("Invalid redirection code: must be between 300 and 399");
+		_returnRedirection = std::make_pair(code, url);
+		_hasRedirection = true;
+		return (*this);
+	}
 
 	ConfigLocationBuilder& ConfigLocationBuilder::setAutoIndex(const std::string& str)
 	{
@@ -40,6 +53,14 @@ namespace config
 		return (*this);
 	}
 	
+	ConfigLocationBuilder&	ConfigLocationBuilder::addCgiPass(const std::string& ext, const std::string& path)
+	{
+			if (_cgiPass.find(ext) != _cgiPass.end())
+			throw std::runtime_error("Duplicate cgi_pass extension in config file: " + ext);
+		_cgiPass[ext] = path;
+		return (*this);
+	}
+
 	ConfigLocationBuilder&	ConfigLocationBuilder::addAllowedMethod(const std::string& method)
 	{
 		if (method != "GET" && method != "POST" && method != "DELETE")

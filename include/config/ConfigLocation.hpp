@@ -14,30 +14,38 @@
 # define CONFIGLOCATION_HPP
 # include <string>
 # include <vector>
+# include <map>
+# include <algorithm>
 
 namespace config
 {
 	class	ConfigLocationBuilder;
+
 	class	ConfigLocation
 	{
 		private:
-			std::string					_executePath;
-			std::string					_rootPath;
-			std::string					_returnRedirection; // NONE (?) ### ERRORPAGES NONE TOO
-			//std::string					_uploadPath; // ???
-			//std::vector<std::string>		_cgiExt; // ???
-			std::vector<std::string>	_allowedMethods; // NO-LIMIT YET, IT SHOULD LIMIT ONLY FOR GET SET POST etc.
-			bool						_autoIndex;
+			std::string							_executePath;
+			std::string							_rootPath;
+			std::string							_uploadPath;
+			std::pair<int, std::string>			_returnRedirection;
+			std::map<std::string, std::string>	_cgiPass;
+			std::vector<std::string>			_allowedMethods;
+			bool								_autoIndex;
+			bool								_hasRedirection;
 		public:
 			ConfigLocation(const ConfigLocationBuilder& builder);
 
-			const std::string&				getExecutePath()		const;
-			const std::string&				getRootPath()			const;
-			const std::string&				getReturnRedirection()	const;
-			bool							getAutoIndex()			const;
-			const std::vector<std::string>&	getAllowedMethods()		const;
+			const std::string&				getExecutePath()						const;
+			const std::string&				getRootPath()							const;
+			const std::string&				getUploadPath()							const;
+			std::pair<int, std::string>		getReturnRedirection()					const;
+			const std::string&				getCgiPass(const std::string& ext)		const;
+			const std::vector<std::string>&	getAllowedMethods()						const;
+			bool							isAllowed(const std::string& method)	const;
+			bool							getAutoIndex()							const;
+			bool							hasRedirection()						const;
 
-			void print() const;
+			void	print() const;
 	};
 }
 

@@ -12,17 +12,10 @@
 
 #ifndef CONFIGSERVER_HPP
 # define CONFIGSERVER_HPP
+# include "ConfigLocation.hpp"
 # include <string>
 # include <vector>
-# include <exception>
-# include <cstdlib>
-# include <cctype>
 # include <map>
-# include <stdexcept>
-# include <algorithm>
-# include <iostream>
-# include <sstream>
-# include "ConfigLocation.hpp"
 
 namespace config
 {
@@ -68,8 +61,10 @@ namespace config
 			const std::vector<ConfigLocation>&	getLocations()				const;
 			const std::vector<ListenTarget>&	getListens()				const;
 			const std::map<int, std::string>&	getErrorPages()				const;
+		
+			const ConfigLocation*				getLocation(const std::string& str)	const;
 
-			void print() const;
+			void	print() const;
 	};
 }
 

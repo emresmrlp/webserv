@@ -19,23 +19,52 @@ namespace config
 	ConfigLocation::ConfigLocation(const ConfigLocationBuilder& builder) :
 		_executePath(builder._executePath),
 		_rootPath(builder._rootPath),
+		_uploadPath(builder._uploadPath),
 		_returnRedirection(builder._returnRedirection),
+		_cgiPass(builder._cgiPass),
 		_allowedMethods(builder._allowedMethods),
-		_autoIndex(builder._autoIndex)
+		_autoIndex(builder._autoIndex),
+		_hasRedirection(builder._hasRedirection)
 	{ }
 
-	const std::string&	ConfigLocation::getExecutePath() const { return _executePath; }
-	const std::string&	ConfigLocation::getRootPath() const { return _rootPath; }
-	const std::string&	ConfigLocation::getReturnRedirection() const { return _returnRedirection; }
-	bool				ConfigLocation::getAutoIndex() const { return _autoIndex; }
+	const std::string&			ConfigLocation::getExecutePath() const { return _executePath; }
+	
+	const std::string&			ConfigLocation::getRootPath() const { return _rootPath; }
+	
+	const std::string&			ConfigLocation::getUploadPath() const { return _uploadPath; }
+	
+	std::pair<int, std::string>	ConfigLocation::getReturnRedirection() const { return _returnRedirection; }
+
+	const std::string&			ConfigLocation::getCgiPass(const std::string& ext) const
+	{
+		std::map<std::string, std::string>::const_iterator it = _cgiPass.find(ext);
+
+		if (it != _cgiPass.end())
+			return it->second;
+		static const std::string emptyString = "";
+		return emptyString;
+	}
 
 	const std::vector<std::string>&	ConfigLocation::getAllowedMethods() const { return _allowedMethods; }
+
+	bool	ConfigLocation::isAllowed(const std::string& method) const 
+	{
+		for (size_t i = 0; i < _allowedMethods.size(); i++)
+			if (_allowedMethods[i] == method)
+				return (true);
+		return (false);
+	}
+
+	bool			ConfigLocation::getAutoIndex()		const { return _autoIndex; }
+
+	bool			ConfigLocation::hasRedirection()	const { return _hasRedirection; }
 
 	void ConfigLocation::print() const
 	{
 		std::cout << "      Execute Path:       " << this->_executePath << "\n";
 		std::cout << "      Root Path:          " << this->_rootPath << "\n";
-		std::cout << "      Return Redirection: " << this->_returnRedirection << "\n";
+		if (this->hasRedirection())
+			std::cout << "      Return Redirection: " << this->_returnRedirection.second << " (" << this->_returnRedirection.first << ")\n";
 		std::cout << "      Auto Index:         " << (this->_autoIndex ? "on" : "off") << "\n";
 		std::cout << "      Allowed Methods:    [";
 		for (size_t i = 0; i < this->_allowedMethods.size(); i++)

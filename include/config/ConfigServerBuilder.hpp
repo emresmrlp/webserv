@@ -14,14 +14,13 @@
 # define CONFIGSERVERBUILDER_HPP
 # include <string>
 # include <vector>
-# include <exception>
+# include <map>
 # include <cstdlib>
 # include <cctype>
-# include <map>
 # include <stdexcept>
 # include <algorithm>
-# include <iostream>
 # include <sstream>
+# include <iostream>
 
 namespace config
 {
@@ -53,7 +52,7 @@ namespace config
 
 			size_t					parseByte(std::string str)	const;
 			ConfigServerBuilder&	setRoot(const std::string& root);
-			// ConfigServerBuilder&	setHttpVersion(const std::string& version);
+			ConfigServerBuilder&	setHttpVersion(const std::string& version);
 			// ConfigServerBuilder&	setSignature(const std::string& signature);
 			ConfigServerBuilder&	setMaxHeaderSize(const std::string& str);
 			ConfigServerBuilder&	setMaxBodySize(const std::string& str);

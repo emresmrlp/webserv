@@ -80,10 +80,10 @@ namespace http
 						"p { font-size: 22px; font-weight: 400; margin: 15px 0 35px 0; color: #aaaaaa; }"
 						".footer { font-size: 11px; border-top: 1px solid #333; padding-top: 25px; text-transform: uppercase; letter-spacing: 1.5px; color: #666; }"
 						"b { color: #888; } </style></head><body>"
-					<< "<div class=\"box\"><div class=\"brand\">WEBSERV — HEY LISTEN()!</div>"
+					<< "<div class=\"box\"><div class=\"brand\">WEBSERV</div>"
 					<< "<h1>" << this->_statusCode << "</h1>"
 					<< "<p>" << this->_statusMessage << "</p>"
-					<< "<div class=\"footer\">Developed by <b>ysumeral, etorun, hhaciogl (C) 2026</b></div>"
+					<< "<div class=\"footer\">Developed by <b>ysumeral, beldemir (C) 2026</b></div>"
 				<< "</div></body></html>";
 		}
 		this->setBody(body_oss.str());

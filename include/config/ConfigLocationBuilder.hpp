@@ -14,9 +14,11 @@
 # define CONFIGLOCATIONBUILDER_HPP
 # include <string>
 # include <vector>
+# include <map>
 # include <stdexcept>
 # include <algorithm>
 # include <iostream>
+
 
 namespace config
 {
@@ -27,21 +29,25 @@ namespace config
 		friend class ConfigLocation;
 
 		private:
-			std::string					_executePath;
-			std::string					_rootPath;
-			std::string					_returnRedirection; // NONE (?) ### ERRORPAGES NONE TOO
-			//std::string					_uploadPath; // ???
-			//std::vector<std::string>		_cgiExt; // ???
-			bool						_autoIndex;
-			std::vector<std::string>	_allowedMethods;
+			std::string							_executePath;
+			std::string							_rootPath;
+			std::string							_uploadPath;
+			std::pair<int, std::string>			_returnRedirection;
+			bool								_autoIndex;
+			std::map<std::string, std::string>	_cgiPass;
+			std::vector<std::string>			_allowedMethods;
+
+			bool								_hasRedirection;
 		public:
 			ConfigLocationBuilder();
 
-			ConfigLocationBuilder& setExecutePath(const std::string& executePath);
-			ConfigLocationBuilder& setRootPath(const std::string& rootPath);
-			ConfigLocationBuilder& setReturnRedirection(const std::string& returnRedirection);
-			ConfigLocationBuilder& setAutoIndex(const std::string& str);
-			ConfigLocationBuilder& addAllowedMethod(const std::string& method);
+			ConfigLocationBuilder&	setExecutePath(const std::string& executePath);
+			ConfigLocationBuilder&	setRootPath(const std::string& rootPath);
+			ConfigLocationBuilder&	setUploadPath(const std::string& rootPath);
+			ConfigLocationBuilder&	setReturnRedirection(int code, const std::string& url);
+			ConfigLocationBuilder&	setAutoIndex(const std::string& str);
+			ConfigLocationBuilder&	addCgiPass(const std::string& ext, const std::string& path);
+			ConfigLocationBuilder&	addAllowedMethod(const std::string& method);
 
 			ConfigLocation	build(void);
 	};

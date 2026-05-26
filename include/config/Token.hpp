@@ -16,6 +16,8 @@
 # include <vector>
 # include <fstream>
 # include <sstream>
+# include <exception>
+# include <sys/stat.h>
 
 namespace config
 {

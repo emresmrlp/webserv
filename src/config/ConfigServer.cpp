@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/config/ConfigServer.hpp"
-#include "../../include/config/ConfigServerBuilder.hpp"
+#include "ConfigServer.hpp"
+#include "ConfigServerBuilder.hpp"
+#include "ConfigLocation.hpp"
 #include <iostream> // !delete
 
 namespace config
@@ -28,18 +29,56 @@ namespace config
 		_errorPages(builder._errorPages)
 	{ }
 	
-	const std::string&	ConfigServer::getRoot() const { return _root; }
-	const std::string&	ConfigServer::getHttpVersion() const { return _httpVersion; }
-	const std::string&	ConfigServer::getSignature() const { return _signature; }
-	std::size_t 		ConfigServer::getMaxHeaderSize() const { return _maxHeaderSize; }
-	std::size_t 		ConfigServer::getMaxBodySize() const { return _maxBodySize; }
-	const std::string&	ConfigServer::getErrorPage(int number) const { return _errorPages.find(number)->second; }
+	const std::string&		ConfigServer::getRoot()					const { return _root; }
+	
+	const std::string&		ConfigServer::getHttpVersion()			const { return _httpVersion; }
+	
+	const std::string&		ConfigServer::getSignature()			const { return _signature; }
+	
+	std::size_t 			ConfigServer::getMaxHeaderSize()		const { return _maxHeaderSize; }
+	
+	std::size_t 			ConfigServer::getMaxBodySize()			const { return _maxBodySize; }
+	
+	const std::string&		ConfigServer::getErrorPage(int number)	const
+	{
+		std::map<int, std::string>::const_iterator it = _errorPages.find(number);
+	
+		if (it != _errorPages.end())
+			return it->second;
+			
+		static const std::string emptyString = "";
+		return emptyString;
+	}
+	
+	const std::vector<std::string>&		ConfigServer::getServerNames() const { return _serverNames; }
+	
+	const std::vector<ConfigLocation>&	ConfigServer::getLocations() const { return _locations; }
+	
+	const std::vector<ListenTarget>&	ConfigServer::getListens() const { return _listens; }
+	
+	const std::map<int, std::string>&	ConfigServer::getErrorPages() const { return _errorPages; }
 
-	const std::vector<std::string>& ConfigServer::getServerNames() const { return _serverNames; }
-	const std::vector<ConfigLocation>& ConfigServer::getLocations() const { return _locations; }
-	const std::vector<ListenTarget>& ConfigServer::getListens() const { return _listens; }
-	const std::map<int, std::string>& ConfigServer::getErrorPages() const { return _errorPages; }
+	const ConfigLocation*				ConfigServer::getLocation(const std::string& str) const
+	{
+		const ConfigLocation* bestMatch = NULL;
+		size_t longestMatch = 0;
 
+		for (size_t i = 0; i < _locations.size(); ++i)
+		{
+			std::string locPath = _locations[i].getExecutePath();
+			
+			if (str.find(locPath) == 0)
+			{
+				if (locPath.length() > longestMatch)
+				{
+					longestMatch = locPath.length();
+					bestMatch = &_locations[i];
+				}
+			}
+		}
+		
+		return bestMatch;
+	}
 	
 	void ConfigServer::print() const
     {
@@ -77,7 +116,7 @@ namespace config
         for (size_t i = 0; i < this->_locations.size(); ++i)
         {
             std::cout << "  Location #" << i + 1 << ":\n";
-            this->_locations[i].print();
+			this->_locations[i].print();
         }
         std::cout << "=====================================================\n" << std::endl;
     }

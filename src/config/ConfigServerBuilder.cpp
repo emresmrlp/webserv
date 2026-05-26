@@ -10,13 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/config/ConfigServerBuilder.hpp"
-#include "../../include/config/ConfigServer.hpp"
+#include "ConfigServerBuilder.hpp"
+#include "ConfigServer.hpp"
+#include "ConfigLocation.hpp"
 
 namespace config
 {
 	ConfigServerBuilder::ConfigServerBuilder()	:
-		_root("/"),
+		_root(""),
 		_httpVersion("HTTP/1.1"),
 		_signature("YECS-BME ADI ORTAKLIGI"),
 		_maxHeaderSize(1048576),
@@ -28,8 +29,8 @@ namespace config
 		if (str.empty())
 			return 1024 * 1024;
 
-		char unit = std::toupper(str[str.length() - 1]);
-		size_t multiplier = 1;
+		char	unit = std::toupper(str[str.length() - 1]);
+		size_t	multiplier = 1;
 
 		if (unit == 'K') multiplier = 1024;
 		else if (unit == 'M') multiplier = 1024 * 1024;
@@ -55,32 +56,26 @@ namespace config
 		return num * multiplier;
 	}
 
-	ConfigServerBuilder&	ConfigServerBuilder::setRoot(const std::string& root) {
-		_root = root; return (*this);
-	}
+	ConfigServerBuilder&	ConfigServerBuilder::setRoot(const std::string& root) { _root = root; return (*this); }
 
-	//ConfigServerBuilder&	ConfigServerBuilder::setHttpVersion(const std::string& version) { _httpVersion = version; }
+	ConfigServerBuilder&	ConfigServerBuilder::setHttpVersion(const std::string& version) { _httpVersion = version; return (*this); }
 
-	//ConfigServerBuilder&	ConfigServerBuilder::setSignature(const std::string& signature) { _signature = signature; }
+	// ConfigServerBuilder&	ConfigServerBuilder::setSignature(const std::string& signature) { _signature = signature; }
 
-	ConfigServerBuilder&	ConfigServerBuilder::setMaxHeaderSize(const std::string& str) {
-		_maxHeaderSize = parseByte(str);
-		return (*this);
-	}
+	ConfigServerBuilder&	ConfigServerBuilder::setMaxHeaderSize(const std::string& str) { _maxHeaderSize = parseByte(str); return (*this); }
 
-	ConfigServerBuilder&	ConfigServerBuilder::setMaxBodySize(const std::string& str){
-		_maxBodySize = parseByte(str);
-		return (*this);
-	}
+	ConfigServerBuilder&	ConfigServerBuilder::setMaxBodySize(const std::string& str){ _maxBodySize = parseByte(str); return (*this); }
 
-	ConfigServerBuilder&	ConfigServerBuilder::addServerName(const std::string& serverName) {
+	ConfigServerBuilder&	ConfigServerBuilder::addServerName(const std::string& serverName)
+	{
 		if (std::find(_serverNames.begin(), _serverNames.end(), serverName) != _serverNames.end())
 			throw std::invalid_argument("Invalid server_name: can't put the same server_name twice");
 		_serverNames.push_back(serverName);
 		return (*this);
 	}
 
-	ConfigServerBuilder&	ConfigServerBuilder::addLocation(const ConfigLocation& location) {
+	ConfigServerBuilder&	ConfigServerBuilder::addLocation(const ConfigLocation& location)
+	{
 		for (size_t i = 0; i < _locations.size(); ++i)
 		{
 			if (_locations[i].getExecutePath() == location.getExecutePath())
@@ -122,6 +117,7 @@ namespace config
 		}
 		return (*this);
 	}
+	
 	ConfigServerBuilder&	ConfigServerBuilder::addErrorPage(const std::string& no, const std::string& loc)
 	{
 		int	errorNo = std::atoi(no.c_str());
@@ -151,8 +147,6 @@ namespace config
 		}
 		if (_locations.empty())
 			throw std::runtime_error("No location found for a server");
-		if (_root.empty())
-			throw std::runtime_error("Server root directory cannot be empty");
 		return (ConfigServer(*this));
 	}
 }

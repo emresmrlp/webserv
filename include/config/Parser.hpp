@@ -15,14 +15,18 @@
 
 # include "Token.hpp"
 # include "ConfigServer.hpp"
+# include "ConfigLocation.hpp"
 # include <vector>
 # include <string>
 # include <exception>
 # include <cstdlib>
+# include <sstream>
 
 # define EXPECTED_OPEN_BLOCK "Expected {"
 # define EXPECTED_VALUE "Expected a value"
 # define EXPECTED_PATH "Expected a path starting with '/'"
+
+# define PARSER_DEBUG_MODE false // !!delete
 
 namespace	config
 {
@@ -50,7 +54,7 @@ namespace	config
 			Parser(std::string filename);
 			void	parse(void);
 
-			const	std::vector<ConfigServer>&	getServers() const;
+			const std::vector<ConfigServer>&	getServers()	const;
 	};
 }
 

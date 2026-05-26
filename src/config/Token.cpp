@@ -36,8 +36,6 @@ namespace config
 	std::string	Token::getStr(void) const { return (this->_str); }
 	size_t		Token::getLine(void) const { return (this->_line); } 
 
-	////////////////////////////////////////////////////////////////////////////
-
 	bool	isKeyword(std::string str)
 	{
 		static const std::string keywords[] = {
@@ -47,10 +45,15 @@ namespace config
 			"root",
 			"index", 
 			"error_page",
+			"client_max_header_size",
 			"client_max_body_size",
 			"autoindex",
 			"allowed_methods",
 			"server_name",
+			"return",
+			"cgi_pass",
+			"upload_store",
+			"http_version"
 		};
 
 		size_t	numKeywords = sizeof(keywords) / sizeof(keywords[0]);
@@ -66,22 +69,34 @@ namespace config
 
 	std::vector<Token>	tokenize(std::string filename)
 	{
+		std::string ext = ".conf";
+		if (filename.length() < ext.length() || 
+			filename.compare(filename.length() - ext.length(), ext.length(), ext) != 0)
+			throw std::invalid_argument("Filename must end with .conf");
+
+		struct stat path_stat;
+		if (stat(filename.c_str(), &path_stat) != 0)
+			throw std::invalid_argument(filename + "does not exist or path is invalid");
+		if (S_ISDIR(path_stat.st_mode))
+			throw std::invalid_argument(filename + " is a directory, not a file");
+
+		std::ifstream	file(filename.c_str());
+		if (!file.is_open())
+			throw std::invalid_argument("Failed to open file");
+
 		std::vector<Token>	tokens;
 		std::string			line;
-		std::ifstream		file(filename.c_str());
 		std::string			content;
 		bool				expecting = true;
-		size_t				currLine;
-		size_t				i;
-		
+		size_t				currLine = 1;
+		size_t				i = 0;
+
 		if (!file.is_open())
-			return tokens;
-		
+			throw std::invalid_argument("File is not reachable");
+
 		while (std::getline(file, line))
 			content += line + "\n";
 
-		i = 0;
-		currLine = 1;
 		while (i < content.length())
 		{
 			if (content[i] == '\n' && ++currLine)
@@ -107,10 +122,7 @@ namespace config
 				if (expecting && isKeyword(word))
 					tokens.push_back(Token(KEYWORD, word, currLine));
 				else if (expecting)
-				{
-					std::cerr << "Error at line " << currLine << " : Expected a keyword but you gave " << word << "." << std::endl;
-					return std::vector<Token>();
-				}
+					throw std::invalid_argument("Expected a keyword");
 				else
 					tokens.push_back(Token(VALUE, word, currLine));
 				expecting = false;

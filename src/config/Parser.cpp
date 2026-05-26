@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/config/Parser.hpp"
-#include "../../include/config/ConfigServerBuilder.hpp"
-#include "../../include/config/ConfigLocationBuilder.hpp"
+#include "Parser.hpp"
+#include "ConfigServerBuilder.hpp"
+#include "ConfigLocationBuilder.hpp"
 
 namespace	config
 {
@@ -51,7 +51,7 @@ namespace	config
 
 	void	Parser::next(void) { if (_pos < _tokens.size()) _pos++; }
 
-	ConfigLocation  Parser::parseLocation(void)
+	ConfigLocation	Parser::parseLocation(void)
 	{
 		ConfigLocationBuilder	locationBuilder;
 
@@ -80,8 +80,22 @@ namespace	config
 						locationBuilder.addAllowedMethod(thisStr()), next();
 				else if (key == "root")
 					locationBuilder.setRootPath(thisStr()), next();
+				else if (key == "upload_store")
+					locationBuilder.setUploadPath(thisStr()), next();
 				else if (key == "autoindex")
 					locationBuilder.setAutoIndex(thisStr()), next();
+				else if (key == "return")
+				{
+					int	code = atoi(thisStr().c_str());
+					next();
+					locationBuilder.setReturnRedirection(code, thisStr()), next();
+				}
+				else if (key == "cgi_pass")
+				{
+					std::string	ext = thisStr();
+					next();
+					locationBuilder.addCgiPass(ext, thisStr()), next();
+				}
 			}
 			if (isType(SEMICOLON))
 				next();
@@ -124,16 +138,18 @@ namespace	config
 						serverBuilder.addServerName(thisStr()), next();
 				else if (key == "root")
 					serverBuilder.setRoot(thisStr()), next();
+				else if (key == "client_max_header_size")
+					serverBuilder.setMaxHeaderSize(thisStr()), next();
+				else if (key == "client_max_body_size")
+					serverBuilder.setMaxBodySize(thisStr()), next();
+				else if (key == "http_version")
+					serverBuilder.setHttpVersion(thisStr()), next();
 				else if (key == "error_page")
 				{
 					std::string	errorNo = thisStr();
 					next();
 					serverBuilder.addErrorPage(errorNo, thisStr()), next();
 				}
-				else if (key == "client_max_header_size")
-					serverBuilder.setMaxHeaderSize(thisStr()), next();
-				else if (key == "client_max_body_size")
-					serverBuilder.setMaxBodySize(thisStr()), next();
 			}
 			else
 				throw std::runtime_error(EXPECTED_VALUE);
@@ -161,19 +177,24 @@ namespace	config
 				{
 					next();
 					_servers.push_back(parseServer());
-					_servers.at(_servers.size() - 1).print();
+					if (PARSER_DEBUG_MODE)
+						_servers.at(_servers.size() - 1).print();
 				}
 				else
 					next();
 			}
-			return ;
 		}
 		catch (std::exception &e)
 		{
-			std::cerr << "Parse error on line " << thisLine() << ": " << e.what() << std::endl;
+			std::ostringstream	errMsg;
+			if (_tokens.empty())
+				errMsg << "check file: " << e.what();
+			else
+				errMsg << "on line " << thisLine() << ": " << e.what();
+
+			throw std::invalid_argument(errMsg.str());
 		}
 	}
-
 
 	const	std::vector<ConfigServer>&	Parser::getServers() const { return (_servers); }
 }
