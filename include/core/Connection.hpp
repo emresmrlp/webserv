@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 18:47:13 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 21:08:40 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,31 +39,36 @@ namespace core
 	class Connection
 	{
 		public:
-			Connection(int fd, const config::ConfigServer &config);
+			Connection(int fd);
 			~Connection();
 
 			void					process();
 			bool					hasResponse() const;
 			void					resetForNextRequest();
 			void					appendRequestBuffer(const std::string &buffer);
-			void					eraseResponseBuffer(std::size_t bytesSent);
+			void 					eraseResponseBuffer(std::size_t bytesSent);
 			
 			int						getFd() const;
 			core::ConnectionState	getState() const;
 			const std::string		&getResponseBuffer() const;
 
 			void					setState(ConnectionState state);
+			void					setConfig(const config::ConfigServer *config);
 		private:
 			int							_fd;
 			std::string					_readBuffer;
 			std::string					_writeBuffer;
+
 			http::IResponse				*_response;
 			http::Request				*_request;
+
 			http::ResponseFactory		_responseFactory;
 			http::ResponseDispatcher	_dispatcher;
 			http::RequestBuilder		_requestBuilder;
+
 			core::ConnectionState		_state;
-			const config::ConfigServer	&_config;
+
+			const config::ConfigServer	*_config;
 	};
 }
 

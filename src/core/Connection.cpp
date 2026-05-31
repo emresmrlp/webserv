@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 18:47:20 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 21:09:32 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 
 namespace core
 {
-	Connection::Connection(int fd, const config::ConfigServer &config) : _fd(fd), _readBuffer(""),  _writeBuffer(""),
-		_response(NULL), _request(NULL), _dispatcher(config, _responseFactory), _requestBuilder(config), _state(READING), _config(config) {}
+	Connection::Connection(int fd) : _fd(fd), _readBuffer(""),  _writeBuffer(""),
+		_response(NULL), _request(NULL), _responseFactory(), _dispatcher(_responseFactory), 
+		_requestBuilder(), _state(READING), _config(NULL) {}
 
 	void Connection::process()
 	{
@@ -30,7 +31,7 @@ namespace core
 			return ;
 
 		http::ParseResult parseResult;
-		parseResult = this->_requestBuilder.parse(this->_readBuffer); //! parseResult.errorPath initalize
+		parseResult = this->_requestBuilder.parse(this->_readBuffer, this->_config); //! parseResult.errorPath initalize
 		std::cout << "+ Connection -> RequestBuilder process result: " << parseResult.parseStatus << std::endl;
 		if (parseResult.parseStatus == http::INCOMPLETE)
 			return ;
@@ -40,7 +41,7 @@ namespace core
 		else
 		{
 			this->_request = this->_requestBuilder.build();
-			this->_response = this->_dispatcher.dispatch(*(this->_request));
+			this->_response = this->_dispatcher.dispatch(this->_request, this->_config);
 		}
 		this->_writeBuffer = this->_response->serialize();
 		this->setState(WRITING);
@@ -92,6 +93,11 @@ namespace core
 		if (this->_state == CLOSING)
 			return ;
 		this->_state = state;
+	}
+
+	void	Connection::setConfig(const config::ConfigServer *config)
+	{
+		this->_config = config;
 	}
 	
 	void Connection::eraseResponseBuffer(std::size_t bytesSent)

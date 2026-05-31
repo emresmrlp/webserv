@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 19:15:19 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 21:11:43 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,12 +219,11 @@ namespace core
 		this->_pollFds.push_back(connPollFd);
 
 		// ? create connection object
-		// ! connection will be refactoring to Connection(fd, conf) -> Connection(fd)!!
-		Connection *newConn = new Connection(connFd, this->_servers[i]->getConfig());
+		Connection *newConn = new Connection(connFd);
+		newConn->setConfig(&(this->_servers[i]->getConfig()));
 		this->_connnections.push_back(newConn);
 
 		std::cout << "New connection created! FD:" << connFd << std::endl;
-
 	}
 
 	void ServerHandler::closeConnection(std::size_t i)

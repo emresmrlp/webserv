@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/26 17:16:38 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 20:56:12 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace http
 {
-	RequestBuilder::RequestBuilder(const config::ConfigServer &config) : _config(config), _hasBody(false), _state(http::STATE_REQUEST_LINE) {}
+	RequestBuilder::RequestBuilder() : _hasBody(false), _state(http::STATE_REQUEST_LINE) {}
 
 	RequestBuilder::~RequestBuilder() {}
 
@@ -36,7 +36,7 @@ namespace http
 		return (this->_parseResult);
 	}
 
-	http::ParseResult   RequestBuilder::parse(std::string &rawReadBuffer)
+	http::ParseResult   RequestBuilder::parse(std::string &rawReadBuffer, const config::ConfigServer *config)
 	{
 		std::cout << "+ RequestBuilder -> Build starting..." << std::endl;
 		// has header? -> REQUEST or HEADERS state
@@ -45,7 +45,7 @@ namespace http
 		{
 			if (rawReadBuffer.find(DOUBLE_CRLF) == std::string::npos)
 			{
-				if (rawReadBuffer.size() > this->_config.getMaxHeaderSize())
+				if (rawReadBuffer.size() > config->getMaxHeaderSize())
 					return (handleParseResult(PAYLOAD_TOO_LARGE, ERROR));
 				return (handleParseResult(UNDEFINED, INCOMPLETE));
 			}
@@ -68,7 +68,7 @@ namespace http
 
 				if (!(line.empty()) && (line[0] == ' ' || line[0] == '\t'))
 					return (handleParseResult(BAD_REQUEST, ERROR));
-				if (!buildRequestLine(line))
+				if (!buildRequestLine(line, config))
 					return (this->_parseResult);
 
 				rawReadBuffer.erase(0, nextPos + 2); // +2 for CRLF (\r\n)
@@ -119,7 +119,7 @@ namespace http
 		return (handleParseResult(UNDEFINED, INCOMPLETE));
 	}
 
-	bool RequestBuilder::buildRequestLine(std::string &line)
+	bool RequestBuilder::buildRequestLine(std::string &line, const config::ConfigServer *config)
 	{
 		std::cout << "+ RequestBuilder -> buildRequestLine method starting..." << std::endl;
         std::size_t sp1 = line.find(' ');
@@ -158,8 +158,8 @@ namespace http
 		// method validate
 		std::vector<std::string>::const_iterator it;
 		std::vector<std::string>::const_iterator itEnd;
-		it = this->_config.getLocation(this->_path)->getAllowedMethods().begin();
-		itEnd = this->_config.getLocation(this->_path)->getAllowedMethods().end();
+		it = config->getLocation(this->_path)->getAllowedMethods().begin();
+		itEnd = config->getLocation(this->_path)->getAllowedMethods().end();
 		bool isAllowedMethod = false;
 		while (it != itEnd)
 		{
