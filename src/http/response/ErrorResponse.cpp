@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/25 16:22:35 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/26 17:17:51 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ namespace http
 		{
 			std::ostringstream result;
 			std::vector<std::string>::const_iterator it
-				= this->_config.getLocations()[0].getAllowedMethods().begin(); //(path).getAllowedMethods().begin();
+				= this->_config.getLocation(path)->getAllowedMethods().begin(); //(path).getAllowedMethods().begin();
 			std::vector<std::string>::const_iterator itEnd
-				= this->_config.getLocations()[0].getAllowedMethods().end(); //(path).getAllowedMethods().end();
+				= this->_config.getLocation(path)->getAllowedMethods().end(); //(path).getAllowedMethods().end();
 			while (it != itEnd)
 			{
 				result << *it;
