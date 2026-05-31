@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:32 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 15:32:22 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 16:15:18 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 namespace core
 {
 	Server::Server(const config::ConfigServer &config, const HostAddr &addr)
-		: _addr(addr), _listenFd(-1), _config(config) {}
+		: _listenFd(-1), _addr(addr), _config(config) {}
 
 	Server::~Server()
 	{

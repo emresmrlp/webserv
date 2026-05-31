@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/28 10:34:27 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 18:47:13 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ namespace core
 			bool					hasResponse() const;
 			void					resetForNextRequest();
 			void					appendRequestBuffer(const std::string &buffer);
+			void					eraseResponseBuffer(std::size_t bytesSent);
 			
 			int						getFd() const;
 			core::ConnectionState	getState() const;
