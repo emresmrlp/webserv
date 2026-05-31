@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 14:39:35 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 15:36:27 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,48 @@ namespace core
 {
 	ServerHandler::ServerHandler() {}
 
-	ServerHandler::~ServerHandler() {}
+	ServerHandler::~ServerHandler()
+	{
+		typedef std::vector<Server *>::iterator ServerIt;
+
+		for (ServerIt it = this->_servers.begin(); it != this->_servers.end(); it++)
+			delete (*it);
+		
+		this->_servers.clear();
+	}
+
+	void ServerHandler::init(const std::vector<config::ConfigServer> &_configs)
+	{
+		HostAddr addr;
+		typedef std::vector<config::ConfigServer>::const_iterator ConfigIt;
+		typedef std::vector<config::ListenTarget>::const_iterator ListenIt; // ? ConfigServer->ListenTarget iterator
+
+		for (ConfigIt it = _configs.begin(); it != _configs.end(); it++)
+		{
+			const std::vector<config::ListenTarget> &listens = it->getListens();
+			for (ListenIt LIt = listens.begin(); LIt != listens.end(); LIt++)
+			{
+				addr = resolveHostAddr(LIt->host, LIt->port);
+				if (isActiveServer(addr))
+					continue;
+				Server *newServer = new Server(*it, addr);
+				newServer->setup();
+				this->_servers.push_back(newServer);
+			}
+		}
+	}
+
+	bool ServerHandler::isActiveServer(HostAddr &addr)
+	{
+		typedef std::vector<Server *>::const_iterator ServerIt;
+
+		for (ServerIt it = this->_servers.begin(); it != this->_servers.end(); it++)
+		{
+			if ((*it)->getAddr() == addr)
+				return (true);
+		}
+		return (false);
+	}
 
 	HostAddr ServerHandler::resolveHostAddr(const std::string &ip, int port)
 	{

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:36:01 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 14:04:39 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 15:32:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ namespace core
 
 			void						setup();
 			int							getListenFd() const;
-			const config::ConfigServer &getConfig() const;
+			const HostAddr				&getAddr() const;
+			const config::ConfigServer	&getConfig() const;
 		private:
 			Server(const Server&);
 			Server& operator=(const Server&);
 
-			HostAddr					_addr;
 			int 						_listenFd;
+			const HostAddr				_addr;
 			const config::ConfigServer	&_config;
 	};
 }

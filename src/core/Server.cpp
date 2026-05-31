@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:32 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 14:39:37 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 15:32:22 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ namespace core
 		if (listen(this->_listenFd, 128) < 0) // ? open to connect for Server.
 			throw std::runtime_error("Listen failed.");
 	}
+
+	const HostAddr &Server::getAddr() const
+	{
+		return (this->_addr);
+	}
+	
 
 	int	Server::getListenFd() const
 	{

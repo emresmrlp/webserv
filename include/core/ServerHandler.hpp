@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:36:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 14:10:04 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/31 15:30:41 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ namespace core
 			std::vector<std::map<int, Connection *> >	_connnections;
 			std::vector<struct pollfd>					_pollfds;
 
-			HostAddr ServerHandler::resolveHostAddr(const std::string &ip, int port);
+			bool		isActiveServer(HostAddr &addr);
+			HostAddr	resolveHostAddr(const std::string &ip, int port);
 	};
 }
 
