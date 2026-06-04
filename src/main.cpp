@@ -17,6 +17,7 @@
 #include "ServerHandler.hpp"
 #include "Connection.hpp"
 #include "Parser.hpp"
+#include "signal.h"
 
 int main(int argc, char **argv)
 {
@@ -40,7 +41,9 @@ int main(int argc, char **argv)
         std::cerr << "Parse error: " << e.what() << std::endl;
         return 1;
     }
-    if (parser.getServers().empty()) {
+
+    if (parser.getServers().empty())
+    {
         std::cerr << "Fatal Error: No valid server blocks found in config file." << std::endl;
         return 1;
     }

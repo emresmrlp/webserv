@@ -16,6 +16,7 @@
 # include <iostream>
 # include <netdb.h>
 # include <sstream>
+# include <cstring>
 # include "Types.hpp"
 # include "ConfigServer.hpp"
 

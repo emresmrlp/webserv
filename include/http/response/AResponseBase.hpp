@@ -41,10 +41,12 @@ namespace http
 			void				addHeader(const std::string &key, const std::string &value);
 			
 			void				setBody(const std::string &body);
+			static std::string	readFile(const std::string &filePath);
 
 			bool				getHeader(const std::string &key, std::string &value) const;
 			bool				getHeaders(const std::string &key, std::vector<std::string> &values) const;
 			std::string			getDate() const;
+			const std::string	getMimeType(const std::string &path) const;
 			http::StatusCode	getStatusCode() const;
 			http::StatusMessage	getStatusMessage(http::StatusCode statusCode) const;
 	};

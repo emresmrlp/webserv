@@ -29,9 +29,9 @@ namespace http
         http::IResponse *response;
         struct stat st;
 
-        std::string filePath = config->getRoot(); // TODO
+        std::string filePath = config->getRoot();
         filePath += request->getPath();
-        response = this->_factory.createErrorResponse(config, request->getPath(), http::FORBIDDEN);
+        
         if (stat(filePath.c_str(), &st) != 0)
         {
             std::cout << "404 File not found: " << request->getPath() << std::endl;
@@ -46,6 +46,8 @@ namespace http
             else
                 response = this->_factory.createErrorResponse(config, request->getPath(), http::FORBIDDEN);
         }
+        else
+            response = this->_factory.createErrorResponse(config, request->getPath(), http::FORBIDDEN);
         return (response);
     }
 }

@@ -16,7 +16,7 @@
 #include "Request.hpp"
 #include <iomanip>
 #include <sstream>
-#include <fstream>
+
 #include <map>
 
 namespace http
@@ -29,7 +29,7 @@ namespace http
         this->createBody();
         this->addHeader("Date", http::AResponseBase::getDate());
         this->addHeader("Server", this->_signature);
-		this->addHeader("Content-Type", this->getMimeType());
+		this->addHeader("Content-Type", this->getMimeType(request->getPath()));
         std::ostringstream oss;
         oss << this->_bodySize;
 		this->addHeader("Content-Length", oss.str());
@@ -47,65 +47,11 @@ namespace http
 		return (response.str());
     }
 
-    static std::string readFile(const std::string& filePath) {
-        std::ifstream file(filePath.c_str());
-        if (!file.is_open())
-            return "";
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        file.close();
-        return (buffer.str());
-    }
-
     void StaticResponse::createBody()
     {
-        std::string filePath = this->_config.getRoot();
-        filePath += this->_request->getPath();
-        this->setBody(readFile(filePath));
-    }
+        std::string path;
 
-    const std::string StaticResponse::getMimeType() const
-    {
-        std::string requestPath;
-        std::string contentType;
-
-        requestPath = this->_request->getPath(); 
-        std::string extension;
-
-        extension = requestPath.substr(requestPath.find_last_of("."));
-        std::map<std::string, std::string> mimeTypes;
-        mimeTypes[".html"]  = "text/html";
-        mimeTypes[".htm"]   = "text/html";
-        mimeTypes[".css"]   = "text/css";
-        mimeTypes[".js"]    = "application/javascript";
-        mimeTypes[".mjs"]   = "text/javascript";
-        mimeTypes[".json"]  = "application/json";
-        mimeTypes[".xml"]   = "application/xml";
-        mimeTypes[".txt"]   = "text/plain";
-        mimeTypes[".csv"]   = "text/csv";
-        mimeTypes[".md"]    = "text/markdown";
-        mimeTypes[".yaml"]  = "text/yaml";
-        mimeTypes[".yml"]   = "text/yaml";
-        mimeTypes[".png"]   = "image/png";
-        mimeTypes[".jpg"]   = "image/jpeg";
-        mimeTypes[".jpeg"]  = "image/jpeg";
-        mimeTypes[".gif"]   = "image/gif";
-        mimeTypes[".webp"]  = "image/webp";
-        mimeTypes[".svg"]   = "image/svg+xml";
-        mimeTypes[".ico"]   = "image/x-icon";
-        mimeTypes[".mp3"]   = "audio/mpeg";
-        mimeTypes[".mp4"]   = "video/mp4";
-        mimeTypes[".pdf"]   = "application/pdf";
-        mimeTypes[".zip"]   = "application/zip";
-        mimeTypes[".rar"]   = "application/vnd.rar";
-        mimeTypes[".tar"]   = "application/x-tar";
-        contentType = "application/octet-stream";
-        std::map<std::string, std::string>::const_iterator it;
-        for (it = mimeTypes.begin(); it != mimeTypes.end(); ++it)
-        {
-            if (it->first == extension)
-                contentType = mimeTypes[extension];
-        }
-        return (contentType);
+        path = this->_config.getRoot() + this->_request->getPath();
+        this->setBody(this->readFile(path));
     }
 }

@@ -25,11 +25,10 @@ namespace http
 			~StaticResponse();
 			std::string serialize() const;
 		private:
+			void			createBody();
+			
 			std::size_t		_bodySize;
-
-			const std::string	getMimeType() const;
-			void				createBody();
-	};
+		};
 }
 
 #endif
