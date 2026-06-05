@@ -120,6 +120,15 @@ namespace http
         return "application/octet-stream";
     }
 
+	void AResponseBase::createBody()
+    {
+        std::string path;
+
+        path = this->_config.getRoot() + this->_request->getPath();
+		if (!path.empty())
+        	this->setBody(this->readFile(path));
+    }
+
 	std::string AResponseBase::readFile(const std::string &filePath)
 	{
         std::ifstream file(filePath.c_str());

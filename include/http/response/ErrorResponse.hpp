@@ -24,7 +24,7 @@ namespace http
             ~ErrorResponse();
             std::string serialize() const;
         private:
-            void createBody();
+            void createDefaultBody();
     };
 }
 #endif

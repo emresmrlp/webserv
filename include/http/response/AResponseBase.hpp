@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   AResponseBase.hpp                                  :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:00:13 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 21:00:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/05 17:04:02 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef ARESPONSEBASE_HPP
 # define ARESPONSEBASE_HPP
@@ -41,7 +41,8 @@ namespace http
 			void				addHeader(const std::string &key, const std::string &value);
 			
 			void				setBody(const std::string &body);
-			static std::string	readFile(const std::string &filePath);
+			void				createBody();
+			std::string			readFile(const std::string &filePath);
 
 			bool				getHeader(const std::string &key, std::string &value) const;
 			bool				getHeaders(const std::string &key, std::vector<std::string> &values) const;

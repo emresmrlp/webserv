@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ErrorResponse.cpp                                  :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/26 17:17:51 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/05 16:09:17 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "ErrorResponse.hpp"
 #include "Util.hpp"
@@ -23,24 +23,27 @@ namespace http
 	{
 		this->_statusCode = status;
 		this->_statusMessage = this->getStatusMessage(this->_statusCode);
-		this->createBody();
+		this->createDefaultBody();
 		this->addHeader("Date", http::AResponseBase::getDate());
         this->addHeader("Server", this->_config.getSignature());
 		if (this->_statusCode == METHOD_NOT_ALLOWED)
 		{
 			std::ostringstream result;
-			std::vector<std::string>::const_iterator it
-				= this->_config.getLocation(path)->getAllowedMethods().begin();
-			std::vector<std::string>::const_iterator itEnd
-				= this->_config.getLocation(path)->getAllowedMethods().end();
-			while (it != itEnd)
+			if (!path.empty())
 			{
-				result << *it;
-				if (*(it + 1) != *itEnd)
-					result << ", ";
-				it++;
+				std::vector<std::string>::const_iterator it
+					= this->_config.getLocation(path)->getAllowedMethods().begin();
+				std::vector<std::string>::const_iterator itEnd
+					= this->_config.getLocation(path)->getAllowedMethods().end();
+				while (it != itEnd)
+				{
+					result << *it;
+					if (*(it + 1) != *itEnd)
+						result << ", ";
+					it++;
+				}
+				this->addHeader("Allow", result.str());
 			}
-			this->addHeader("Allow", result.str());
 		}
 		this->addHeader("Content-Type", "text/html");
         std::ostringstream oss;
@@ -60,7 +63,7 @@ namespace http
 		return (response.str());
 	}
 
-	void ErrorResponse::createBody()
+	void ErrorResponse::createDefaultBody()
 	{
 		std::stringstream body_oss;
 		

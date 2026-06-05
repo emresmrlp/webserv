@@ -1,33 +1,32 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StaticResponse.hpp                                 :+:      :+:    :+:   */
+/*   OkResponse.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 18:51:39 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/05 16:59:56 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
-#ifndef STATICRESPONSE_HPP
-# define STATICRESPONSE_HPP
+#ifndef OKRESPONSE_HPP
+# define OKRESPONSE_HPP
 # include "AResponseBase.hpp"
 
 namespace http
 {
 	class Request;
 	
-	class StaticResponse : public AResponseBase
+	class OkResponse : public AResponseBase
 	{
 		public:
-			StaticResponse(const config::ConfigServer &config, const http::Request *request, std::size_t bodySize);
-			~StaticResponse();
+			OkResponse(const config::ConfigServer &config, const http::Request *request);
+			OkResponse(const config::ConfigServer &config, const http::Request *request, const std::string &html);
+			~OkResponse();
 			std::string serialize() const;
 		private:
-			void			createBody();
-			
-			std::size_t		_bodySize;
+			void initHeaders();
 		};
 }
 
