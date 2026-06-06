@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 20:56:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/06 10:27:56 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,17 @@ namespace http
 			}
 			else if (this->_state == http::STATE_HEADERS)
 			{
-				std::cout << "+ RequestBuilder -> Headers parsing..." << std::endl;
 				// if first line is CRLF
 				if (nextPos == 0)
 				{
 					rawReadBuffer.erase(0, 2);
+					if (config->getLocation(this->_path)->hasRedirection())
+					{
+						this->_hasBody = false;	
+						this->_state = http::STATE_WAIT_VALIDATE;
+						handleParseResult(static_cast<http::StatusCode>
+							(config->getLocation(this->_path)->getReturnRedirection().first), COMPLETE);
+					}
 					if (this->_hasBody)
 						this->_state = http::STATE_BODY;
 					else
@@ -224,7 +230,7 @@ namespace http
 		std::vector<std::string> values;
 		this->getHeaders("host", values);
 
-		if (values[0].empty()) //TODO: if Hosts > 1 ??? is it forbidden?
+		if (values[0].empty())
 		{
 			handleParseResult(BAD_REQUEST, ERROR);
             return (false);

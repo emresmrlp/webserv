@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ResponseFactory.cpp                                :+:      :+:    :+:   */
@@ -6,13 +6,14 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:07:42 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/05 19:36:28 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/06 10:16:30 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "ResponseFactory.hpp"
 #include "ErrorResponse.hpp"
 #include "OkResponse.hpp"
+#include "RedirectResponse.hpp"
 #include <dirent.h>
 
 namespace http
@@ -24,6 +25,11 @@ namespace http
 	http::IResponse *ResponseFactory::createErrorResponse(const config::ConfigServer *config, const std::string &path, http::StatusCode statusCode)
 	{
 		return (new ErrorResponse(*config, path, statusCode));
+	}
+
+	http::IResponse *ResponseFactory::createRedirectResponse(const config::ConfigServer *config, std::pair<int, std::string> redirectPair)
+	{
+		return (new RedirectResponse(*config, redirectPair));
 	}
 
 	http::IResponse *ResponseFactory::createOkResponse(const config::ConfigServer *config, http::Request *request)

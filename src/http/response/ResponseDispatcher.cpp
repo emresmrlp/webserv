@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ResponseDispatcher.cpp                             :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/05 17:09:52 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/06 10:16:32 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "ResponseDispatcher.hpp"
 #include "StatusCode.hpp"
@@ -29,6 +29,17 @@ namespace http
         http::IResponse *response;
         struct stat st;
 
+        if (config->getLocation(request->getPath())->hasRedirection())
+        {
+            std::pair<int, std::string> redirectPair;
+
+            redirectPair = config->getLocation(request->getPath())->getReturnRedirection();
+            if (redirectPair.second == request->getPath())
+                response = this->_factory.createErrorResponse(config, request->getPath(), http::INTERNAL_SERVER_ERROR);
+            else
+                response = this->_factory.createRedirectResponse(config, redirectPair);
+            return (response);
+        }
         std::string filePath = config->getRoot();
         filePath += request->getPath();
         

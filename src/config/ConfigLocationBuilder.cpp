@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ConfigLocationBuilder.cpp                          :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/05 17:15:00 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/06 09:41:27 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../include/config/ConfigLocationBuilder.hpp"
 #include "../../include/config/ConfigLocation.hpp"
@@ -19,7 +19,7 @@ namespace config
 		_executePath(""),
 		_rootPath(""),
 		_uploadPath("/tmp"),
-		_returnRedirection(std::make_pair(0, "/")),
+		_returnRedirection(std::pair<int, std::string>(0, "/")),
 		_autoIndex(false),
 		_hasRedirection(false)
 	{}
@@ -37,7 +37,7 @@ namespace config
 			throw std::invalid_argument("Invalid redirection usage: more than 1 redirection cannot be set");
 		if (code < 300 || code > 399)
         	throw std::invalid_argument("Invalid redirection code: must be between 300 and 399");
-		_returnRedirection = std::make_pair(code, url);
+		_returnRedirection = std::pair<int, std::string>(code, url);
 		_hasRedirection = true;
 		return (*this);
 	}
