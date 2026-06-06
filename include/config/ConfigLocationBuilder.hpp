@@ -36,7 +36,7 @@ namespace config
 			bool								_autoIndex;
 			std::map<std::string, std::string>	_cgiPass;
 			std::vector<std::string>			_allowedMethods;
-
+			std::vector<std::string>			_indexList;
 			bool								_hasRedirection;
 		public:
 			ConfigLocationBuilder();
@@ -48,6 +48,7 @@ namespace config
 			ConfigLocationBuilder&	setAutoIndex(const std::string& str);
 			ConfigLocationBuilder&	addCgiPass(const std::string& ext, const std::string& path);
 			ConfigLocationBuilder&	addAllowedMethod(const std::string& method);
+			ConfigLocationBuilder&	addToIndexList(const std::string& index);
 
 			ConfigLocation	build(void);
 	};

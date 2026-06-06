@@ -78,6 +78,9 @@ namespace	config
 				if (key == "allowed_methods")
 					while (isType(VALUE))
 						locationBuilder.addAllowedMethod(thisStr()), next();
+				else if (key == "index")
+					while (isType(VALUE))
+						locationBuilder.addToIndexList(thisStr()), next();
 				else if (key == "root")
 					locationBuilder.setRootPath(thisStr()), next();
 				else if (key == "upload_store")

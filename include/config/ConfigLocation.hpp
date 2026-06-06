@@ -30,6 +30,7 @@ namespace config
 			std::pair<int, std::string>			_returnRedirection;
 			std::map<std::string, std::string>	_cgiPass;
 			std::vector<std::string>			_allowedMethods;
+			std::vector<std::string>			_indexList;
 			bool								_autoIndex;
 			bool								_hasRedirection;
 		public:
@@ -41,6 +42,7 @@ namespace config
 			std::pair<int, std::string>		getReturnRedirection()					const;
 			const std::string&				getCgiPass(const std::string& ext)		const;
 			const std::vector<std::string>&	getAllowedMethods()						const;
+			const std::vector<std::string>&	getIndexList()							const;
 			bool							isAllowed(const std::string& method)	const;
 			bool							getAutoIndex()							const;
 			bool							hasRedirection()						const;

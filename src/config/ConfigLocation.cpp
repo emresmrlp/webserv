@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigLocation.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:23:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/06 09:43:18 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/19 15:08:56 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ namespace config
 		_returnRedirection(builder._returnRedirection),
 		_cgiPass(builder._cgiPass),
 		_allowedMethods(builder._allowedMethods),
+		_indexList(builder._indexList),
 		_autoIndex(builder._autoIndex),
 		_hasRedirection(builder._hasRedirection)
 	{ }
@@ -47,6 +48,8 @@ namespace config
 
 	const std::vector<std::string>&	ConfigLocation::getAllowedMethods() const { return _allowedMethods; }
 
+	const std::vector<std::string>&	ConfigLocation::getIndexList()		const { return _indexList; }
+	
 	bool	ConfigLocation::isAllowed(const std::string& method) const 
 	{
 		for (size_t i = 0; i < _allowedMethods.size(); i++)

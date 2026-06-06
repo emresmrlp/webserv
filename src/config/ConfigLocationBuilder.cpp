@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigLocationBuilder.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/06 09:41:27 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/05/19 16:54:57 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ namespace config
 		_executePath(""),
 		_rootPath(""),
 		_uploadPath("/tmp"),
-		_returnRedirection(std::pair<int, std::string>(0, "/")),
+		_returnRedirection(std::make_pair(0, "/")),
 		_autoIndex(false),
 		_hasRedirection(false)
 	{}
@@ -37,7 +37,7 @@ namespace config
 			throw std::invalid_argument("Invalid redirection usage: more than 1 redirection cannot be set");
 		if (code < 300 || code > 399)
         	throw std::invalid_argument("Invalid redirection code: must be between 300 and 399");
-		_returnRedirection = std::pair<int, std::string>(code, url);
+		_returnRedirection = std::make_pair(code, url);
 		_hasRedirection = true;
 		return (*this);
 	}
@@ -68,6 +68,12 @@ namespace config
 		if (std::find(_allowedMethods.begin(), _allowedMethods.end(), method) != _allowedMethods.end())
 			throw std::invalid_argument("Invalid allowed_method input: methods must only appear once");
 		_allowedMethods.push_back(method);
+		return (*this);
+	}
+
+	ConfigLocationBuilder&	ConfigLocationBuilder::addToIndexList(const std::string& path)
+	{
+		_indexList.push_back(path);
 		return (*this);
 	}
 
