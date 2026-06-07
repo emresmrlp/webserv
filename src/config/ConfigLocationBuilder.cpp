@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/19 16:54:57 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 16:56:02 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,13 @@ namespace config
 		if (_allowedMethods.empty())
 		{
 			_allowedMethods.push_back("GET");
-			std::cerr << "### Allowed methods for the location was empty, automatically added 'GET'" << std::endl;
+			_allowedMethods.push_back("POST");
+			_allowedMethods.push_back("DELETE");
+			_allowedMethods.push_back("HEAD");
+			_allowedMethods.push_back("PUT");
+			// ! DEBUGGING
+			std::cerr << "### No allowed methods specified, automatically added all." << std::endl;
+			// ! END OF DEBUGGING
 		}
 		return (ConfigLocation(*this));
 	}

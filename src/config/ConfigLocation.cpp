@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:23:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/19 15:08:56 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 15:16:09 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ namespace config
 
 	bool			ConfigLocation::hasRedirection()	const { return _hasRedirection; }
 
+	// ! DEBUGGING
 	void ConfigLocation::print() const
 	{
 		std::cout << "      Execute Path:       " << this->_executePath << "\n";
@@ -78,4 +79,5 @@ namespace config
 		}
 		std::cout << "]\n";
 	}
+	// ! END OF DEBUGGING
 }
