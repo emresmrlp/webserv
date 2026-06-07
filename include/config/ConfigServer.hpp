@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:11 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/25 16:15:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/07 17:36:38 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ namespace config
 			std::vector<ConfigLocation>	_locations;
 			std::vector<ListenTarget>	_listens;
 			std::map<int, std::string>	_errorPages;
+			std::pair<int, std::string>	_returnRedirection;
+			bool						_hasRedirection;
 
 		public:
 			ConfigServer(const ConfigServerBuilder& builder);
@@ -61,6 +63,9 @@ namespace config
 			const std::vector<ConfigLocation>&	getLocations()				const;
 			const std::vector<ListenTarget>&	getListens()				const;
 			const std::map<int, std::string>&	getErrorPages()				const;
+			
+			std::pair<int, std::string>			getReturnRedirection()		const;
+			bool								hasRedirection()			const;
 		
 			const ConfigLocation*				getLocation(const std::string& str)	const;
 

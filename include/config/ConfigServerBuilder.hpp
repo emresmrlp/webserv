@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:23 by beldemir          #+#    #+#             */
-/*   Updated: 2026/05/19 13:24:52 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 17:56:43 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ namespace config
 			std::vector<ConfigLocation> _locations;
 			std::vector<ListenTarget>	_listens;
 			std::map<int, std::string>	_errorPages;
+			std::pair<int, std::string>	_returnRedirection;
+			bool						_hasRedirection;
 
 		public:
 			ConfigServerBuilder();
@@ -60,6 +62,7 @@ namespace config
 			ConfigServerBuilder&	addLocation(const ConfigLocation& location);
 			ConfigServerBuilder&	addListen(const std::string& str);
 			ConfigServerBuilder&	addErrorPage(const std::string& no, const std::string& loc);
+			ConfigServerBuilder&	setReturnRedirection(int code, const std::string& url);
 
 			ConfigServer	build(void);
 	};

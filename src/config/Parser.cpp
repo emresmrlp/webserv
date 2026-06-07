@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:19 by beldemir          #+#    #+#             */
-/*   Updated: 2026/05/19 16:59:09 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 17:56:56 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,12 @@ namespace	config
 					serverBuilder.setMaxBodySize(thisStr()), next();
 				else if (key == "http_version")
 					serverBuilder.setHttpVersion(thisStr()), next();
+				else if (key == "return")
+				{
+					int	code = atoi(thisStr().c_str());
+					next();
+					serverBuilder.setReturnRedirection(code, thisStr()), next();
+				}
 				else if (key == "error_page")
 				{
 					std::string	errorNo = thisStr();

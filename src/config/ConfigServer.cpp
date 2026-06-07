@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/26 18:25:47 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/07 17:35:38 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ namespace config
 		_serverNames(builder._serverNames),
 		_locations(builder._locations),
 		_listens(builder._listens),
-		_errorPages(builder._errorPages)
+		_errorPages(builder._errorPages),
+		_returnRedirection(builder._returnRedirection),
+		_hasRedirection(builder._hasRedirection)
 	{ }
 	
 	const std::string&		ConfigServer::getRoot()					const { return _root; }
@@ -58,6 +60,10 @@ namespace config
 	
 	const std::map<int, std::string>&	ConfigServer::getErrorPages() const { return _errorPages; }
 
+	std::pair<int, std::string>			ConfigLocation::getReturnRedirection() const { return _returnRedirection; }
+
+	bool								ConfigServer::hasRedirection() const { return _hasRedirection; }
+	
 	const ConfigLocation*				ConfigServer::getLocation(const std::string& str) const
 	{
 		const ConfigLocation* bestMatch = NULL;
@@ -80,6 +86,7 @@ namespace config
 		return bestMatch;
 	}
 	
+	// ! DEBUGGING
 	void ConfigServer::print() const
     {
         std::cout << "=================== CONFIG SERVER ===================\n";
@@ -120,4 +127,5 @@ namespace config
         }
         std::cout << "=====================================================\n" << std::endl;
     }
+	// ! END OF DEBUGGING
 }

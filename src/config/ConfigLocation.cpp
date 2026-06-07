@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:23:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 15:16:09 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 17:53:10 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ namespace config
 		return (false);
 	}
 
-	bool			ConfigLocation::getAutoIndex()		const { return _autoIndex; }
+	bool			ConfigLocation::getAutoIndex() const { return _autoIndex; }
 
-	bool			ConfigLocation::hasRedirection()	const { return _hasRedirection; }
+	bool			ConfigLocation::hasRedirection() const { return _hasRedirection; }
 
 	// ! DEBUGGING
 	void ConfigLocation::print() const

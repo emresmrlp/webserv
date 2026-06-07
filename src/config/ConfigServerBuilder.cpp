@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/19 16:54:57 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 17:56:35 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ namespace config
 		_httpVersion("HTTP/1.1"),
 		_signature("YECS-BME ADI ORTAKLIGI"),
 		_maxHeaderSize(1048576),
-		_maxBodySize(1048576)
+		_maxBodySize(1048576),
+		_returnRedirection(std::make_pair(0, "0")),
+		_hasRedirection(false)
 	{ }
 
 	size_t ConfigServerBuilder::parseByte(std::string str) const
@@ -130,6 +132,17 @@ namespace config
 			oss << "Invalid error page: can't declare a error page for " << errorNo;
 			throw std::invalid_argument(oss.str());
 		}
+		return (*this);
+	}
+
+	ConfigServerBuilder& ConfigServerBuilder::setReturnRedirection(int code, const std::string& url)
+	{
+		if (_hasRedirection)	
+			throw std::invalid_argument("Invalid redirection usage: more than 1 redirection cannot be set");
+		if (code < 300 || code > 399)
+			throw std::invalid_argument("Invalid redirection code: must be between 300 and 399");
+		_returnRedirection = std::make_pair(code, url);
+		_hasRedirection = true;
 		return (*this);
 	}
 	
