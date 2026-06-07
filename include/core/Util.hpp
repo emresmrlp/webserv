@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Util.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:40:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 14:03:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:04:41 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
 
 namespace util
 {	
-	void toLowerCase(std::string &str);
-	bool isFileExist(const std::string &path);
+	void	toLowerCase(std::string &str);
+	bool	isFileExist(const std::string &path);
+	size_t	parseByte(std::string str);
 }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:19 by beldemir          #+#    #+#             */
-/*   Updated: 2026/06/07 17:56:56 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:12:21 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ namespace	config
 					locationBuilder.setUploadPath(thisStr()), next();
 				else if (key == "autoindex")
 					locationBuilder.setAutoIndex(thisStr()), next();
+				else if (key == "client_max_header_size")
+					locationBuilder.setMaxHeaderSize(thisStr()), next();
+				else if (key == "client_max_body_size")
+					locationBuilder.setMaxBodySize(thisStr()), next();
 				else if (key == "return")
 				{
 					int	code = atoi(thisStr().c_str());

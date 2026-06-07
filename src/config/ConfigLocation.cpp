@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:23:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 17:53:10 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:10:07 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ namespace config
 		_allowedMethods(builder._allowedMethods),
 		_indexList(builder._indexList),
 		_autoIndex(builder._autoIndex),
-		_hasRedirection(builder._hasRedirection)
+		_hasRedirection(builder._hasRedirection),
+		_maxHeaderSize(builder._maxHeaderSize),
+		_maxBodySize(builder._maxBodySize)
 	{ }
 
 	const std::string&			ConfigLocation::getExecutePath() const { return _executePath; }
@@ -48,7 +50,7 @@ namespace config
 
 	const std::vector<std::string>&	ConfigLocation::getAllowedMethods() const { return _allowedMethods; }
 
-	const std::vector<std::string>&	ConfigLocation::getIndexList()		const { return _indexList; }
+	const std::vector<std::string>&	ConfigLocation::getIndexList() const { return _indexList; }
 	
 	bool	ConfigLocation::isAllowed(const std::string& method) const 
 	{
@@ -61,6 +63,11 @@ namespace config
 	bool			ConfigLocation::getAutoIndex() const { return _autoIndex; }
 
 	bool			ConfigLocation::hasRedirection() const { return _hasRedirection; }
+
+	std::size_t 			ConfigLocation::getMaxHeaderSize() const { return _maxHeaderSize; }
+	
+	std::size_t 			ConfigLocation::getMaxBodySize() const { return _maxBodySize; }
+
 
 	// ! DEBUGGING
 	void ConfigLocation::print() const

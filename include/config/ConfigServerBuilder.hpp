@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:23 by beldemir          #+#    #+#             */
-/*   Updated: 2026/06/07 17:56:43 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:03:58 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ namespace config
 		public:
 			ConfigServerBuilder();
 
-			size_t					parseByte(std::string str)	const;
 			ConfigServerBuilder&	setRoot(const std::string& root);
 			ConfigServerBuilder&	setHttpVersion(const std::string& version);
 			// ConfigServerBuilder&	setSignature(const std::string& signature);

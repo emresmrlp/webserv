@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:18:05 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/19 17:01:19 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:05:57 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdexcept>
 # include <algorithm>
 # include <iostream>
-
+# include "Util.hpp"
 
 namespace config
 {
@@ -38,6 +38,8 @@ namespace config
 			std::vector<std::string>			_allowedMethods;
 			std::vector<std::string>			_indexList;
 			bool								_hasRedirection;
+			size_t								_maxHeaderSize;
+			size_t								_maxBodySize;
 		public:
 			ConfigLocationBuilder();
 
@@ -49,6 +51,9 @@ namespace config
 			ConfigLocationBuilder&	addCgiPass(const std::string& ext, const std::string& path);
 			ConfigLocationBuilder&	addAllowedMethod(const std::string& method);
 			ConfigLocationBuilder&	addToIndexList(const std::string& index);
+
+			ConfigLocationBuilder&	setMaxHeaderSize(const std::string& str);
+			ConfigLocationBuilder&	setMaxBodySize(const std::string& str);
 
 			ConfigLocation	build(void);
 	};

@@ -6,13 +6,14 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 17:56:35 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:04:08 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ConfigServerBuilder.hpp"
 #include "ConfigServer.hpp"
 #include "ConfigLocation.hpp"
+#include "Util.hpp"
 
 namespace config
 {
@@ -26,47 +27,15 @@ namespace config
 		_hasRedirection(false)
 	{ }
 
-	size_t ConfigServerBuilder::parseByte(std::string str) const
-	{
-		if (str.empty())
-			return 1024 * 1024;
-
-		char	unit = std::toupper(str[str.length() - 1]);
-		size_t	multiplier = 1;
-
-		if (unit == 'K') multiplier = 1024;
-		else if (unit == 'M') multiplier = 1024 * 1024;
-		else if (unit == 'G') multiplier = 1024 * 1024 * 1024;
-		else if (!std::isdigit(unit)) 
-			throw std::invalid_argument("Invalid byte format: unknown unit");
-			
-		if (unit == 'K' || unit == 'M' || unit == 'G') 
-			str.resize(str.length() - 1);
-
-		if (str.empty())
-			throw std::invalid_argument("Invalid byte format: no number provided");
-
-		for (size_t i = 0; i < str.length(); ++i)
-			if (!std::isdigit(str[i]))
-				throw std::invalid_argument("Invalid byte format: non-numeric characters found");
-
-		size_t num = std::strtoul(str.c_str(), NULL, 10);
-
-		if (num == 0)
-			return 1024 * 1024;
-
-		return num * multiplier;
-	}
-
 	ConfigServerBuilder&	ConfigServerBuilder::setRoot(const std::string& root) { _root = root; return (*this); }
 
 	ConfigServerBuilder&	ConfigServerBuilder::setHttpVersion(const std::string& version) { _httpVersion = version; return (*this); }
 
 	// ConfigServerBuilder&	ConfigServerBuilder::setSignature(const std::string& signature) { _signature = signature; }
 
-	ConfigServerBuilder&	ConfigServerBuilder::setMaxHeaderSize(const std::string& str) { _maxHeaderSize = parseByte(str); return (*this); }
+	ConfigServerBuilder&	ConfigServerBuilder::setMaxHeaderSize(const std::string& str) { _maxHeaderSize = util::parseByte(str); return (*this); }
 
-	ConfigServerBuilder&	ConfigServerBuilder::setMaxBodySize(const std::string& str){ _maxBodySize = parseByte(str); return (*this); }
+	ConfigServerBuilder&	ConfigServerBuilder::setMaxBodySize(const std::string& str){ _maxBodySize = util::parseByte(str); return (*this); }
 
 	ConfigServerBuilder&	ConfigServerBuilder::addServerName(const std::string& serverName)
 	{

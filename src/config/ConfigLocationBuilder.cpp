@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 16:56:02 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:07:54 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,16 @@ namespace config
 		_uploadPath("/tmp"),
 		_returnRedirection(std::make_pair(0, "/")),
 		_autoIndex(false),
-		_hasRedirection(false)
+		_hasRedirection(false),
+		_maxHeaderSize(0),
+		_maxBodySize(0)
 	{}
 
-	ConfigLocationBuilder& ConfigLocationBuilder::setExecutePath(const std::string& executePath)
-		{ _executePath = executePath; return (*this); }
-	ConfigLocationBuilder& ConfigLocationBuilder::setRootPath(const std::string& rootPath)
-		{ _rootPath = rootPath; return (*this); }
-	ConfigLocationBuilder& ConfigLocationBuilder::setUploadPath(const std::string& uploadPath)
-		{ _uploadPath = uploadPath; return (*this); }
+	ConfigLocationBuilder& ConfigLocationBuilder::setExecutePath(const std::string& executePath) { _executePath = executePath; return (*this); }
+	
+	ConfigLocationBuilder& ConfigLocationBuilder::setRootPath(const std::string& rootPath) { _rootPath = rootPath; return (*this); }
+	
+	ConfigLocationBuilder& ConfigLocationBuilder::setUploadPath(const std::string& uploadPath) { _uploadPath = uploadPath; return (*this); }
 
 	ConfigLocationBuilder& ConfigLocationBuilder::setReturnRedirection(int code, const std::string& url)
 	{
@@ -76,6 +77,10 @@ namespace config
 		_indexList.push_back(path);
 		return (*this);
 	}
+
+	ConfigLocationBuilder&	ConfigLocationBuilder::setMaxHeaderSize(const std::string& str) { _maxHeaderSize = util::parseByte(str); return (*this); }
+
+	ConfigLocationBuilder&	ConfigLocationBuilder::setMaxBodySize(const std::string& str){ _maxBodySize = util::parseByte(str); return (*this); }
 
 	ConfigLocation	ConfigLocationBuilder::build(void)
 	{

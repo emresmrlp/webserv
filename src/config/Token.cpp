@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:11 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/19 14:15:57 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/07 18:16:22 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,17 +72,14 @@ namespace config
 		std::string ext = ".conf";
 		if (filename.length() < ext.length() || 
 			filename.compare(filename.length() - ext.length(), ext.length(), ext) != 0)
-			throw std::invalid_argument("Filename must end with .conf");
+			throw std::invalid_argument("Filename must end with .conf: " + filename);
 
-		struct stat path_stat;
-		if (stat(filename.c_str(), &path_stat) != 0)
-			throw std::invalid_argument(filename + "does not exist or path is invalid");
-		if (S_ISDIR(path_stat.st_mode))
-			throw std::invalid_argument(filename + " is a directory, not a file");
-
+		if (!util::isFileExist(filename))
+			throw std::invalid_argument("File not found: " + filename);
+		
 		std::ifstream	file(filename.c_str());
 		if (!file.is_open())
-			throw std::invalid_argument("Failed to open file");
+			throw std::invalid_argument("Failed to open file: " + filename);
 
 		std::vector<Token>	tokens;
 		std::string			line;
@@ -92,7 +89,7 @@ namespace config
 		size_t				i = 0;
 
 		if (!file.is_open())
-			throw std::invalid_argument("File is not reachable");
+			throw std::invalid_argument("File is not reachable: " + filename);
 
 		while (std::getline(file, line))
 			content += line + "\n";
