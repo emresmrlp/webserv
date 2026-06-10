@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   OkResponse.cpp                                     :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/05 17:08:48 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/10 13:47:55 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "OkResponse.hpp"
 #include "StatusCode.hpp"
@@ -29,10 +29,10 @@ namespace http
         this->addHeader("Content-Type", this->getMimeType(this->_request->getPath()));
     }
 
-    OkResponse::OkResponse(const config::ConfigServer &config, const Request *request, const std::string &html)
+    OkResponse::OkResponse(const config::ConfigServer &config, const Request *request, const std::string &path)
         : AResponseBase(config, request)
     {
-        this->setBody(html);
+        this->createBody(path);
         this->initHeaders();
         this->addHeader("Content-Type", "text/html");
     }

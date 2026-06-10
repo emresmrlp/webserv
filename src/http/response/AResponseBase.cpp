@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/06 10:26:28 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/10 14:04:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,15 @@ namespace http
         std::string path;
 
         path = this->_config.getRoot() + this->_request->getPath();
+		if (!path.empty())
+        	this->setBody(this->readFile(path));
+    }
+
+	void AResponseBase::createBody(const std::string &literalPath)
+    {
+        std::string path;
+
+        path = literalPath;
 		if (!path.empty())
         	this->setBody(this->readFile(path));
     }

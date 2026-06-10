@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:07:42 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/06 10:16:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/10 14:00:06 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "ErrorResponse.hpp"
 #include "OkResponse.hpp"
 #include "RedirectResponse.hpp"
-#include <dirent.h>
+#include "AutoIndexResponse.hpp"
 
 namespace http
 {
@@ -37,39 +37,13 @@ namespace http
 		return (new OkResponse(*config, request));
 	}
 
-	http::IResponse *ResponseFactory::createAutoIndexResponse(const config::ConfigServer *config, http::Request *request)
+	http::IResponse *ResponseFactory::createPathOkResponse(const config::ConfigServer *config, http::Request *request, const std::string &path)
 	{
-		std::string html;
-
-		html = this->generateAutoIndexResponse(config, request);
-		return (new OkResponse(*config, request, html));
+		return (new OkResponse(*config, request, path));
 	}
 
-	const std::string     ResponseFactory::generateAutoIndexResponse(const config::ConfigServer *config, http::Request *request)
+	http::IResponse *ResponseFactory::createAutoIndexResponse(const config::ConfigServer *config, http::Request *request)
 	{
-		std::stringstream   body_oss;
-		std::string         fileName;
-		DIR* dir;
-
-		body_oss << "<!DOCTYPE html><html><head><title>Webserv - Index of " << request->getPath() << "</title></head>"    
-			<< "<body style='font-size: 24px;'><h1>" << "Webserv - Index of " << request->getPath() << "</h1>"
-			<< "<hr>"
-			<< "<a href='../' style='display: block;'>../</a>\n";
-		dir = opendir((config->getRoot() + "/" + request->getPath()).c_str());
-		if (dir != NULL)
-		{
-			struct dirent *ent;
-
-			while ((ent = readdir(dir)) != NULL)
-			{
-				fileName = ent->d_name;
-				if (fileName != "." && fileName != "..")
-					body_oss << "<a href='" << fileName << "' style='display: block;'>" << fileName << "</a>\n";
-			}
-			closedir(dir);
-		}
-		
-		body_oss << "<hr></body></html>";
-		return (body_oss.str());
+		return (new AutoIndexResponse(*config, request));
 	}
 }

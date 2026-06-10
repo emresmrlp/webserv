@@ -6,7 +6,7 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/06/06 10:14:59 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/06/10 13:48:24 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,8 @@ HTTP_SRC	=	$(HTTP_REQUEST_DIR)Request.cpp \
 				$(HTTP_RESPONSE_DIR)AResponseBase.cpp \
 				$(HTTP_RESPONSE_DIR)OkResponse.cpp \
 				$(HTTP_RESPONSE_DIR)ErrorResponse.cpp \
-				$(HTTP_RESPONSE_DIR)RedirectResponse.cpp
+				$(HTTP_RESPONSE_DIR)RedirectResponse.cpp \
+				$(HTTP_RESPONSE_DIR)AutoIndexResponse.cpp
 
 SRC         =   $(CONFIG_SRC) $(CORE_SRC) $(HTTP_SRC)
 OBJ         =   $(SRC:src/%.cpp=$(OBJ_DIR)%.o)
