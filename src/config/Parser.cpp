@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:19 by beldemir          #+#    #+#             */
-/*   Updated: 2026/06/07 18:12:21 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/10 12:45:49 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,12 +151,6 @@ namespace	config
 					serverBuilder.setMaxBodySize(thisStr()), next();
 				else if (key == "http_version")
 					serverBuilder.setHttpVersion(thisStr()), next();
-				else if (key == "return")
-				{
-					int	code = atoi(thisStr().c_str());
-					next();
-					serverBuilder.setReturnRedirection(code, thisStr()), next();
-				}
 				else if (key == "error_page")
 				{
 					std::string	errorNo = thisStr();

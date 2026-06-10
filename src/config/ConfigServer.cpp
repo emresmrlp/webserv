@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 18:11:25 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/10 12:45:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ namespace config
 		_serverNames(builder._serverNames),
 		_locations(builder._locations),
 		_listens(builder._listens),
-		_errorPages(builder._errorPages),
-		_returnRedirection(builder._returnRedirection),
-		_hasRedirection(builder._hasRedirection)
+		_errorPages(builder._errorPages)
 	{ }
 	
 	const std::string&		ConfigServer::getRoot()	const { return _root; }
@@ -59,10 +57,6 @@ namespace config
 	const std::vector<ListenTarget>&	ConfigServer::getListens() const { return _listens; }
 	
 	const std::map<int, std::string>&	ConfigServer::getErrorPages() const { return _errorPages; }
-
-	std::pair<int, std::string>			ConfigLocation::getReturnRedirection() const { return _returnRedirection; }
-
-	bool								ConfigServer::hasRedirection() const { return _hasRedirection; }
 	
 	const ConfigLocation*				ConfigServer::getLocation(const std::string& str) const
 	{
