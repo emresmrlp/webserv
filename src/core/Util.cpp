@@ -30,6 +30,14 @@ namespace util
 		return (false);
 	}
 
+	bool isDirExist(const std::string &path)
+	{
+		struct stat st;
+		if (stat(path.c_str(), &st) == 0) // file exist?
+			return (S_ISDIR(st.st_mode)); // is that directory?
+		return (false);
+	}
+
 	size_t	parseByte(std::string str)
 	{
 		if (str.empty())

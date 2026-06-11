@@ -104,18 +104,30 @@ namespace config
 	
 	ConfigServer	ConfigServerBuilder::build(void)
 	{
+		if (_root.empty())
+			throw std::runtime_error("Root must be set for each server");
+		if (!util::isDirExist(_root))
+			throw std::runtime_error("Root directory is invalid");
+		if (_maxHeaderSize < 1024 || _maxHeaderSize > 10485760)
+			throw std::runtime_error("client_max_header_size must be between 1KB (1.024 bytes) and 10MB (10.485.760 bytes)");
+		if (_maxBodySize < 1024 || _maxBodySize > 2147483648)
+			throw std::runtime_error("client_max_body_size must be between 1KB (1.024 bytes) and 2GB (2.147.483.648 bytes)");
 		if (_listens.empty())
 		{
 			addListen("0.0.0.0:8080");
+			// ! DEBUGGING
 			std::cerr << "# listen cannot be empty, automatically added 0.0.0.0:8080" << std::endl;
+			// ! END OF DEBUGGING
 		}
 		if (_serverNames.empty())
 		{
 			addServerName("");
+			// ! DEBUGGING
 			std::cerr << "# server_names cannot be empty, automatically added \"\"" << std::endl;
+			// ! END OF DEBUGGING
 		}
 		if (_locations.empty())
-			throw std::runtime_error("No location found for a server");
+			throw std::runtime_error("No location found for the server");
 		return (ConfigServer(*this));
 	}
 }

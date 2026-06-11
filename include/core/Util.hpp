@@ -20,6 +20,7 @@ namespace util
 {	
 	void	toLowerCase(std::string &str);
 	bool	isFileExist(const std::string &path);
+	bool	isDirExist(const std::string &path);
 	size_t	parseByte(std::string str);
 }
 

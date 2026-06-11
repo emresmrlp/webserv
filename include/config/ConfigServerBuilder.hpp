@@ -46,8 +46,6 @@ namespace config
 			std::vector<ConfigLocation> _locations;
 			std::vector<ListenTarget>	_listens;
 			std::map<int, std::string>	_errorPages;
-			std::pair<int, std::string>	_returnRedirection;
-			bool						_hasRedirection;
 
 		public:
 			ConfigServerBuilder();
@@ -61,7 +59,6 @@ namespace config
 			ConfigServerBuilder&	addLocation(const ConfigLocation& location);
 			ConfigServerBuilder&	addListen(const std::string& str);
 			ConfigServerBuilder&	addErrorPage(const std::string& no, const std::string& loc);
-			ConfigServerBuilder&	setReturnRedirection(int code, const std::string& url);
 
 			ConfigServer	build(void);
 	};

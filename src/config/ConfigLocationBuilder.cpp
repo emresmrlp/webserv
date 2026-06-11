@@ -24,7 +24,7 @@ namespace config
 		_hasRedirection(false),
 		_maxHeaderSize(0),
 		_maxBodySize(0)
-	{}
+	{ }
 
 	ConfigLocationBuilder& ConfigLocationBuilder::setExecutePath(const std::string& executePath) { _executePath = executePath; return (*this); }
 	
@@ -36,7 +36,7 @@ namespace config
 	{
 		if (_hasRedirection)	
 			throw std::invalid_argument("Invalid redirection usage: more than 1 redirection cannot be set");
-		if (code < 300 || code > 399)
+		if (code < 301 || code > 308)
         	throw std::invalid_argument("Invalid redirection code: must be between 300 and 399");
 		_returnRedirection = std::make_pair(code, url);
 		_hasRedirection = true;
@@ -86,6 +86,12 @@ namespace config
 	{
 		if (_executePath.empty())
 			throw std::runtime_error("Location block missing execute path");
+		if (!util::isDirExist(_executePath))
+			throw std::runtime_error("Location directory is invalid");
+		if (_maxHeaderSize < 1024 || _maxHeaderSize > 10485760)
+			throw std::runtime_error("client_max_header_size must be between 1KB (1.024 bytes) and 10MB (10.485.760 bytes)");
+		if (_maxBodySize < 1024 || _maxBodySize > 2147483648)
+			throw std::runtime_error("client_max_body_size must be between 1KB (1.024 bytes) and 2GB (2.147.483.648 bytes)");
 		if (_allowedMethods.empty())
 		{
 			_allowedMethods.push_back("GET");
