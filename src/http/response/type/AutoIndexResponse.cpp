@@ -71,14 +71,4 @@ namespace http
         body_oss << "<hr></body></html>";
         this->setBody(body_oss.str());
     }
-
-    std::string AutoIndexResponse::serialize() const
-    {
-		std::ostringstream response;
-		
-		response << this->buildHeader();
-        if (this->_request->getMethod() != "HEAD")
-		    response << this->_body;
-		return (response.str());
-    }
 }

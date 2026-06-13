@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 09:04:21 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 10:52:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,4 @@ namespace http
 	}
 
 	RedirectResponse::~RedirectResponse() {}
-
-	std::string RedirectResponse::serialize() const
-	{
-		std::ostringstream response;
-		
-		response << this->buildHeader();
-		if (this->_request->getMethod() != "HEAD")
-			response << this->_body;
-		return (response.str());
-	}
 }

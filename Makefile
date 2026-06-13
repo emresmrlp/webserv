@@ -6,58 +6,65 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/06/10 13:48:24 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/06/13 11:06:12 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-P_BLUE				=	\033[38;5;111m
-P_PURPLE			=	\033[38;5;147m
-P_AQUA				=	\033[38;5;159m
-P_GREEN				=	\033[38;5;120m
-P_PEACH				=	\033[38;5;222m
-RESET				=	\033[0m
-PREFIX				=	$(P_BLUE)(WEBSERV)$(RESET)
-CXX					=	c++
-CXXFLAGS			=	-Wall -Wextra -Werror -std=c++98
-IFLAGS				=	-I include \
-						-I include/config \
-						-I include/core \
-						-I include/http \
-						-I include/http/request \
-						-I include/http/response
-SRC_DIR				=	src/
-OBJ_DIR				=	obj/
-CONFIG_DIR			=	$(SRC_DIR)config/
-CORE_DIR			=	$(SRC_DIR)core/
-HTTP_DIR			=	$(SRC_DIR)http/
-HTTP_REQUEST_DIR	=	$(HTTP_DIR)request/
-HTTP_RESPONSE_DIR	=	$(HTTP_DIR)response/
+P_BLUE					=	\033[38;5;111m
+P_PURPLE				=	\033[38;5;147m
+P_AQUA					=	\033[38;5;159m
+P_GREEN					=	\033[38;5;120m
+P_PEACH					=	\033[38;5;222m
+RESET					=	\033[0m
+PREFIX					=	$(P_BLUE)(WEBSERV)$(RESET)
+CXX						=	c++
+CXXFLAGS				=	-Wall -Wextra -Werror -std=c++98
 
-CONFIG_SRC	=	$(CONFIG_DIR)ConfigServer.cpp \
-				$(CONFIG_DIR)ConfigServerBuilder.cpp \
-				$(CONFIG_DIR)ConfigLocation.cpp \
-				$(CONFIG_DIR)ConfigLocationBuilder.cpp \
-				$(CONFIG_DIR)Parser.cpp \
-				$(CONFIG_DIR)Token.cpp 
-	
-CORE_SRC	=	$(SRC_DIR)main.cpp \
-				$(CORE_DIR)Server.cpp \
-				$(CORE_DIR)ServerHandler.cpp \
-				$(CORE_DIR)Connection.cpp \
-				$(CORE_DIR)Util.cpp
+SRC_DIR                 =   src/
+OBJ_DIR                 =   obj/
+INC_DIR                 =   include/
 
-HTTP_SRC	=	$(HTTP_REQUEST_DIR)Request.cpp \
-				$(HTTP_REQUEST_DIR)RequestBuilder.cpp \
-				$(HTTP_RESPONSE_DIR)ResponseDispatcher.cpp \
-				$(HTTP_RESPONSE_DIR)ResponseFactory.cpp \
-				$(HTTP_RESPONSE_DIR)AResponseBase.cpp \
-				$(HTTP_RESPONSE_DIR)OkResponse.cpp \
-				$(HTTP_RESPONSE_DIR)ErrorResponse.cpp \
-				$(HTTP_RESPONSE_DIR)RedirectResponse.cpp \
-				$(HTTP_RESPONSE_DIR)AutoIndexResponse.cpp
+CONFIG_DIR              =   $(SRC_DIR)config/
+CORE_DIR                =   $(SRC_DIR)core/
+HTTP_DIR                =   $(SRC_DIR)http/
+HTTP_REQUEST_DIR        =   $(HTTP_DIR)request/
+HTTP_RESPONSE_DIR       =   $(HTTP_DIR)response/
+HTTP_RESPONSE_TYPE_DIR  =   $(HTTP_RESPONSE_DIR)type/
 
-SRC         =   $(CONFIG_SRC) $(CORE_SRC) $(HTTP_SRC)
-OBJ         =   $(SRC:src/%.cpp=$(OBJ_DIR)%.o)
+IFLAGS                  =   -I $(INC_DIR) \
+                            -I $(INC_DIR)config \
+                            -I $(INC_DIR)core \
+                            -I $(INC_DIR)http \
+                            -I $(INC_DIR)http/request \
+                            -I $(INC_DIR)http/response \
+                            -I $(INC_DIR)http/response/type
+
+ROOT_SRC    =   $(SRC_DIR)main.cpp
+
+CONFIG_SRC  =   $(CONFIG_DIR)ConfigServer.cpp \
+                $(CONFIG_DIR)ConfigServerBuilder.cpp \
+                $(CONFIG_DIR)ConfigLocation.cpp \
+                $(CONFIG_DIR)ConfigLocationBuilder.cpp \
+                $(CONFIG_DIR)Parser.cpp \
+                $(CONFIG_DIR)Token.cpp 
+
+CORE_SRC    =   $(CORE_DIR)Server.cpp \
+                $(CORE_DIR)ServerHandler.cpp \
+                $(CORE_DIR)Connection.cpp \
+                $(CORE_DIR)Util.cpp
+
+HTTP_SRC    =   $(HTTP_REQUEST_DIR)Request.cpp \
+                $(HTTP_REQUEST_DIR)RequestBuilder.cpp \
+                $(HTTP_RESPONSE_DIR)ResponseDispatcher.cpp \
+                $(HTTP_RESPONSE_DIR)ResponseFactory.cpp \
+                $(HTTP_RESPONSE_DIR)AResponseBase.cpp \
+                $(HTTP_RESPONSE_TYPE_DIR)OkResponse.cpp \
+                $(HTTP_RESPONSE_TYPE_DIR)ErrorResponse.cpp \
+                $(HTTP_RESPONSE_TYPE_DIR)RedirectResponse.cpp \
+                $(HTTP_RESPONSE_TYPE_DIR)AutoIndexResponse.cpp
+
+SRC         =   $(ROOT_SRC) $(CONFIG_SRC) $(CORE_SRC) $(HTTP_SRC)
+OBJ         =   $(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 NAME        =   webserv
 
 all: $(NAME)

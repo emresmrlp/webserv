@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:00:13 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/10 13:42:05 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 11:08:15 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ namespace http
 	{
 		public:
 			virtual ~AResponseBase() {};
-			virtual std::string serialize() const = 0;
+			virtual std::string serialize() const;
 		protected:
 			AResponseBase(const config::ConfigServer &config, const http::Request *request);
 			http::StatusCode									_statusCode;

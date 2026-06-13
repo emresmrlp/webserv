@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 09:03:29 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 11:08:18 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,16 @@ namespace http
 		}
 		header << CRLF;
 		return (header.str());
+	}
+
+	std::string AResponseBase::serialize() const
+	{
+		std::ostringstream response;
+		
+		response << this->buildHeader();
+		if (this->_request->getMethod() != "HEAD")
+			response << this->_body;
+		return (response.str());
 	}
 	
 	void	AResponseBase::addHeader(const std::string &key, const std::string &value)
