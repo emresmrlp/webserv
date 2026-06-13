@@ -77,7 +77,8 @@ namespace http
 		std::ostringstream response;
 		
 		response << this->buildHeader();
-		response << this->_body;
+        if (this->_request->getMethod() != "HEAD")
+		    response << this->_body;
 		return (response.str());
     }
 }

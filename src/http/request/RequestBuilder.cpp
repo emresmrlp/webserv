@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/06 10:27:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 09:58:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ namespace http
 
 				if (!(line.empty()) && (line[0] == ' ' || line[0] == '\t'))
 					return (handleParseResult(BAD_REQUEST, ERROR));
-				if (!buildRequestLine(line, config))
+				if (!buildRequestLine(line))
 					return (this->_parseResult);
 
 				rawReadBuffer.erase(0, nextPos + 2); // +2 for CRLF (\r\n)
@@ -116,7 +116,7 @@ namespace http
 		}
 		if (this->_state == http::STATE_WAIT_VALIDATE)
 		{
-			if (!validateParseResult())
+			if (!validateParseResult(config))
 				return (this->_parseResult);
 			this->_state = http::STATE_COMPLETE;
 		}
@@ -125,7 +125,7 @@ namespace http
 		return (handleParseResult(UNDEFINED, INCOMPLETE));
 	}
 
-	bool RequestBuilder::buildRequestLine(std::string &line, const config::ConfigServer *config)
+	bool RequestBuilder::buildRequestLine(std::string &line)
 	{
 		std::cout << "+ RequestBuilder -> buildRequestLine method starting..." << std::endl;
         std::size_t sp1 = line.find(' ');
@@ -159,23 +159,6 @@ namespace http
 			|| (this->_path.length() >= 3 && this->_path.substr(this->_path.length() - 3) == "/..")) // if "root/pictures/.."
 		{
             handleParseResult(FORBIDDEN, ERROR);
-			return (false);
-		}
-		// method validate
-		std::vector<std::string>::const_iterator it;
-		std::vector<std::string>::const_iterator itEnd;
-		it = config->getLocation(this->_path)->getAllowedMethods().begin();
-		itEnd = config->getLocation(this->_path)->getAllowedMethods().end();
-		bool isAllowedMethod = false;
-		while (it != itEnd)
-		{
-			if (*it == this->_method)
-				isAllowedMethod = true;
-			it++;
-		}
-		if (!isAllowedMethod)
-		{
-			handleParseResult(METHOD_NOT_ALLOWED, ERROR);
 			return (false);
 		}
 		// version validate
@@ -225,9 +208,28 @@ namespace http
 		return (true);
 	}
 
-	bool RequestBuilder::validateParseResult()
+	bool RequestBuilder::validateParseResult(const config::ConfigServer *config)
 	{
 		std::vector<std::string> values;
+
+		// method validate
+		std::vector<std::string>::const_iterator it;
+		std::vector<std::string>::const_iterator itEnd;
+		it = config->getLocation(this->_path)->getAllowedMethods().begin();
+		itEnd = config->getLocation(this->_path)->getAllowedMethods().end();
+		bool isAllowedMethod = false;
+		while (it != itEnd)
+		{
+			if (*it == this->_method)
+				isAllowedMethod = true;
+			it++;
+		}
+		if (!isAllowedMethod)
+		{
+			handleParseResult(METHOD_NOT_ALLOWED, ERROR);
+			return (false);
+		}
+		// host validate
 		this->getHeaders("host", values);
 
 		if (values[0].empty())
@@ -274,8 +276,6 @@ namespace http
 
 	Request *RequestBuilder::build()
 	{
-		if (this->_state != http::STATE_COMPLETE)
-			return (NULL);
 		Request *request = new Request();
 
 		request->setMethod(this->_method);

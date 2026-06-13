@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/06 09:48:10 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 09:56:51 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,16 @@ namespace core
 			return ;
 
 		http::ParseResult parseResult;
-		parseResult = this->_requestBuilder.parse(this->_readBuffer, this->_config); //! parseResult.errorPath initalize
+		parseResult = this->_requestBuilder.parse(this->_readBuffer, this->_config);
 		std::cout << "+ Connection -> RequestBuilder process result: " << parseResult.parseStatus << std::endl;
 		if (parseResult.parseStatus == http::INCOMPLETE)
 			return ;
-
+		this->_request = this->_requestBuilder.build();
+		std::cout << this->_request->getMethod() << std::endl;
 		if (parseResult.parseStatus == http::ERROR)
-			this->_response = this->_responseFactory.createErrorResponse(this->_config, parseResult.errorPath, parseResult.httpStatusCode);
+			this->_response = this->_responseFactory.createErrorResponse(this->_config, this->_request, parseResult.httpStatusCode);
 		else if (parseResult.parseStatus == http::COMPLETE)
-		{
-			this->_request = this->_requestBuilder.build();
-			this->_response = this->_dispatcher.dispatch(this->_request, this->_config);
-		}
+			this->_response = this->_dispatcher.dispatch(this->_config, this->_request);
 		this->_writeBuffer = this->_response->serialize();
 		this->setState(WRITING);
 	}

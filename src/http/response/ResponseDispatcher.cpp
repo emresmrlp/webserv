@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/10 13:50:52 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 09:45:35 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace http
 
 	ResponseDispatcher::~ResponseDispatcher() {}
 
-	http::IResponse *ResponseDispatcher::dispatch(http::Request *request, const config::ConfigServer *config)
+	http::IResponse *ResponseDispatcher::dispatch(const config::ConfigServer *config, http::Request *request)
 	{
 		http::IResponse *response;
 		struct stat st;
@@ -38,7 +38,7 @@ namespace http
 
 			redirectPair = configLocation->getReturnRedirection();
 			if (redirectPair.second == request->getPath())
-				response = this->_factory.createErrorResponse(config, request->getPath(), http::INTERNAL_SERVER_ERROR);
+				response = this->_factory.createErrorResponse(config, request, http::INTERNAL_SERVER_ERROR);
 			else
 				response = this->_factory.createRedirectResponse(config, redirectPair);
 			return (response);
@@ -49,7 +49,7 @@ namespace http
 		if (stat(filePath.c_str(), &st) != 0)
 		{
 			std::cout << "404 File not found: " << request->getPath() << std::endl;
-			response = this->_factory.createErrorResponse(config, request->getPath(), http::NOT_FOUND);
+			response = this->_factory.createErrorResponse(config, request, http::NOT_FOUND);
 		}
 		else if (S_ISREG(st.st_mode))
 			response = this->_factory.createOkResponse(config, request);
@@ -75,10 +75,10 @@ namespace http
 					response = this->_factory.createPathOkResponse(config, request, indexPath);
 			}
 			else
-				response = this->_factory.createErrorResponse(config, request->getPath(), http::FORBIDDEN);
+				response = this->_factory.createErrorResponse(config, request, http::FORBIDDEN);
 		}
 		else
-			response = this->_factory.createErrorResponse(config, request->getPath(), http::FORBIDDEN);
+			response = this->_factory.createErrorResponse(config, request, http::FORBIDDEN);
 		return (response);
 	}
 }

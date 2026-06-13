@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 20:56:09 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 09:54:54 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ namespace http
 	{
 		http::ParseStatus	parseStatus;
 		http::StatusCode	httpStatusCode;
-		std::string			errorPath;
 	};
 
 	class Request;
@@ -68,10 +67,10 @@ namespace http
 			http::ParseResult	handleParseResult(http::StatusCode statusCode, http::ParseStatus parseStatus);
 			bool				getHeaders(const std::string &key, std::vector<std::string> &values) const;
 			void				addHeader(const std::string &key, const std::string &value);
-			bool				buildRequestLine(std::string &line, const config::ConfigServer *config);
+			bool				buildRequestLine(std::string &line);
 			bool				buildHeaderLine(std::string &line);
 			bool				buildBody(std::string &rawReadBuffer);
-			bool				validateParseResult();
+			bool				validateParseResult(const config::ConfigServer *config);
 	};
 }
 

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:07:42 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/10 14:00:06 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 09:33:34 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ namespace http
 
 	ResponseFactory::~ResponseFactory() {}
 
-	http::IResponse *ResponseFactory::createErrorResponse(const config::ConfigServer *config, const std::string &path, http::StatusCode statusCode)
+	http::IResponse *ResponseFactory::createErrorResponse(const config::ConfigServer *config, http::Request *request, http::StatusCode statusCode)
 	{
-		return (new ErrorResponse(*config, path, statusCode));
+		return (new ErrorResponse(*config, request, statusCode));
 	}
 
 	http::IResponse *ResponseFactory::createRedirectResponse(const config::ConfigServer *config, std::pair<int, std::string> redirectPair)

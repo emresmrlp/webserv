@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:41:51 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/10 13:50:47 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 09:33:30 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ namespace http
             http::IResponse *createAutoIndexResponse(const config::ConfigServer *config, http::Request *request);
             http::IResponse *createOkResponse(const config::ConfigServer *config, http::Request *request);
             http::IResponse *createPathOkResponse(const config::ConfigServer *config, http::Request *request, const std::string &path);
-            http::IResponse *createErrorResponse(const config::ConfigServer *config, const std::string &path, http::StatusCode statusCode);
+            http::IResponse *createErrorResponse(const config::ConfigServer *config, http::Request *request, http::StatusCode statusCode);
         	http::IResponse *createRedirectResponse(const config::ConfigServer *config, std::pair<int, std::string> redirectPair);
     };
 }
