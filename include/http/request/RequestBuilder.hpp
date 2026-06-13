@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 17:46:22 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 21:28:53 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ namespace http
 			std::vector<std::pair<std::string, std::string> >	_headers;
 			std::string											_body;
 
-			bool												_hasBody;
 			ParseState											_state;
 			ParseResult											_parseResult;
 			http::ParseResult	handleParseResult(http::StatusCode statusCode, http::ParseStatus parseStatus);

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 17:46:28 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 21:34:50 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace http
 {
-	RequestBuilder::RequestBuilder() : _hasBody(false), _state(http::STATE_REQUEST_LINE) {}
+	RequestBuilder::RequestBuilder() : _state(http::STATE_REQUEST_LINE) {}
 
 	RequestBuilder::~RequestBuilder() {}
 
@@ -72,9 +72,6 @@ namespace http
 					return (this->_parseResult);
 
 				rawReadBuffer.erase(0, nextPos + 2); // +2 for CRLF (\r\n)
-				// POST method has a body
-				if (this->_method == "POST") // TODO: content length < 0 -> hasbody=false
-					this->_hasBody = true;
 				std::cout << "+ RequestBuilder -> Request line parsed success." << std::endl;
 				this->_state = http::STATE_HEADERS;
 			}
@@ -86,15 +83,11 @@ namespace http
 					rawReadBuffer.erase(0, 2);
 					if (config->getLocation(this->_path)->hasRedirection())
 					{
-						this->_hasBody = false;	
 						this->_state = http::STATE_WAIT_VALIDATE;
 						handleParseResult(static_cast<http::StatusCode>
 							(config->getLocation(this->_path)->getReturnRedirection().first), COMPLETE);
 					}
-					if (this->_hasBody)
-						this->_state = http::STATE_BODY;
-					else
-						this->_state = http::STATE_WAIT_VALIDATE;
+					this->_state = http::STATE_BODY;
 					break ;
 				}
 				line = rawReadBuffer.substr(0, nextPos);
@@ -110,8 +103,8 @@ namespace http
 		if (this->_state == http::STATE_BODY)
 		{
 			std::cout << "+ RequestBuilder -> Body parsing..." << std::endl;
-			if (!buildBody(rawReadBuffer))
-				return (this->_parseResult);
+			if (!rawReadBuffer.empty())
+				this->_body = rawReadBuffer;
 			this->_state = http::STATE_WAIT_VALIDATE;
 		}
 		if (this->_state == http::STATE_WAIT_VALIDATE)
@@ -203,8 +196,9 @@ namespace http
 
 	bool RequestBuilder::buildBody(std::string &rawReadBuffer)
 	{
-		//TODO: body parse
-		(void)rawReadBuffer;
+		if (rawReadBuffer.empty())
+			return (false);
+		this->_body = rawReadBuffer;
 		return (true);
 	}
 

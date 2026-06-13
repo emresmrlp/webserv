@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:00:13 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:10:24 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 21:07:18 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ namespace http
 
 			bool				getHeader(const std::string &key, std::string &value) const;
 			bool				getHeaders(const std::string &key, std::vector<std::string> &values) const;
-			std::string			getDate() const;
 			const std::string	getMimeType(const std::string &path) const;
 			http::StatusCode	getStatusCode() const;
 			http::StatusMessage	getStatusMessage(http::StatusCode statusCode) const;

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:27:39 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 22:19:23 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ namespace http
 
 	void AResponseBase::initDefaultHeaders()
 	{
-		this->addHeader("Date", this->getDate());
+		this->addHeader("Date", util::getCurrentDate());
 		this->addHeader("Server", this->_signature);
 		this->addHeader("Connection", "close");
 	}
@@ -200,16 +200,6 @@ namespace http
 		if (values.empty())
 			return (false);
 		return (true);
-	}
-
-	std::string AResponseBase::getDate() const
-	{
-		char	buffer[50];
-		time_t	timestamp;
-		
-		timestamp = time(NULL);
-		std::strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", localtime(&timestamp));
-		return (buffer);
 	}
 
 	http::StatusCode AResponseBase::getStatusCode() const

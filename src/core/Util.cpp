@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:41:15 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:09:20 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 21:06:55 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,26 @@ namespace util
 	{
 		for (std::size_t i = 0; i < str.length(); ++i)
 			str[i] = std::tolower(static_cast<unsigned char>(str[i]));
+	}
+
+	std::string getCurrentDate()
+	{
+		char	buffer[50];
+		time_t	timestamp;
+		
+		timestamp = time(NULL);
+		std::strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", localtime(&timestamp));
+		return (buffer);
+	}
+
+	std::string getCurrentTimestamp()
+	{
+		char	buffer[50];
+		time_t	timestamp;
+		
+		timestamp = time(NULL);
+		std::strftime(buffer, sizeof(buffer), "%Y%m%d_%H%M%S", localtime(&timestamp));
+		return (buffer);
 	}
 
 	std::string	toString(std::size_t size)

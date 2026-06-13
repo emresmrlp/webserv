@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:16:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 20:56:54 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace http
 {
-    DeleteHandler::DeleteHandler()
+    DeleteHandler::DeleteHandler(ResponseFactory &factory) : _factory(factory)
     {
     }
 

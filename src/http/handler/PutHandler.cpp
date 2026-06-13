@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:03:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:16:20 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 20:56:44 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace http
 {
-    PutHandler::PutHandler()
+    PutHandler::PutHandler(ResponseFactory &factory) : _factory(factory)
     {
     }
 

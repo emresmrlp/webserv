@@ -6,7 +6,7 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/06/13 19:08:31 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/06/13 21:15:07 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,6 +62,7 @@ HTTP_SRC    =   $(HTTP_REQUEST_DIR)Request.cpp \
                 $(HTTP_RESPONSE_DIR)AResponseBase.cpp \
 				$(HTTP_HANDLER_DIR)GetHandler.cpp \
 				$(HTTP_HANDLER_DIR)HeadHandler.cpp \
+				$(HTTP_HANDLER_DIR)PostHandler.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)SuccessResponse.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)StatusResponse.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)RedirectResponse.cpp \

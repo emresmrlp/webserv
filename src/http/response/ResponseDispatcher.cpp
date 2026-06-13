@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:21:44 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 21:15:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <Util.hpp>
 #include "GetHandler.hpp"
 #include "HeadHandler.hpp"
-// #include "PostHandler.hpp"
+#include "PostHandler.hpp"
 // #include "DeleteHandler.hpp"
 // #include "PutHandler.hpp"
 
@@ -30,9 +30,9 @@ namespace http
 	{
 		this->_handlers["GET"] = new GetHandler(this->_factory);
 		this->_handlers["HEAD"] = new HeadHandler(this->_factory);
-		// this->_handlers["POST"] = new PostHandler();
-		// this->_handlers["DELETE"] = new DeleteHandler();
-		// this->_handlers["PUT"] = new PutHandler();
+		this->_handlers["POST"] = new PostHandler(this->_factory);
+		// this->_handlers["DELETE"] = new DeleteHandler(this->_factory);
+		// this->_handlers["PUT"] = new PutHandler(this->_factory);
 	}
 
 	ResponseDispatcher::~ResponseDispatcher()

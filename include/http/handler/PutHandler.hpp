@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 16:58:35 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 18:24:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 20:56:07 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ namespace http
     class PutHandler : public http::IMethodHandler
     {
         public:
-            PutHandler();
+            PutHandler(ResponseFactory &factory);
             ~PutHandler();
             virtual http::IResponse *handle(const config::ConfigServer *config, 
                 const config::ConfigLocation *configLoc, http::Request *request) const;
