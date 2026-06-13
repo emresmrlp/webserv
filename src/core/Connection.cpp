@@ -6,13 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 09:56:51 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 16:48:23 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Connection.hpp"
-#include "OkResponse.hpp"
-#include "ErrorResponse.hpp"
+#include "SuccessResponse.hpp"
+#include "StatusResponse.hpp"
 #include <iostream>
 #include "Request.hpp"
 #include "ResponseDispatcher.hpp"
@@ -35,9 +35,8 @@ namespace core
 		if (parseResult.parseStatus == http::INCOMPLETE)
 			return ;
 		this->_request = this->_requestBuilder.build();
-		std::cout << this->_request->getMethod() << std::endl;
 		if (parseResult.parseStatus == http::ERROR)
-			this->_response = this->_responseFactory.createErrorResponse(this->_config, this->_request, parseResult.httpStatusCode);
+			this->_response = this->_responseFactory.createStatusResponse(this->_config, this->_request, parseResult.httpStatusCode);
 		else if (parseResult.parseStatus == http::COMPLETE)
 			this->_response = this->_dispatcher.dispatch(this->_config, this->_request);
 		this->_writeBuffer = this->_response->serialize();

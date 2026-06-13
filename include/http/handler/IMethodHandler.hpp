@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   OkResponse.hpp                                     :+:      :+:    :+:   */
+/*   IMethodHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 10:45:58 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 12:26:56 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/06/13 18:28:07 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OKRESPONSE_HPP
-# define OKRESPONSE_HPP
-# include "AResponseBase.hpp"
+#ifndef IMETHODHANDLER_HPP
+# define IMETHODHANDLER_HPP
+# include "ConfigServer.hpp"
+# include "ConfigLocation.hpp"
+# include "Request.hpp"
 
 namespace http
 {
-	class Request;
+	class IResponse;
+    class ResponseFactory;
 	
-	class OkResponse : public AResponseBase
+	class IMethodHandler
 	{
 		public:
-			OkResponse(const config::ConfigServer &config, const http::Request *request);
-			OkResponse(const config::ConfigServer &config, const http::Request *request, const std::string &html);
-			~OkResponse();
-		private:
-			void initHeaders();
-		};
+			virtual ~IMethodHandler() {};
+			virtual IResponse *handle(const config::ConfigServer *config, const config::ConfigLocation *configLoc, http::Request *request) const = 0;
+	};
 }
 
 #endif

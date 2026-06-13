@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 09:54:54 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 17:46:22 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ namespace http
 			bool				buildRequestLine(std::string &line);
 			bool				buildHeaderLine(std::string &line);
 			bool				buildBody(std::string &rawReadBuffer);
-			bool				validateParseResult(const config::ConfigServer *config);
+			bool				validateParseResult();
 	};
 }
 

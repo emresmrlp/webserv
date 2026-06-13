@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Util.hpp                                           :+:      :+:    :+:   */
+/*   StatusResponse.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/22 14:40:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:08:28 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/06/13 10:51:23 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTIL_HPP
-# define UTIL_HPP
-# include <string>
-# define CRLF "\r\n"
-# define DOUBLE_CRLF "\r\n\r\n"
+#ifndef ERRORRESPONSE_HPP
+# define ERRORRESPONSE_HPP
+# include "AResponseBase.hpp"
 
-namespace util
+namespace http
 {
-	std::string	toString(std::size_t size);
-	void		toLowerCase(std::string &str);
-	bool		isFileExist(const std::string &path);
-	bool		isDirExist(const std::string &path);
-	size_t		parseByte(std::string str);
+    class StatusResponse : public http::AResponseBase
+    {
+        public:
+            StatusResponse(const config::ConfigServer &config, const Request *request, http::StatusCode status);
+            ~StatusResponse();
+        private:
+            void initHeaders();
+            void createDefaultBody();
+    };
 }
-
 #endif

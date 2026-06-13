@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 09:58:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 17:46:28 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ namespace http
 		}
 		if (this->_state == http::STATE_WAIT_VALIDATE)
 		{
-			if (!validateParseResult(config))
+			if (!validateParseResult())
 				return (this->_parseResult);
 			this->_state = http::STATE_COMPLETE;
 		}
@@ -208,27 +208,10 @@ namespace http
 		return (true);
 	}
 
-	bool RequestBuilder::validateParseResult(const config::ConfigServer *config)
+	bool RequestBuilder::validateParseResult()
 	{
 		std::vector<std::string> values;
 
-		// method validate
-		std::vector<std::string>::const_iterator it;
-		std::vector<std::string>::const_iterator itEnd;
-		it = config->getLocation(this->_path)->getAllowedMethods().begin();
-		itEnd = config->getLocation(this->_path)->getAllowedMethods().end();
-		bool isAllowedMethod = false;
-		while (it != itEnd)
-		{
-			if (*it == this->_method)
-				isAllowedMethod = true;
-			it++;
-		}
-		if (!isAllowedMethod)
-		{
-			handleParseResult(METHOD_NOT_ALLOWED, ERROR);
-			return (false);
-		}
 		// host validate
 		this->getHeaders("host", values);
 

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Util.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:41:15 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 18:03:45 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/13 20:09:20 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Util.hpp"
 #include <sys/stat.h>
 #include <stdexcept>
+#include <sstream>
 
 namespace util
 {
@@ -20,6 +21,14 @@ namespace util
 	{
 		for (std::size_t i = 0; i < str.length(); ++i)
 			str[i] = std::tolower(static_cast<unsigned char>(str[i]));
+	}
+
+	std::string	toString(std::size_t size)
+	{
+		std::ostringstream oss;
+
+		oss << size;
+		return (oss.str());
 	}
 
 	bool isFileExist(const std::string &path)

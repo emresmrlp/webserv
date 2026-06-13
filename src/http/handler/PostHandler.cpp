@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Util.hpp                                           :+:      :+:    :+:   */
+/*   PostHandler.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/22 14:40:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:08:28 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/06/13 17:02:59 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/06/13 19:49:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTIL_HPP
-# define UTIL_HPP
-# include <string>
-# define CRLF "\r\n"
-# define DOUBLE_CRLF "\r\n\r\n"
+#include "PostHandler.hpp"
 
-namespace util
+namespace http
 {
-	std::string	toString(std::size_t size);
-	void		toLowerCase(std::string &str);
-	bool		isFileExist(const std::string &path);
-	bool		isDirExist(const std::string &path);
-	size_t		parseByte(std::string str);
-}
+	PostHandler::PostHandler()
+	{
+	}
 
-#endif
+	PostHandler::~PostHandler()
+	{
+	}
+
+	http::IResponse *PostHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *configLoc,
+		http::Request *request) const
+	{}
+}

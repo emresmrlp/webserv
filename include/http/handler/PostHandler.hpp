@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ErrorResponse.hpp                                  :+:      :+:    :+:   */
+/*   PostHandler.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 10:51:23 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/06/13 16:58:56 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/06/13 18:24:23 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERRORRESPONSE_HPP
-# define ERRORRESPONSE_HPP
-# include "AResponseBase.hpp"
+#ifndef POSTHANDLER_HPP
+# define POSTHANDLER_HPP
+# include "IMethodHandler.hpp"
 
 namespace http
 {
-    class ErrorResponse : public http::AResponseBase
+	class IResponse;
+    class ResponseFactory;
+
+    class PostHandler : public http::IMethodHandler
     {
         public:
-            ErrorResponse(const config::ConfigServer &config, const Request *request, http::StatusCode status);
-            ~ErrorResponse();
+            PostHandler();
+            ~PostHandler();
+            virtual http::IResponse *handle(const config::ConfigServer *config, 
+                const config::ConfigLocation *configLoc, http::Request *request) const;
         private:
-            void initHeaders();
-            void createDefaultBody();
+            ResponseFactory &_factory;
     };
 }
+
 #endif

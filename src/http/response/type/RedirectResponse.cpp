@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 10:52:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 20:14:05 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,9 @@ namespace http
 		: AResponseBase(config, NULL)
 	{
 		this->_statusCode = static_cast<http::StatusCode>(redirectPair.first);
-		this->_statusMessage = this->getStatusMessage(this->_statusCode);
 		this->setBody("");
-		this->addHeader("Date", http::AResponseBase::getDate());
-        this->addHeader("Server", this->_config.getSignature());
-        this->addHeader("Location", redirectPair.second);
-		this->addHeader("Content-Type", "text/html");
-        std::ostringstream oss;
-        oss << this->_body.length();
-		this->addHeader("Content-Length", oss.str());
-		this->addHeader("Connection", "close");
+        this->addHeader("Location", ("/" + redirectPair.second));
+		this->addHeader("Content-Length", 0);
 	}
 
 	RedirectResponse::~RedirectResponse() {}

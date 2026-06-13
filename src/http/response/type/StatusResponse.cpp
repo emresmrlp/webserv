@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ErrorResponse.cpp                                  :+:      :+:    :+:   */
+/*   StatusResponse.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ErrorResponse.hpp"
+#include "StatusResponse.hpp"
 #include "Util.hpp"
 #include <vector>
 #include <iostream>
@@ -18,21 +18,11 @@
 
 namespace http
 {
-	ErrorResponse::ErrorResponse(const config::ConfigServer &config, const Request *request, StatusCode status)
+	StatusResponse::StatusResponse(const config::ConfigServer &config, const Request *request, StatusCode status)
 		: AResponseBase(config, request)
 	{
 		this->_statusCode = status;
-		this->_statusMessage = this->getStatusMessage(this->_statusCode);
 		this->createDefaultBody();
-		this->initHeaders();
-	}
-
-	ErrorResponse::~ErrorResponse() {}
-
-	void ErrorResponse::initHeaders()
-    {
-        this->addHeader("Date", http::AResponseBase::getDate());
-        this->addHeader("Server", this->_config.getSignature());
 		if (this->_statusCode == METHOD_NOT_ALLOWED)
 		{
 			std::ostringstream result;
@@ -53,21 +43,19 @@ namespace http
 			}
 		}
 		this->addHeader("Content-Type", "text/html");
-        std::ostringstream oss;
-        oss << this->_body.length();
-		this->addHeader("Content-Length", oss.str());
-		this->addHeader("Connection", "close");
-    }
+		this->addHeader("Content-Length", util::toString(this->_body.size()));
+	}
 
-	void ErrorResponse::createDefaultBody()
+	StatusResponse::~StatusResponse() {}
+
+	void StatusResponse::createDefaultBody()
 	{
 		std::stringstream body_oss;
 	
 		body_oss << "<!DOCTYPE html><html>"
-				<< "<title>" << this->_statusCode << " - " << this->_statusMessage << "</title>"
-				<< "<body>WEBSERV"
-				<< "<h1>" << this->_statusCode << "</h1>"
-				<< "<p>" << this->_statusMessage << "</p>"
+				<< "<title>" << this->_statusCode << " - " << this->getStatusMessage(this->_statusCode) << "</title>"
+				<< "<body><h1>WEBSERV</h1>"
+				<< "<h2>" << this->_statusCode << " - " << this->getStatusMessage(this->_statusCode) << "</h2>"
 				<< "Developed by <b>ysumeral, beldemir (C) 2026</b></div>"
 			<< "</body></html>";
 

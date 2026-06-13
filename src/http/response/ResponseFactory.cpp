@@ -6,13 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:07:42 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 11:07:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 20:18:01 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResponseFactory.hpp"
-#include "ErrorResponse.hpp"
-#include "OkResponse.hpp"
+#include "StatusResponse.hpp"
+#include "SuccessResponse.hpp"
 #include "RedirectResponse.hpp"
 #include "AutoIndexResponse.hpp"
 
@@ -22,9 +22,9 @@ namespace http
 
 	ResponseFactory::~ResponseFactory() {}
 
-	http::IResponse *ResponseFactory::createErrorResponse(const config::ConfigServer *config, http::Request *request, http::StatusCode statusCode)
+	http::IResponse *ResponseFactory::createStatusResponse(const config::ConfigServer *config, http::Request *request, http::StatusCode statusCode)
 	{
-		return (new ErrorResponse(*config, request, statusCode));
+		return (new StatusResponse(*config, request, statusCode));
 	}
 
 	http::IResponse *ResponseFactory::createRedirectResponse(const config::ConfigServer *config, std::pair<int, std::string> redirectPair)
@@ -32,14 +32,14 @@ namespace http
 		return (new RedirectResponse(*config, redirectPair));
 	}
 
-	http::IResponse *ResponseFactory::createOkResponse(const config::ConfigServer *config, http::Request *request)
+	http::IResponse *ResponseFactory::createSuccessResponse(const config::ConfigServer *config, http::Request *request, http::StatusCode status)
 	{
-		return (new OkResponse(*config, request));
+		return (new SuccessResponse(*config, request, status));
 	}
 
-	http::IResponse *ResponseFactory::createPathOkResponse(const config::ConfigServer *config, http::Request *request, const std::string &path)
+	http::IResponse *ResponseFactory::createSuccessResponseWithPath(const config::ConfigServer *config, http::Request *request, const std::string &path)
 	{
-		return (new OkResponse(*config, request, path));
+		return (new SuccessResponse(*config, request, path));
 	}
 
 	http::IResponse *ResponseFactory::createAutoIndexResponse(const config::ConfigServer *config, http::Request *request)

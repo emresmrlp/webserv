@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/10 13:00:42 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 19:35:39 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,12 +164,11 @@ namespace core
 		if (bytesRead > 0)
 		{
 			std::string rawData(buffer, bytesRead);
-			std::cout << "---------------- READ REQUEST ----------------\n";
-			std::cout << rawData;
-			std::cout << "---------------- READ REQUEST ----------------\n";
+			std::cout << "---------------- REQUEST ----------------" << std::endl;
+			std::cout << rawData << std::endl;
+			std::cout << "---------------- REQUEST END ----------------" << std::endl;
 			conn->appendRequestBuffer(rawData);
 			conn->process();
-			std::cout << "---------------- READ REQUEST: " << conn->getState() << " ----------------" << std::endl;
 			if (conn->getState() == core::WRITING)
 				this->_pollFds[i].events |= POLLOUT; // ? ready to writeConnection function
 		}

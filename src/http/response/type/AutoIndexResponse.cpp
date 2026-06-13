@@ -18,31 +18,20 @@
 #include <sstream>
 #include <dirent.h>
 #include <map>
+#include "Util.hpp"
 
 namespace http
 {
     AutoIndexResponse::AutoIndexResponse(const config::ConfigServer &config, const Request *request)
         : AResponseBase(config, request)
     {
+        this->_statusCode = OK;
         this->createDefaultBody();
-        this->initHeaders();
+        this->addHeader("Content-Length", util::toString(this->_body.size()));
         this->addHeader("Content-Type", "text/html");
     }
 
     AutoIndexResponse::~AutoIndexResponse() {}
-
-    void AutoIndexResponse::initHeaders()
-    {
-        std::ostringstream oss;
-        
-        this->_statusCode = OK;
-        this->_statusMessage = this->getStatusMessage(this->_statusCode);
-        this->addHeader("Date", http::AResponseBase::getDate());
-        this->addHeader("Server", this->_signature);
-        oss << this->_body.size();
-		this->addHeader("Content-Length", oss.str());
-		this->addHeader("Connection", "close");
-    }
 
     void    AutoIndexResponse::createDefaultBody()
     {

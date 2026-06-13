@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ResponseDispatcher.hpp                             :+:      :+:    :+:   */
+/*   GetHandler.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/22 12:25:40 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 18:21:50 by ysumeral         ###   ########.fr       */
+/*   Created: 2026/06/13 16:58:22 by ysumeral          #+#    #+#             */
+/*   Updated: 2026/06/13 18:54:04 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RESPONSEDISPATCHER_HPP
-# define RESPONSEDISPATCHER_HPP
-# include "Server.hpp"
-# include "Request.hpp"
-# include "IResponse.hpp"
-# include "ResponseFactory.hpp"
+#ifndef GETHANDLER_HPP
+# define GETHANDLER_HPP
 # include "IMethodHandler.hpp"
-# include <map>
 
 namespace http
 {
-	class ResponseDispatcher
+	class IResponse;
+	class ResponseFactory;
+
+	class GetHandler : public http::IMethodHandler
 	{
 		public:
-			ResponseDispatcher(ResponseFactory &factory);
-			~ResponseDispatcher();
-			http::IResponse *dispatch(const config::ConfigServer *_config, http::Request *request);
+			GetHandler(ResponseFactory &factory);
+			~GetHandler();
+			virtual http::IResponse *handle(const config::ConfigServer *config, 
+				const config::ConfigLocation *configLoc, http::Request *request) const;
 		private:
-			ResponseFactory									&_factory;
-			std::map<std::string, http::IMethodHandler *>	_handlers;
+			ResponseFactory &_factory;
 	};
 }
 

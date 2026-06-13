@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 11:08:18 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/13 20:27:39 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,41 @@
 namespace http
 {
 	AResponseBase::AResponseBase(const config::ConfigServer &config, const http::Request *request)
-		: _statusCode(http::UNDEFINED), _statusMessage(this->getStatusMessage(this->_statusCode)), _body("")
-		, _config(config), _signature(this->_config.getSignature()), _request(request) {}
+		: _statusCode(http::UNDEFINED), _body(""), _config(config), 
+		_signature(this->_config.getSignature()), _request(request)
+	{
+		this->initDefaultHeaders();
+	}
+
+	std::string AResponseBase::serialize() const
+	{
+		std::ostringstream response;
+		
+		response << this->buildStatusLine();
+		response << this->buildHeader();
+		response << this->_body;
+		std::cout << "---------------- RESPONSE ----------------" << std::endl;
+		std::cout << response.str() << std::endl;
+		std::cout << "---------------- RESPONSE END ----------------" << std::endl;
+		std::cout << std::endl;
+		return (response.str());
+	}
+
+	std::string AResponseBase::buildStatusLine() const
+	{
+		std::ostringstream statusLine;
+
+		statusLine	<< this->_config.getHttpVersion() << " "
+				<< this->_statusCode << " "
+				<< this->getStatusMessage(this->_statusCode) << CRLF;
+
+		return (statusLine.str());
+	}
 
 	std::string	AResponseBase::buildHeader() const
 	{
 		std::ostringstream header;
-		header << this->_config.getHttpVersion() << " " << this->_statusCode << " " << this->_statusMessage << CRLF; // REQUEST LINE
+		
 		std::vector<std::pair<std::string, std::string> >::const_iterator it;
 		std::string headerKey;
 		for (it = this->_headers.begin(); it != this->_headers.end(); ++it)
@@ -38,16 +66,18 @@ namespace http
 		return (header.str());
 	}
 
-	std::string AResponseBase::serialize() const
+	void AResponseBase::initDefaultHeaders()
 	{
-		std::ostringstream response;
-		
-		response << this->buildHeader();
-		if (this->_request->getMethod() != "HEAD")
-			response << this->_body;
-		return (response.str());
+		this->addHeader("Date", this->getDate());
+		this->addHeader("Server", this->_signature);
+		this->addHeader("Connection", "close");
 	}
 	
+	void	AResponseBase::clearBody()
+	{
+		this->_body = "";
+	}
+
 	void	AResponseBase::addHeader(const std::string &key, const std::string &value)
 	{
 		std::pair<std::string, std::string> headerPair;
@@ -139,11 +169,8 @@ namespace http
         	this->setBody(this->readFile(path));
     }
 
-	void AResponseBase::createBody(const std::string &literalPath)
+	void AResponseBase::createBody(const std::string &path)
     {
-        std::string path;
-
-        path = literalPath;
 		if (!path.empty())
         	this->setBody(this->readFile(path));
     }

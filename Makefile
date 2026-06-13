@@ -6,7 +6,7 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/06/13 11:06:12 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/06/13 19:08:31 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ CONFIG_DIR              =   $(SRC_DIR)config/
 CORE_DIR                =   $(SRC_DIR)core/
 HTTP_DIR                =   $(SRC_DIR)http/
 HTTP_REQUEST_DIR        =   $(HTTP_DIR)request/
+HTTP_HANDLER_DIR        =   $(HTTP_DIR)handler/
 HTTP_RESPONSE_DIR       =   $(HTTP_DIR)response/
 HTTP_RESPONSE_TYPE_DIR  =   $(HTTP_RESPONSE_DIR)type/
 
@@ -35,6 +36,7 @@ IFLAGS                  =   -I $(INC_DIR) \
                             -I $(INC_DIR)config \
                             -I $(INC_DIR)core \
                             -I $(INC_DIR)http \
+							-I $(INC_DIR)http/handler \
                             -I $(INC_DIR)http/request \
                             -I $(INC_DIR)http/response \
                             -I $(INC_DIR)http/response/type
@@ -58,8 +60,10 @@ HTTP_SRC    =   $(HTTP_REQUEST_DIR)Request.cpp \
                 $(HTTP_RESPONSE_DIR)ResponseDispatcher.cpp \
                 $(HTTP_RESPONSE_DIR)ResponseFactory.cpp \
                 $(HTTP_RESPONSE_DIR)AResponseBase.cpp \
-                $(HTTP_RESPONSE_TYPE_DIR)OkResponse.cpp \
-                $(HTTP_RESPONSE_TYPE_DIR)ErrorResponse.cpp \
+				$(HTTP_HANDLER_DIR)GetHandler.cpp \
+				$(HTTP_HANDLER_DIR)HeadHandler.cpp \
+                $(HTTP_RESPONSE_TYPE_DIR)SuccessResponse.cpp \
+                $(HTTP_RESPONSE_TYPE_DIR)StatusResponse.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)RedirectResponse.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)AutoIndexResponse.cpp
 
