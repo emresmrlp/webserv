@@ -1,4 +1,4 @@
-# **************************************************************************** #
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -6,9 +6,9 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/06/14 10:42:52 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/06/14 19:06:46 by ysumeral         ###   ########.fr        #
 #                                                                              #
-# **************************************************************************** #
+#******************************************************************************#
 
 P_BLUE					=	\033[38;5;111m
 P_PURPLE				=	\033[38;5;147m
@@ -28,6 +28,7 @@ CONFIG_DIR              =   $(SRC_DIR)config/
 CORE_DIR                =   $(SRC_DIR)core/
 HTTP_DIR                =   $(SRC_DIR)http/
 HTTP_REQUEST_DIR        =   $(HTTP_DIR)request/
+HTTP_REQUEST_STATE_DIR  =   $(HTTP_DIR)request/state/
 HTTP_HANDLER_DIR        =   $(HTTP_DIR)handler/
 HTTP_RESPONSE_DIR       =   $(HTTP_DIR)response/
 HTTP_RESPONSE_TYPE_DIR  =   $(HTTP_RESPONSE_DIR)type/
@@ -38,6 +39,7 @@ IFLAGS                  =   -I $(INC_DIR) \
                             -I $(INC_DIR)http \
 							-I $(INC_DIR)http/handler \
                             -I $(INC_DIR)http/request \
+							-I $(INC_DIR)http/request/state \
                             -I $(INC_DIR)http/response \
                             -I $(INC_DIR)http/response/type
 
@@ -57,14 +59,17 @@ CORE_SRC    =   $(CORE_DIR)Server.cpp \
 
 HTTP_SRC    =   $(HTTP_REQUEST_DIR)Request.cpp \
                 $(HTTP_REQUEST_DIR)RequestBuilder.cpp \
-                $(HTTP_RESPONSE_DIR)ResponseDispatcher.cpp \
-                $(HTTP_RESPONSE_DIR)ResponseFactory.cpp \
-                $(HTTP_RESPONSE_DIR)AResponseBase.cpp \
+				$(HTTP_REQUEST_STATE_DIR)BodyState.cpp \
+                $(HTTP_REQUEST_STATE_DIR)HeaderState.cpp \
+				$(HTTP_REQUEST_STATE_DIR)RequestLineState.cpp \
 				$(HTTP_HANDLER_DIR)GetHandler.cpp \
 				$(HTTP_HANDLER_DIR)HeadHandler.cpp \
 				$(HTTP_HANDLER_DIR)PostHandler.cpp \
 				$(HTTP_HANDLER_DIR)PutHandler.cpp \
 				$(HTTP_HANDLER_DIR)DeleteHandler.cpp \
+                $(HTTP_RESPONSE_DIR)ResponseDispatcher.cpp \
+                $(HTTP_RESPONSE_DIR)ResponseFactory.cpp \
+                $(HTTP_RESPONSE_DIR)AResponseBase.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)SuccessResponse.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)StatusResponse.cpp \
                 $(HTTP_RESPONSE_TYPE_DIR)RedirectResponse.cpp \
