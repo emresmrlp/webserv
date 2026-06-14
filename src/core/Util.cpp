@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:41:15 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 21:06:55 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/14 10:51:29 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,16 @@ namespace util
 	bool isFileExist(const std::string &path)
 	{
 		struct stat st;
-		if (stat(path.c_str(), &st) == 0) // file exist?
-			return (S_ISREG(st.st_mode)); // is that directory?
+		if (stat(path.c_str(), &st) == 0)
+			return (S_ISREG(st.st_mode));
 		return (false);
 	}
 
 	bool isDirExist(const std::string &path)
 	{
 		struct stat st;
-		if (stat(path.c_str(), &st) == 0) // file exist?
-			return (S_ISDIR(st.st_mode)); // is that directory?
+		if (stat(path.c_str(), &st) == 0)
+			return (S_ISDIR(st.st_mode));
 		return (false);
 	}
 

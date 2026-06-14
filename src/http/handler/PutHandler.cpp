@@ -6,23 +6,43 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:03:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:56:44 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/14 10:53:21 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PutHandler.hpp"
+#include "ResponseFactory.hpp"
+#include "Util.hpp"
+#include <fstream>
 
 namespace http
 {
-    PutHandler::PutHandler(ResponseFactory &factory) : _factory(factory)
-    {
-    }
+	PutHandler::PutHandler(ResponseFactory &factory) : _factory(factory) {}
 
-    PutHandler::~PutHandler()
-    {
-    }
+	PutHandler::~PutHandler() {}
 
-    http::IResponse *PutHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *configLoc,
+	http::IResponse *PutHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *,
 		http::Request *request) const
-	{}
+	{
+		std::string		fileName = config->getRoot() + request->getPath();
+		bool			isFileExist = util::isFileExist(fileName);
+
+		if (util::isDirExist(fileName))
+			return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
+		if (request->getBody().size() > config->getMaxBodySize())
+			return (this->_factory.createStatusResponse(config, request, http::PAYLOAD_TOO_LARGE));
+
+		std::ofstream	file(fileName, std::ios::binary);
+		if (!file.is_open())
+			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
+
+		file.write(request->getBody().c_str(), request->getBody().size());
+		if (file.fail())
+			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
+
+		file.close();
+		if (isFileExist)
+			return (this->_factory.createSuccessResponse(config, request, http::OK));
+		return (this->_factory.createSuccessResponse(config, request, http::CREATED));
+	}
 }
