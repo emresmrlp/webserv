@@ -1,0 +1,20 @@
+name: Make Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: 
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: depends
+      run: sudo apt-get update
+    - name: c++ env
+      run: sudo apt-get install build-essential
+    - name: make
+      run: make
