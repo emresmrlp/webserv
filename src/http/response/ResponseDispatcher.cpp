@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ResponseDispatcher.cpp                             :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/14 10:42:16 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/15 20:52:49 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "ResponseDispatcher.hpp"
 #include "StatusCode.hpp"
@@ -58,13 +58,13 @@ namespace http
 			return (this->_factory.createRedirectResponse(config, redirectPair));
 		}
 
-		if (!configLocation->isAllowed(request->getMethod()))
-			return (this->_factory.createStatusResponse(config, request, http::METHOD_NOT_ALLOWED));
-
 		std::map<std::string, http::IMethodHandler *>::iterator it;
 		it = this->_handlers.find(request->getMethod());
 		if (it == this->_handlers.end())
 			return (this->_factory.createStatusResponse(config, request, http::NOT_IMPLEMENTED));
+
+		if (!configLocation->isAllowed(request->getMethod()))
+			return (this->_factory.createStatusResponse(config, request, http::METHOD_NOT_ALLOWED));
 
 		return (it->second->handle(config, configLocation, request));
 	}

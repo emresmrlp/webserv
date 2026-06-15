@@ -6,7 +6,7 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/06/14 19:06:46 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/06/15 19:50:45 by ysumeral         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -39,7 +39,6 @@ IFLAGS                  =   -I $(INC_DIR) \
                             -I $(INC_DIR)http \
 							-I $(INC_DIR)http/handler \
                             -I $(INC_DIR)http/request \
-							-I $(INC_DIR)http/request/state \
                             -I $(INC_DIR)http/response \
                             -I $(INC_DIR)http/response/type
 
@@ -59,9 +58,6 @@ CORE_SRC    =   $(CORE_DIR)Server.cpp \
 
 HTTP_SRC    =   $(HTTP_REQUEST_DIR)Request.cpp \
                 $(HTTP_REQUEST_DIR)RequestBuilder.cpp \
-				$(HTTP_REQUEST_STATE_DIR)BodyState.cpp \
-                $(HTTP_REQUEST_STATE_DIR)HeaderState.cpp \
-				$(HTTP_REQUEST_STATE_DIR)RequestLineState.cpp \
 				$(HTTP_HANDLER_DIR)GetHandler.cpp \
 				$(HTTP_HANDLER_DIR)HeadHandler.cpp \
 				$(HTTP_HANDLER_DIR)PostHandler.cpp \

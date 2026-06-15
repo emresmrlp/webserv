@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   Connection.cpp                                     :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 16:48:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/15 21:00:42 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "Connection.hpp"
 #include "SuccessResponse.hpp"
@@ -46,6 +46,9 @@ namespace core
 	void Connection::appendRequestBuffer(const std::string &buffer)
 	{	
 		this->_readBuffer += buffer;
+		std::cout << "---------------- REQUEST ----------------" << std::endl;
+		std::cout << this->_readBuffer << std::endl;
+		std::cout << "---------------- REQUEST END ----------------" << std::endl;
 	}
 
 	void Connection::resetForNextRequest()

@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   RequestBuilder.hpp                                 :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 21:28:53 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/15 20:44:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef REQUESTBUILDER_HPP
 # define REQUESTBUILDER_HPP
@@ -68,8 +68,7 @@ namespace http
 			void				addHeader(const std::string &key, const std::string &value);
 			bool				buildRequestLine(std::string &line);
 			bool				buildHeaderLine(std::string &line);
-			bool				buildBody(std::string &rawReadBuffer);
-			bool				validateParseResult();
+			bool				buildBody(std::string &rawReadBuffer, bool isChunked);
 	};
 }
 

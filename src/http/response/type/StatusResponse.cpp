@@ -34,10 +34,10 @@ namespace http
 					= this->_config.getLocation(this->_request->getPath())->getAllowedMethods().end();
 				while (it != itEnd)
 				{
-					result << *it;
-					if (*(it + 1) != *itEnd)
+					if (!result.str().empty())
 						result << ", ";
-					it++;
+					result << *it;
+					++it;
 				}
 				this->addHeader("Allow", result.str());
 			}
