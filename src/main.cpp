@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 19:16:22 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/16 11:41:49 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     }
     catch(const std::exception& e)
     {
-        std::cerr << "Fatal Error: ServerHandler critical error!" << std::endl;
+        std::cerr << "Server Error: " << e.what() << std::endl;
         return (1);
     }
     

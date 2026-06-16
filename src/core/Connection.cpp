@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   Connection.cpp                                     :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/15 21:00:42 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/16 11:36:16 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "Connection.hpp"
 #include "SuccessResponse.hpp"
@@ -41,6 +41,19 @@ namespace core
 			this->_response = this->_dispatcher.dispatch(this->_config, this->_request);
 		this->_writeBuffer = this->_response->serialize();
 		this->setState(WRITING);
+	}
+
+	void Connection::handleTimeout()
+	{
+		std::cout << "! DEBUG: TIMEOUT" << std::endl;
+		if (!this->_config)
+		{
+			this->setState(CLOSING);
+			return ;
+		}
+		this->_response = this->_responseFactory.createStatusResponse(this->_config, NULL, http::REQUEST_TIMEOUT);
+		this->_writeBuffer = this->_response->serialize();
+		this->setState(TIMEOUT);
 	}
 
 	void Connection::appendRequestBuffer(const std::string &buffer)

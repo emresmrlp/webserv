@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 21:08:40 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/16 11:26:07 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ namespace core
 {
 	enum ConnectionState
 	{
+		TIMEOUT,
 		READING,
 		WRITING,
 		CLOSING
@@ -42,6 +43,7 @@ namespace core
 			Connection(int fd);
 			~Connection();
 
+			void					handleTimeout();
 			void					process();
 			bool					hasResponse() const;
 			void					resetForNextRequest();

@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ServerHandler.cpp                                  :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/15 21:08:41 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/16 12:02:46 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "ServerHandler.hpp"
 #include "ConfigLocation.hpp"
@@ -19,11 +19,13 @@
 #include <cstring>
 #include <cstdlib>
 #include <fcntl.h>
-#include <signal.h>
+#include <csignal>
 #include <vector>
 
 namespace core
 {
+	bool ServerHandler::_running = true;
+	
 	ServerHandler::ServerHandler() {}
 
 	ServerHandler::~ServerHandler()
@@ -88,19 +90,41 @@ namespace core
 		// ! END OF DEBUGGING
 	}
 
+	void ServerHandler::signalHandler(int)
+	{
+		ServerHandler::_running = false;
+	}
+
 	void ServerHandler::run()
 	{
-		while (true)
+		std::signal(SIGINT, ServerHandler::signalHandler);
+		std::signal(SIGTERM, ServerHandler::signalHandler);
+
+		while (ServerHandler::_running)
 		{
 			int socketCount;
 
-			socketCount = poll(&(this->_pollFds[0]), this->_pollFds.size(), -1);
+			socketCount = poll(&(this->_pollFds[0]), this->_pollFds.size(), 30000);
 
 			if (socketCount < 0) // ? if poll error occured
+			{
+				if (ServerHandler::_running == false)
+				{
+					std::cout << "\nServer closing... Goodbye! (YECS - BME WebServ)" << std::endl;
+					break ;
+				}
 				throw std::runtime_error("ServerHandler(Fatal Error): poll failure.");
+			}
 			if (socketCount == 0) // ? if no active sockets
-				continue ;
-
+			{
+				for (std::size_t i = 0; i < this->_pollFds.size(); i++)
+				{
+					if (i < this->_servers.size())
+						continue;
+					this->_connnections[i - this->_servers.size()]->handleTimeout();
+					this->_pollFds[i].events |= POLLOUT;
+				}
+			}
 			if (socketCount > 0)
 			{
 				for (std::size_t i = 0; ((i < this->_pollFds.size()) && (socketCount > 0)); i++)
@@ -157,8 +181,14 @@ namespace core
 	{
 		std::cout << "Read occured" << std::endl;
 		Connection *conn = this->_connnections[i - this->_servers.size()];
-		char buffer[4096];
 
+		if (conn->getState() == core::CLOSING)
+		{
+			this->closeConnection(i);
+			return ;
+		}
+
+		char buffer[4096];
 		ssize_t bytesRead = recv(this->_pollFds[i].fd, buffer, sizeof(buffer), 0);
 
 		if (bytesRead > 0)
@@ -184,11 +214,19 @@ namespace core
 		if (response.empty())
 			return ;
 		
+		if (conn->getState() != core::WRITING && conn->getState() != core::TIMEOUT)
+			return ;
+		
 		ssize_t bytesSent = send(this->_pollFds[i].fd, response.c_str(), response.length(), 0);
 		if (bytesSent > 0)
 		{
 			if (static_cast<std::size_t>(bytesSent) == response.length())
 			{
+				if (conn->getState() == core::TIMEOUT)
+				{
+					this->closeConnection(i);
+					return ;
+				}
 				conn->resetForNextRequest();
 				this->_pollFds[i].events &= ~POLLOUT; // ? (~) meaining opposite (0010) -> (1101)
 				std::cout << "Write success. FD: " << this->_pollFds[i].fd << std::endl; 

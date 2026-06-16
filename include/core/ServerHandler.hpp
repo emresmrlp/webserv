@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:36:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 18:24:40 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/16 11:51:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,12 @@ namespace core
 			ServerHandler(const ServerHandler&);
 			ServerHandler& operator=(const ServerHandler&);
 
+			static bool					_running;
 			std::vector<Server *>		_servers;
 			std::vector<Connection *>	_connnections;
 			std::vector<struct pollfd>	_pollFds;
 
+			static void	signalHandler(int sig);
 			void		acceptConnection(std::size_t i);
 			void		closeConnection(std::size_t i);
 			void		readConnection(std::size_t i);

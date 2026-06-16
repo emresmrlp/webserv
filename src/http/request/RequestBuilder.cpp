@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   RequestBuilder.cpp                                 :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/15 20:45:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/16 12:06:04 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "RequestBuilder.hpp"
 #include "Request.hpp"
@@ -99,7 +99,7 @@ namespace http
 		if (this->_state == http::STATE_BODY)
 		{
 			if (!buildBody(rawReadBuffer, isChunked))
-				isChunked = false;
+				return (this->_parseResult);
 			this->_state = http::STATE_COMPLETE;
 		}
 
@@ -111,12 +111,36 @@ namespace http
 
 	bool RequestBuilder::buildBody( std::string &rawReadBuffer, bool isChunked)
 	{
-		if (!rawReadBuffer.empty())
+		if (isChunked == false && !rawReadBuffer.empty())
 			this->_body = rawReadBuffer;
-		while (isChunked)
+		while (isChunked && !rawReadBuffer.empty())
 		{
-			std::cout << "!!!!! transfer occured ------------" << std::endl;
-			isChunked = false;
+			std::size_t pos;
+			std::string chunkSizeStr;
+			std::size_t chunkSize;
+			char		*end;
+
+			pos = rawReadBuffer.find(CRLF);
+			if (pos == std::string::npos)
+			{
+				handleParseResult(BAD_REQUEST, ERROR);
+				return (false);
+			}
+			chunkSizeStr = rawReadBuffer.substr(0, pos);
+			chunkSize = std::strtoul(chunkSizeStr.c_str(), &end, 16);
+			rawReadBuffer.erase(0, pos + 2);
+			if (chunkSize == 0)
+				isChunked = false;
+			else
+			{
+				if (rawReadBuffer.size() < chunkSize + 2)
+				{
+					handleParseResult(UNDEFINED, INCOMPLETE);
+					return (false);
+				}
+				this->_body.append(rawReadBuffer.substr(0, chunkSize));
+				rawReadBuffer.erase(0, chunkSize + 2);
+			}
 		}
 		return (true);
 	}
