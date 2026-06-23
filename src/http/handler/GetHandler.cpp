@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:00:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 05:30:54 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 05:40:38 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,11 @@ namespace http
 		if (S_ISDIR(st.st_mode))
 		{
 			std::string indexPath;
-
-			if ((relativePath != "/" && relativePath != "") && configLoc->getAutoIndex() == false)
-				return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
 	
 			typedef std::vector<std::string>::const_iterator IndexIt;
 			for(IndexIt it = configLoc->getIndexList().begin(); it != configLoc->getIndexList().end(); it++)
 			{
-				indexPath = (util::getRelativeConfigPath(config, configLoc) + "/" + *it);
+				indexPath = (resolvedPath + "/" + *it);
 				if (util::isFileExist(indexPath))
 					return (this->_factory.createSuccessResponseWithPath(config, request, indexPath));
 			}
@@ -51,6 +48,6 @@ namespace http
 		}
 		if (S_ISREG(st.st_mode))
 			return (this->_factory.createSuccessResponse(config, request, http::OK));
-		return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
+		return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
     }
 }
