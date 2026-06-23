@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/14 10:59:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 03:48:23 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,16 @@ namespace http
 
 	DeleteHandler::~DeleteHandler() {}
 
-	http::IResponse *DeleteHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *,
+	http::IResponse *DeleteHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *configLoc,
 		http::Request *request) const
 	{
-		std::string		fileName = config->getRoot() + request->getPath();
+		std::string		fileName;
 
+		if (configLoc->getUploadPath().empty())
+			fileName = configLoc->getRootPath() + request->getPath();
+		else
+			fileName = configLoc->getUploadPath() + request->getPath();
+		
 		if (unlink(fileName.c_str()) == 0)
 			return (this->_factory.createSuccessResponse(config, request, http::NO_CONTENT));
 		return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 21:39:20 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 03:36:56 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ namespace config
 	ConfigLocationBuilder::ConfigLocationBuilder() :
 		_executePath(""),
 		_rootPath(""),
-		_uploadPath("/tmp"),
+		_uploadPath("tmp"),
 		_returnRedirection(std::make_pair(0, "/")),
 		_autoIndex(false),
 		_hasRedirection(false),

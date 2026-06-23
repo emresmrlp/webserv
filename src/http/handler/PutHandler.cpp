@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   PutHandler.cpp                                     :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:03:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/14 17:15:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 03:49:30 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "PutHandler.hpp"
 #include "ResponseFactory.hpp"
@@ -21,10 +21,13 @@ namespace http
 
 	PutHandler::~PutHandler() {}
 
-	http::IResponse *PutHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *,
+	http::IResponse *PutHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *configLoc,
 		http::Request *request) const
 	{
-		std::string		fileName = config->getRoot() + request->getPath();
+		if (configLoc->getUploadPath().empty())
+			return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
+			
+		std::string		fileName = configLoc->getUploadPath() + request->getPath();
 		bool			isFileExist = util::isFileExist(fileName);
 
 		if (util::isDirExist(fileName))

@@ -6,7 +6,7 @@
 #    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/18 13:17:49 by ysumeral          #+#    #+#              #
-#    Updated: 2026/06/16 11:58:00 by ysumeral         ###   ########.fr        #
+#    Updated: 2026/06/23 03:34:44 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,6 +86,7 @@ $(OBJ_DIR)%.o: src/%.cpp
 $(NAME): $(OBJ)
 	@echo "\n$(PREFIX) $(P_PEACH)Linking object files...$(RESET)"
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
+	@mkdir -p tmp
 	@echo ""
 	@echo "$(P_BLUE) ██     ██ ███████ ██████  ███████ ███████ ██████  ██    ██ $(RESET)"
 	@echo "$(P_BLUE) ██     ██ ██      ██   ██ ██      ██      ██   ██ ██    ██ $(RESET)"
@@ -102,10 +103,12 @@ $(NAME): $(OBJ)
 clean:
 	@echo "$(PREFIX) $(P_PURPLE)Cleaning objects...$(RESET)"
 	rm -rf $(OBJ_DIR)
+	rm -rf tmp
 
 fclean: clean
 	@echo "$(PREFIX) $(P_PURPLE)Cleaning binary...$(RESET)"
 	rm -f $(NAME)
+	rm -rf tmp
 
 re: fclean all
 
