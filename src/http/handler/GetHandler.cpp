@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:00:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 05:00:43 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 05:25:42 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,16 @@ namespace http
 
 		std::string relativePath = request->getPath().substr(configLoc->getExecutePath().length());
 		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + relativePath;
+		std::cout << "! DEBUG: RESOLVED: " << relativePath << std::endl;
 		if (stat(resolvedPath.c_str(), &st) != 0)
 			return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
 		if (S_ISDIR(st.st_mode))
 		{
 			std::string indexPath;
-			
+
+			if (relativePath != "/" && configLoc->getAutoIndex() == false)
+				return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
+	
 			typedef std::vector<std::string>::const_iterator IndexIt;
 			for(IndexIt it = configLoc->getIndexList().begin(); it != configLoc->getIndexList().end(); it++)
 			{
