@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:00:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:18:46 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 05:00:43 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,28 @@ namespace http
     http::IResponse *GetHandler::handle(const config::ConfigServer *config, const config::ConfigLocation *configLoc,
         http::Request *request) const
     {
-		std::string resolvedPath;
 		struct stat st;
 
-		resolvedPath = config->getRoot() + request->getPath();
+		std::string relativePath = request->getPath().substr(configLoc->getExecutePath().length());
+		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + relativePath;
 		if (stat(resolvedPath.c_str(), &st) != 0)
 			return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
-		if (S_ISREG(st.st_mode))
-			return (this->_factory.createSuccessResponse(config, request, http::OK));
 		if (S_ISDIR(st.st_mode))
-		{			
+		{
 			std::string indexPath;
 			
 			typedef std::vector<std::string>::const_iterator IndexIt;
 			for(IndexIt it = configLoc->getIndexList().begin(); it != configLoc->getIndexList().end(); it++)
 			{
-				indexPath = (config->getRoot() + "/" + *it);
+				indexPath = (util::getRelativeConfigPath(config, configLoc) + "/" + *it);
 				if (util::isFileExist(indexPath))
 					return (this->_factory.createSuccessResponseWithPath(config, request, indexPath));
 			}
 			if (configLoc->getAutoIndex())
 				return (this->_factory.createAutoIndexResponse(config, request));
-		}	
+		}
+		if (S_ISREG(st.st_mode))
+			return (this->_factory.createSuccessResponse(config, request, http::OK));
 		return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
     }
 }

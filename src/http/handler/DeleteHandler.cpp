@@ -6,13 +6,14 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 03:48:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 04:36:23 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DeleteHandler.hpp"
 #include "ResponseFactory.hpp"
 #include <unistd.h>
+#include "Util.hpp"
 
 namespace http
 {
@@ -26,7 +27,7 @@ namespace http
 		std::string		fileName;
 
 		if (configLoc->getUploadPath().empty())
-			fileName = configLoc->getRootPath() + request->getPath();
+			fileName = util::getRelativeConfigPath(config, configLoc) + request->getPath();
 		else
 			fileName = configLoc->getUploadPath() + request->getPath();
 		

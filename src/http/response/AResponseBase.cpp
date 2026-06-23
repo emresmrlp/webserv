@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 22:19:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 04:35:10 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ namespace http
     {
         std::string path;
 
-        path = this->_config.getRoot() + this->_request->getPath();
+        path = util::getRelativeConfigPath(&(this->_config), this->_config.getLocation(this->_request->getPath())) + this->_request->getPath();
 		if (!path.empty())
         	this->setBody(this->readFile(path));
     }

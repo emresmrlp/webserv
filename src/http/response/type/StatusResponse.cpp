@@ -31,7 +31,7 @@ namespace http
 			this->createBody(errorPage);
 		else
 			this->createDefaultBody();
-
+		
 		if (this->_statusCode == METHOD_NOT_ALLOWED)
 		{
 			std::ostringstream result;

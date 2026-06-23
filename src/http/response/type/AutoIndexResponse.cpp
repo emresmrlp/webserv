@@ -43,7 +43,7 @@ namespace http
             << "<body style='font-size: 24px;'><h1>" << "Webserv - Index of " << this->_request->getPath() << "</h1>"
             << "<hr>"
             << "<a href='../' style='display: block;'>../</a>\n";
-        dir = opendir((this->_config.getRoot() + "/" + this->_request->getPath()).c_str());
+        dir = opendir((util::getRelativeConfigPath(&(this->_config), NULL) + "/" + this->_request->getPath()).c_str());
         if (dir != NULL)
         {
             struct dirent *ent;

@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   Util.cpp                                           :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:41:15 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/14 17:16:41 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 04:34:18 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "Util.hpp"
 #include <sys/stat.h>
@@ -67,6 +67,13 @@ namespace util
 		if (stat(path.c_str(), &st) == 0)
 			return (S_ISDIR(st.st_mode));
 		return (false);
+	}
+
+	std::string getRelativeConfigPath(const config::ConfigServer *config, const config::ConfigLocation *configLoc)
+	{
+		if (configLoc == NULL || configLoc->getRootPath().empty())
+			return (config->getRoot());
+		return (configLoc->getRootPath());
 	}
 
 	size_t	parseByte(std::string str)
