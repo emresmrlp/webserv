@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/16 11:36:16 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 15:57:46 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,6 @@ namespace core
 	void Connection::appendRequestBuffer(const std::string &buffer)
 	{	
 		this->_readBuffer += buffer;
-		std::cout << "---------------- REQUEST ----------------" << std::endl;
-		std::cout << this->_readBuffer << std::endl;
-		std::cout << "---------------- REQUEST END ----------------" << std::endl;
 	}
 
 	void Connection::resetForNextRequest()

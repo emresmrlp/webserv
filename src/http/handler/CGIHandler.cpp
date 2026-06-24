@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 13:26:33 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 16:35:27 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ namespace http
 	{
 		CGIResult inputResult;
 		CGIResult outputResult;
-
+			
 		std::vector<std::string> envValues = this->buildEnv(config, request);
 		std::vector<char *> envp((envValues.size() + 1), NULL);
 		for (size_t i = 0; i < envValues.size(); i++)
@@ -124,8 +124,8 @@ namespace http
 				const_cast<char *>(resolvedPath.c_str()),
 				NULL
 			};
-			
-			execve(interpreterPath.c_str(), argv, envp);
+	
+			execve(interpreterPath.c_str(), argv, &envp[0]);
 			exit(1);
 		}
 		int status;

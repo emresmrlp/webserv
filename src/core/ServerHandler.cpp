@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/16 12:02:46 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 15:57:51 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,9 +194,6 @@ namespace core
 		if (bytesRead > 0)
 		{
 			std::string rawData(buffer, bytesRead);
-			std::cout << "---------------- RAWREQUEST ----------------" << std::endl;
-			std::cout << rawData << std::endl;
-			std::cout << "---------------- RAWREQUEST END ----------------" << std::endl;
 			conn->appendRequestBuffer(rawData);
 			conn->process();
 			if (conn->getState() == core::WRITING)
