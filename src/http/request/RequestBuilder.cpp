@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 13:38:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 13:54:50 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace http
 {
-	RequestBuilder::RequestBuilder() : _state(http::STATE_REQUEST_LINE) {}
+	RequestBuilder::RequestBuilder() : _state(http::STATE_REQUEST_LINE), _isChunked(false) {}
 
 	RequestBuilder::~RequestBuilder() {}
 
@@ -31,21 +31,51 @@ namespace http
 
 	http::ParseResult   RequestBuilder::parse(std::string &rawReadBuffer, const config::ConfigServer *config)
 	{
+		if (this->_state == http::STATE_REQUEST_LINE || this->_state == http::STATE_HEADERS)
+		{
+			http::ParseResult headerResult = this->parseHeaders(rawReadBuffer, config);
+			if (headerResult.parseStatus != http::COMPLETE)
+				return (headerResult);
+		}
+
+		if (this->_state == http::STATE_WAIT_VALIDATE)
+		{
+			std::vector<std::string> hostValues;
+			std::vector<std::string> transferValues;
+			if (this->getHeaders("Host", hostValues) == false)
+				return (handleParseResult(BAD_REQUEST, ERROR));
+			if (this->getHeaders("Transfer-Encoding", transferValues)
+				&& transferValues[0] == "chunked")
+				this->_isChunked = true;
+			this->_state = http::STATE_BODY;
+		}
+
+		if (this->_state == http::STATE_BODY)
+		{
+			if (!buildBody(rawReadBuffer))
+				return (this->_parseResult);
+			this->_state = http::STATE_COMPLETE;
+		}
+
+		if (this->_state == http::STATE_COMPLETE)
+			return (handleParseResult(OK, COMPLETE));
+
+		return (handleParseResult(UNDEFINED, INCOMPLETE));
+	}
+
+	http::ParseResult	RequestBuilder::parseHeaders(std::string &rawReadBuffer, const config::ConfigServer *config)
+	{
+		std::size_t	nextPos;
+		std::string line;
+
 		if (rawReadBuffer.find(DOUBLE_CRLF) == std::string::npos)
 		{
 			if (rawReadBuffer.size() > config->getMaxHeaderSize())
 				return (handleParseResult(PAYLOAD_TOO_LARGE, ERROR));
 			return (handleParseResult(UNDEFINED, INCOMPLETE));
 		}
-
-		std::size_t	nextPos;
-		std::string line;
-		bool		isChunked;
-		
-		isChunked = false;
 		while (!rawReadBuffer.empty())
 		{
-
 			nextPos = rawReadBuffer.find(CRLF);
 			if (nextPos == std::string::npos)
 				break ;
@@ -83,35 +113,12 @@ namespace http
 				rawReadBuffer.erase(0, nextPos + 2);
 			}
 		}
-		
-		if (this->_state == http::STATE_WAIT_VALIDATE)
-		{
-			std::vector<std::string> hostValues;
-			std::vector<std::string> transferValues;
-			if (this->getHeaders("Host", hostValues) == false)
-				return (handleParseResult(BAD_REQUEST, ERROR));
-			if (this->getHeaders("Transfer-Encoding", transferValues)
-				&& transferValues[0] == "chunked")
-				isChunked = true;
-			this->_state = http::STATE_BODY;
-		}
-
-		if (this->_state == http::STATE_BODY)
-		{
-			if (!buildBody(rawReadBuffer, isChunked))
-				return (this->_parseResult);
-			this->_state = http::STATE_COMPLETE;
-		}
-
-		if (this->_state == http::STATE_COMPLETE)
-			return (handleParseResult(OK, COMPLETE));
-
-		return (handleParseResult(UNDEFINED, INCOMPLETE));
+		return (handleParseResult(UNDEFINED, INCOMPLETE));	
 	}
 
-	bool RequestBuilder::buildBody( std::string &rawReadBuffer, bool isChunked)
+	bool RequestBuilder::buildBody( std::string &rawReadBuffer)
 	{
-		if (isChunked == false && !rawReadBuffer.empty())
+		if (this->_isChunked == false && !rawReadBuffer.empty())
 		{
 			std::vector<std::string> contentLengthValues;
 			std::size_t contentLength = 0;
@@ -129,7 +136,7 @@ namespace http
         	rawReadBuffer.erase(0, contentLength);
 			return (true);
 		}
-		while (isChunked && !rawReadBuffer.empty())
+		while (this->_isChunked && !rawReadBuffer.empty())
 		{
 			std::size_t pos;
 			std::string chunkSizeStr;
@@ -146,7 +153,7 @@ namespace http
 			chunkSize = std::strtoul(chunkSizeStr.c_str(), &end, 16);
 			rawReadBuffer.erase(0, pos + 2);
 			if (chunkSize == 0)
-				isChunked = false;
+				this->_isChunked = false;
 			else
 			{
 				if (rawReadBuffer.size() < chunkSize + 2)
@@ -293,5 +300,6 @@ namespace http
 		_headers.clear();
 		_body.clear();
 		this->_state = http::STATE_REQUEST_LINE;
+		this->_isChunked = false;
 	}
 }

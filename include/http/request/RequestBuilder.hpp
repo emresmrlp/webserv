@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   RequestBuilder.hpp                                 :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/15 20:44:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 13:53:49 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef REQUESTBUILDER_HPP
 # define REQUESTBUILDER_HPP
@@ -62,13 +62,16 @@ namespace http
 			std::string											_body;
 
 			ParseState											_state;
+			bool												_isChunked;
 			ParseResult											_parseResult;
+			
+			http::ParseResult	parseHeaders(std::string &rawReadBuffer, const config::ConfigServer *config);
 			http::ParseResult	handleParseResult(http::StatusCode statusCode, http::ParseStatus parseStatus);
 			bool				getHeaders(const std::string &key, std::vector<std::string> &values) const;
 			void				addHeader(const std::string &key, const std::string &value);
 			bool				buildRequestLine(std::string &line);
 			bool				buildHeaderLine(std::string &line);
-			bool				buildBody(std::string &rawReadBuffer, bool isChunked);
+			bool				buildBody(std::string &rawReadBuffer);
 	};
 }
 
