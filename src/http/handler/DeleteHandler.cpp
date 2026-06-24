@@ -6,13 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 11:22:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 13:26:36 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "DeleteHandler.hpp"
 #include "ResponseFactory.hpp"
-#include <unistd.h>
+#include <cstdio>
 #include "Util.hpp"
 
 namespace http

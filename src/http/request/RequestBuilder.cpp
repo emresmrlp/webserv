@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/16 12:06:04 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 13:38:12 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,23 @@ namespace http
 	bool RequestBuilder::buildBody( std::string &rawReadBuffer, bool isChunked)
 	{
 		if (isChunked == false && !rawReadBuffer.empty())
-			this->_body = rawReadBuffer;
+		{
+			std::vector<std::string> contentLengthValues;
+			std::size_t contentLength = 0;
+
+			if (this->getHeaders("Content-Length", contentLengthValues))
+				contentLength = std::strtoul(contentLengthValues[0].c_str(), NULL, 10);
+			if (contentLength == 0)
+				return (true);
+			if (rawReadBuffer.size() < contentLength)
+			{
+				handleParseResult(UNDEFINED, INCOMPLETE);
+				return (false);
+			}
+			this->_body = rawReadBuffer.substr(0, contentLength);
+        	rawReadBuffer.erase(0, contentLength);
+			return (true);
+		}
 		while (isChunked && !rawReadBuffer.empty())
 		{
 			std::size_t pos;

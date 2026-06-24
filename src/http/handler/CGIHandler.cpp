@@ -6,16 +6,18 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 13:16:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 13:26:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CGIHandler.hpp"
 #include "ResponseFactory.hpp"
+#include <cstdio>
 #include <unistd.h>
 #include <cstdlib>
 #include "Util.hpp"
 #include <fcntl.h>
+#include <sys/wait.h>
 #include <fstream>
 
 namespace http
