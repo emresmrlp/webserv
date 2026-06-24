@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 21:10:08 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 21:18:21 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,6 @@ namespace http
 		
 		std::string fullPath = path;
 
-		std::cout << "! DEBUG: fullpath: " << fullPath << std::endl;
-
 		std::size_t	queryPos;
 		queryPos = fullPath.find_first_of("?");
 		if (queryPos == std::string::npos || queryPos + 1 == std::string::npos)
@@ -176,15 +174,10 @@ namespace http
 	{
 		std::vector<std::string> envValues;
 
-		std::string resolvedPath = request->getPath();
-		
-		if (resolvedPath.find_first_of("?") != std::string::npos)
-			resolvedPath = resolvedPath.substr(0, resolvedPath.find_first_of("?"));
-
 		envValues.push_back("REQUEST_METHOD=" + request->getMethod());
 		envValues.push_back("QUERY_STRING=" + URI.queryString);
 		envValues.push_back("SERVER_PROTOCOL=" + config->getHttpVersion());
-		envValues.push_back("SCRIPT_NAME=" + resolvedPath);
+		envValues.push_back("SCRIPT_NAME=" + URI.scriptPath);
 		envValues.push_back("GATEWAY_INTERFACE=CGI/1.1");
 		envValues.push_back("SERVER_SOFTWARE=YECS-BME-Webserv/1.0");
 		envValues.push_back("PATH_INFO=" + URI.pathInfo);
