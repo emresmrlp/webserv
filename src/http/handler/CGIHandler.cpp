@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 16:35:27 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 21:10:08 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ namespace http
 	{
 		CGIResult inputResult;
 		CGIResult outputResult;
-			
-		std::vector<std::string> envValues = this->buildEnv(config, request);
+		
+		ParsedURI URI = this->parseURI(util::getRelativeConfigPath(config, configLoc) + request->getPath());
+
+		std::vector<std::string> envValues = this->buildEnv(config, request, URI);
 		std::vector<char *> envp((envValues.size() + 1), NULL);
 		for (size_t i = 0; i < envValues.size(); i++)
 			envp[i] = (const_cast<char *>(envValues[i].c_str()));
@@ -40,13 +42,9 @@ namespace http
 		inputResult = this->prepareInput(request);
 		if (inputResult.status == false)
 			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
-		
-		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + request->getPath();
-		if (resolvedPath.find_first_of("?") != std::string::npos)
-			resolvedPath = resolvedPath.substr(0, resolvedPath.find_first_of("?"));
 
-		std::string interpreterPath = configLoc->getCgiPass(util::getExtension(request->getPath()));
-		outputResult = this->executeCgi(resolvedPath, interpreterPath, inputResult.output, &envp[0]);
+		std::string interpreterPath = configLoc->getCgiPass(util::getExtension(URI.scriptPath));
+		outputResult = this->executeCgi(URI.scriptPath, interpreterPath, inputResult.output, &envp[0]);
 		if (outputResult.status == false)
 			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
 
@@ -136,8 +134,45 @@ namespace http
 		result.output = tmpOutFile;
 		return (result);
 	}
+	
+	ParsedURI CGIHandler::parseURI(const std::string &path)
+	{
+		ParsedURI result;
+		result.pathInfo = "";
+		result.queryString = "";
+		result.scriptPath = "";
+		
+		std::string fullPath = path;
 
-	std::vector<std::string> CGIHandler::buildEnv(const config::ConfigServer *config, http::Request *request) const
+		std::cout << "! DEBUG: fullpath: " << fullPath << std::endl;
+
+		std::size_t	queryPos;
+		queryPos = fullPath.find_first_of("?");
+		if (queryPos == std::string::npos || queryPos + 1 == std::string::npos)
+			result.queryString = "";
+		else
+		{
+			result.queryString = fullPath.substr(queryPos + 1);
+			fullPath.erase(queryPos);
+		}
+
+		std::size_t dotPos = fullPath.find_last_of(".");
+		if (dotPos != std::string::npos)
+		{
+			std::size_t slashPos = fullPath.find("/", dotPos);
+			if (slashPos == std::string::npos)
+				result.scriptPath = fullPath;
+			else
+			{
+				result.scriptPath = fullPath.substr(0, slashPos);
+				result.pathInfo = fullPath.substr(slashPos);
+			}
+		}
+
+		return (result);
+	}
+
+	std::vector<std::string> CGIHandler::buildEnv(const config::ConfigServer *config, http::Request *request, ParsedURI URI) const
 	{
 		std::vector<std::string> envValues;
 
@@ -147,24 +182,14 @@ namespace http
 			resolvedPath = resolvedPath.substr(0, resolvedPath.find_first_of("?"));
 
 		envValues.push_back("REQUEST_METHOD=" + request->getMethod());
-		envValues.push_back("QUERY_STRING=" + this->getQuery(request->getPath()));
+		envValues.push_back("QUERY_STRING=" + URI.queryString);
 		envValues.push_back("SERVER_PROTOCOL=" + config->getHttpVersion());
 		envValues.push_back("SCRIPT_NAME=" + resolvedPath);
 		envValues.push_back("GATEWAY_INTERFACE=CGI/1.1");
 		envValues.push_back("SERVER_SOFTWARE=YECS-BME-Webserv/1.0");
+		envValues.push_back("PATH_INFO=" + URI.pathInfo);
 		if (request->getMethod() == "POST" || request->getMethod() == "PUT")
 			envValues.push_back("CONTENT_LENGTH=" + util::toString(request->getBody().size()));
 		return (envValues);
-	}
-
-	const std::string CGIHandler::getQuery(const std::string &path) const
-	{
-		std::size_t	queryPos;
-		std::string	result;
-
-		queryPos = path.find_first_of("?");
-		if (queryPos == std::string::npos || queryPos + 1 == std::string::npos)
-			return ("");
-		return (path.substr(queryPos + 1));
 	}
 }

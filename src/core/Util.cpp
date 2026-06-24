@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:41:15 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 13:21:45 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 19:47:36 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,6 @@ namespace util
 			return (std::string(""));
 		return (literalPath.substr(dotPos));
 	}
-
-
 
 	const std::string getMimeType(const std::string &path)
     {

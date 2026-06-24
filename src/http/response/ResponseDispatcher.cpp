@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 10:43:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:58:24 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,18 @@ namespace http
 			return (this->_factory.createRedirectResponse(config, redirectPair));
 		}
 
-		std::string cgiValue;
-		if (configLoc->getCgiPass(util::getExtension(request->getPath())).empty())
-			cgiValue = "";
-		else
-			cgiValue = configLoc->getCgiPass(util::getExtension(request->getPath()));
+		ParsedURI URI = CGIHandler::parseURI(util::getRelativeConfigPath(config, configLoc) + request->getPath());
+
+		bool isCgi = false;
+		if (!configLoc->getCgiPass(util::getExtension(URI.scriptPath)).empty())
+			isCgi = true;
 
 		std::map<std::string, http::IMethodHandler *>::iterator it;
 		it = this->_handlers.find(request->getMethod());
 		if (it == this->_handlers.end())
 			return (this->_factory.createStatusResponse(config, request, http::NOT_IMPLEMENTED));
 
-		if (!cgiValue.empty())
+		if (isCgi)
 			return (this->_handlers.find("CGI")->second->handle(config, configLoc, request));
 
 		if (!configLoc->isAllowed(request->getMethod()))

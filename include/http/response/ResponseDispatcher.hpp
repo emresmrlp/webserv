@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 12:25:40 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 18:21:50 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:32:19 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <map>
 
 namespace http
-{
+{	
 	class ResponseDispatcher
 	{
 		public:
