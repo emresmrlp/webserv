@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 05:19:18 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 12:51:51 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ namespace config
 	
 	ConfigLocationBuilder&	ConfigLocationBuilder::addCgiPass(const std::string& ext, const std::string& path)
 	{
-			if (_cgiPass.find(ext) != _cgiPass.end())
+		if (_cgiPass.find(ext) != _cgiPass.end())
 			throw std::runtime_error("Duplicate cgi_pass extension in config file: " + ext);
 		_cgiPass[ext] = path;
 		return (*this);

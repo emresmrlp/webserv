@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ResponseDispatcher.cpp                             :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/15 20:52:49 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 10:43:30 by ysumeral         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "ResponseDispatcher.hpp"
 #include "StatusCode.hpp"
@@ -22,6 +22,7 @@
 #include "PostHandler.hpp"
 #include "DeleteHandler.hpp"
 #include "PutHandler.hpp"
+#include "CGIHandler.hpp"
 
 namespace http
 {
@@ -33,6 +34,7 @@ namespace http
 		this->_handlers["POST"] = new PostHandler(this->_factory);
 		this->_handlers["PUT"] = new PutHandler(this->_factory);
 		this->_handlers["DELETE"] = new DeleteHandler(this->_factory);
+		this->_handlers["CGI"] = new CGIHandler(this->_factory);
 	}
 
 	ResponseDispatcher::~ResponseDispatcher()
@@ -45,27 +47,36 @@ namespace http
 
 	http::IResponse *ResponseDispatcher::dispatch(const config::ConfigServer *config, http::Request *request)
 	{
-		const config::ConfigLocation *configLocation;
+		const config::ConfigLocation *configLoc;
 
-		configLocation = config->getLocation(request->getPath());
-		if (configLocation->hasRedirection())
+		configLoc = config->getLocation(request->getPath());
+		if (configLoc->hasRedirection())
 		{
 			std::pair<int, std::string> redirectPair;
 
-			redirectPair = configLocation->getReturnRedirection();
+			redirectPair = configLoc->getReturnRedirection();
 			if (redirectPair.second == request->getPath())
 				return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
 			return (this->_factory.createRedirectResponse(config, redirectPair));
 		}
+
+		std::string cgiValue;
+		if (configLoc->getCgiPass(util::getExtension(request->getPath())).empty())
+			cgiValue = "";
+		else
+			cgiValue = configLoc->getCgiPass(util::getExtension(request->getPath()));
 
 		std::map<std::string, http::IMethodHandler *>::iterator it;
 		it = this->_handlers.find(request->getMethod());
 		if (it == this->_handlers.end())
 			return (this->_factory.createStatusResponse(config, request, http::NOT_IMPLEMENTED));
 
-		if (!configLocation->isAllowed(request->getMethod()))
+		if (!cgiValue.empty())
+			return (this->_handlers.find("CGI")->second->handle(config, configLoc, request));
+
+		if (!configLoc->isAllowed(request->getMethod()))
 			return (this->_factory.createStatusResponse(config, request, http::METHOD_NOT_ALLOWED));
 
-		return (it->second->handle(config, configLocation, request));
+		return (it->second->handle(config, configLoc, request));
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 04:35:10 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 11:39:48 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,55 +110,6 @@ namespace http
 			return (false);
 		return (true);
 	}
-
-	const std::string AResponseBase::getMimeType(const std::string &path) const
-    {
-        std::string contentType;
-        std::string extension;
-		std::size_t	dotPos;
-
-		dotPos = path.find_last_of(".");
-		if (dotPos == std::string::npos)
-			return "application/octet-stream";
-
-        extension = path.substr(dotPos);
-        static std::map<std::string, std::string> mimeTypes;
-		if (mimeTypes.empty())
-		{
-			mimeTypes[".html"]  = "text/html";
-			mimeTypes[".htm"]   = "text/html";
-			mimeTypes[".css"]   = "text/css";
-			mimeTypes[".js"]    = "application/javascript";
-			mimeTypes[".mjs"]   = "text/javascript";
-			mimeTypes[".json"]  = "application/json";
-			mimeTypes[".xml"]   = "application/xml";
-			mimeTypes[".txt"]   = "text/plain";
-			mimeTypes[".csv"]   = "text/csv";
-			mimeTypes[".md"]    = "text/markdown";
-			mimeTypes[".yaml"]  = "text/yaml";
-			mimeTypes[".yml"]   = "text/yaml";
-			mimeTypes[".png"]   = "image/png";
-			mimeTypes[".jpg"]   = "image/jpeg";
-			mimeTypes[".jpeg"]  = "image/jpeg";
-			mimeTypes[".gif"]   = "image/gif";
-			mimeTypes[".webp"]  = "image/webp";
-			mimeTypes[".svg"]   = "image/svg+xml";
-			mimeTypes[".ico"]   = "image/x-icon";
-			mimeTypes[".mp3"]   = "audio/mpeg";
-			mimeTypes[".mp4"]   = "video/mp4";
-			mimeTypes[".pdf"]   = "application/pdf";
-			mimeTypes[".zip"]   = "application/zip";
-			mimeTypes[".rar"]   = "application/vnd.rar";
-			mimeTypes[".tar"]   = "application/x-tar";
-		}
-        std::map<std::string, std::string>::const_iterator it;
-        for (it = mimeTypes.begin(); it != mimeTypes.end(); ++it)
-        {
-            if (it->first == extension)
-                return (mimeTypes[extension]);
-        }
-        return "application/octet-stream";
-    }
 
 	void AResponseBase::createBody()
     {

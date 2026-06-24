@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:59 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 03:49:33 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 11:23:27 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@ namespace http
 			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
 		file.write(request->getBody().c_str(), request->getBody().size());
 		if (file.fail())
-			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
+		{
+			file.close();
+			std::remove(fileName.c_str())
+;			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
+		}
 
 		file.close();
 		return (this->_factory.createSuccessResponse(config, request, http::CREATED));

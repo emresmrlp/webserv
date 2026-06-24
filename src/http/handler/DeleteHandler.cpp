@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 04:36:23 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 11:22:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ namespace http
 		else
 			fileName = configLoc->getUploadPath() + request->getPath();
 		
-		if (unlink(fileName.c_str()) == 0)
+		if (std::remove(fileName.c_str()) == 0)
 			return (this->_factory.createSuccessResponse(config, request, http::NO_CONTENT));
 		return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
 	}

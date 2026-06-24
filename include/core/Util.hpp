@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:40:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 04:34:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/23 13:21:04 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,16 @@
 
 namespace util
 {
-	std::string	toString(std::size_t size);
-	void		toLowerCase(std::string &str);
-	bool		isFileExist(const std::string &path);
-	bool		isDirExist(const std::string &path);
-	size_t		parseByte(std::string str);
-	std::string getRelativeConfigPath(const config::ConfigServer *config, const config::ConfigLocation *configLoc);
-	std::string	getCurrentDate();
-	std::string	getCurrentTimestamp();
+	std::string			toString(std::size_t size);
+	void				toLowerCase(std::string &str);
+	bool				isFileExist(const std::string &path);
+	bool				isDirExist(const std::string &path);
+	size_t				parseByte(std::string str);
+	const std::string	getExtension(const std::string &path);
+	const std::string	getMimeType(const std::string &path);
+	std::string 		getRelativeConfigPath(const config::ConfigServer *config, const config::ConfigLocation *configLoc);
+	std::string			getCurrentDate();
+	std::string			getCurrentTimestamp();
 }
 
 #endif

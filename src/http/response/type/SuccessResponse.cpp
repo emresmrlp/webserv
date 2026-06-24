@@ -27,7 +27,7 @@ namespace http
 		this->_statusCode = statusCode;
 		this->createBody();
 		this->addHeader("Content-Length", util::toString(this->_body.size()));
-		this->addHeader("Content-Type", this->getMimeType(this->_request->getPath()));
+		this->addHeader("Content-Type", util::getMimeType(this->_request->getPath()));
 	}
 
 	SuccessResponse::SuccessResponse(const config::ConfigServer &config, const Request *request, const std::string &path)
