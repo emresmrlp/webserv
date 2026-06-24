@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 14:58:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 15:17:44 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ namespace http
 
 	bool RequestBuilder::buildBody( std::string &rawReadBuffer)
 	{
-		if (this->_isChunked == false && !rawReadBuffer.empty())
+		if (this->_isChunked == false)
 		{
 			std::vector<std::string> contentLengthValues;
 			std::size_t contentLength = 0;
@@ -146,14 +146,28 @@ namespace http
 			pos = rawReadBuffer.find(CRLF);
 			if (pos == std::string::npos)
 			{
-				handleParseResult(BAD_REQUEST, ERROR);
+				handleParseResult(UNDEFINED, INCOMPLETE);
 				return (false);
 			}
 			chunkSizeStr = rawReadBuffer.substr(0, pos);
 			chunkSize = std::strtoul(chunkSizeStr.c_str(), &end, 16);
 			rawReadBuffer.erase(0, pos + 2);
 			if (chunkSize == 0)
+			{
 				this->_isChunked = false;
+				while (!rawReadBuffer.empty())
+				{
+					std::size_t trailerEnd = rawReadBuffer.find(CRLF);
+					if (trailerEnd == std::string::npos)
+					{
+						handleParseResult(UNDEFINED, INCOMPLETE);
+						return (false);
+					}
+					rawReadBuffer.erase(0, trailerEnd + 2);
+					if (trailerEnd == 0)
+						break ;
+				}
+			}
 			else
 			{
 				if (rawReadBuffer.size() < chunkSize + 2)
@@ -164,6 +178,11 @@ namespace http
 				this->_body.append(rawReadBuffer.substr(0, chunkSize));
 				rawReadBuffer.erase(0, chunkSize + 2);
 			}
+		}
+		if (this->_isChunked)
+		{
+			handleParseResult(UNDEFINED, INCOMPLETE);
+			return (false);
 		}
 		return (true);
 	}
