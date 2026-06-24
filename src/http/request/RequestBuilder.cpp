@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 13:54:50 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 14:58:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace http
 		if (this->_state == http::STATE_REQUEST_LINE || this->_state == http::STATE_HEADERS)
 		{
 			http::ParseResult headerResult = this->parseHeaders(rawReadBuffer, config);
-			if (headerResult.parseStatus != http::COMPLETE)
+			if (this->_state != http::STATE_WAIT_VALIDATE)
 				return (headerResult);
 		}
 

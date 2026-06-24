@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:00:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 13:27:52 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 14:57:47 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ namespace http
 		struct stat st;
 
 		std::string relativePath = request->getPath().substr(configLoc->getExecutePath().length());
-		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + relativePath;
-		std::cout << "! DEBUG: RESOLVED: " << relativePath << std::endl;
+		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + "/" + relativePath;
+
 		if (stat(resolvedPath.c_str(), &st) != 0)
 			return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
 		if (S_ISDIR(st.st_mode))
