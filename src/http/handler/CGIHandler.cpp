@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 21:18:21 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/24 22:02:54 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,7 @@ namespace http
 		envValues.push_back("SCRIPT_NAME=" + URI.scriptPath);
 		envValues.push_back("GATEWAY_INTERFACE=CGI/1.1");
 		envValues.push_back("SERVER_SOFTWARE=YECS-BME-Webserv/1.0");
+		envValues.push_back("REQUEST_URI=" + URI.pathInfo);
 		envValues.push_back("PATH_INFO=" + URI.pathInfo);
 		if (request->getMethod() == "POST" || request->getMethod() == "PUT")
 			envValues.push_back("CONTENT_LENGTH=" + util::toString(request->getBody().size()));
