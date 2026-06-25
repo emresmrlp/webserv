@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 12:47:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 18:18:54 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace http
             CGIState    _state;
             
             bool        parseCGIOutput(const std::string &path);
-            bool        parseHeaders(std::string &headBuffer);
+            bool        parseHeaders(std::string &headersBuffer);
 		};
 }
 

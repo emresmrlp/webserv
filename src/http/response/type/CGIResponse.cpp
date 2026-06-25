@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 10:34:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 13:30:44 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 18:57:01 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,17 @@ namespace http
             return (false);
         
         char buffer[4096];
-        std::string headBuffer;
+        std::string headersBuffer;
         std::string bodyBuffer;
         std::size_t pos = std::string::npos;
 
         while (file.read(buffer, sizeof(buffer)) || file.gcount() > 0)
         {
-            headBuffer.append(buffer, file.gcount());
-            pos = headBuffer.find("\r\n\r\n");
+            headersBuffer.append(buffer, file.gcount());
+            pos = headersBuffer.find("\r\n\r\n");
             if (pos != std::string::npos)
                 break;
-            if (headBuffer.size() > 8192)
+            if (headersBuffer.size() > 8192)
             {
                 file.close();
                 return (false); 
@@ -80,21 +80,64 @@ namespace http
             return (false); 
         }
 
-        bodyBuffer = headBuffer.substr(pos + 4);
+        bodyBuffer = headersBuffer.substr(pos + 4);
+        headersBuffer.erase(pos + 4);
         while (file.read(buffer, sizeof(buffer)) || file.gcount() > 0)
             bodyBuffer.append(buffer, file.gcount());
         this->setBody(bodyBuffer);
-        if (this->parseHeaders(headBuffer) == false)
+        if (this->parseHeaders(headersBuffer) == false)
             return (false);
-
         std::remove(path.c_str());
         return (true);
     }
     
-    bool CGIResponse::parseHeaders(std::string &)
+    bool CGIResponse::parseHeaders(std::string &headersBuffer)
     {
-        this->_statusCode = OK; 
-        this->addHeader("Content-Type", "text/html");
+        std::size_t pos;
+        std::string line;
+        std::vector<std::string> headers;
+        
+        this->_statusCode = http::OK; 
+        while (!headersBuffer.empty())
+        {
+            pos = headersBuffer.find_first_of(CRLF);
+            if (pos == std::string::npos)
+                break ;
+            if (pos == 0)
+            {
+                headersBuffer.erase(0, 2);
+                break ;
+            }
+            line = headersBuffer.substr(0, pos);
+            if (!(line.empty()) && (line[0] == ' ' || line[0] == '\t'))
+				return (false);
+            std::size_t sep = line.find(":");
+            if (sep == std::string::npos
+                || sep == 0)
+                return (false);
+            std::string key = line.substr(0, sep);
+            std::string value = line.substr(sep + 1);
+            if (key.find_first_of(" \t") != std::string::npos
+                || key.find(" ") != std::string::npos) 
+                return (false);
+            std::size_t firstSpace = value.find_first_not_of(" \t");
+            if (firstSpace == std::string::npos) 
+                value = "";
+            else
+            {
+                std::size_t lastSpace = value.find_last_not_of(" \t");
+                value = value.substr(firstSpace, lastSpace + 1);
+            }
+            if (key != "Status")
+                this->addHeader(key, value);
+            else
+            {
+                std::cout << "! DEBUG: value: " << value << std::endl;
+                value.substr(0, value.find_first_of(" "));
+                this->_statusCode = static_cast<http::StatusCode>(std::atoi(value.c_str()));
+            }
+            headersBuffer.erase(0, pos + 2);
+        }
         return (true);
     }
 }

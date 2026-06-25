@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 17:10:35 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 17:18:21 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ namespace http
 			}
 			else
 			{
-				if (rawReadBuffer.size() < chunkSize + 2)
+				if (rawReadBuffer.size() < pos + 2 + chunkSize + 2)
 				{
 					handleParseResult(UNDEFINED, INCOMPLETE);
 					return (false);

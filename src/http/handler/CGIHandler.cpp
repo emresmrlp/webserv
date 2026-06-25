@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 15:08:11 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 18:36:43 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,13 @@ namespace http
 		CGIResult outputResult;
 		
 		std::string relativePath = request->getPath().substr(configLoc->getExecutePath().length());
-		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + relativePath;
+		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + "/" + relativePath;
 		ParsedURI URI = this->parseURI(resolvedPath);
 
 		std::cout << "! DEBUG: p: " << URI.pathInfo << std::endl;
 		std::cout << "! DEBUG: s " << URI.scriptPath << std::endl;
 		std::cout << "! DEBUG: q: " << URI.queryString << std::endl;
-		if (access(URI.scriptPath.c_str(), F_OK) != 0)
-			return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
-		if (access(URI.scriptPath.c_str(), X_OK) != 0)
-			return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
-
+		
 		std::vector<std::string> envValues = this->buildEnv(config, request, URI);
 		std::vector<char *> envp((envValues.size() + 1), NULL);
 		for (size_t i = 0; i < envValues.size(); i++)
