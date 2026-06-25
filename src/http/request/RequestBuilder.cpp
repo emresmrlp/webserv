@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 11:46:06 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 17:10:35 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ namespace http
 			}
 			chunkSizeStr = rawReadBuffer.substr(0, pos);
 			chunkSize = std::strtoul(chunkSizeStr.c_str(), &end, 16);
-			rawReadBuffer.erase(0, pos + 2);
 			if (chunkSize == 0)
 			{
 				this->_isChunked = false;
@@ -163,7 +162,7 @@ namespace http
 						handleParseResult(UNDEFINED, INCOMPLETE);
 						return (false);
 					}
-					rawReadBuffer.erase(0, trailerEnd + 2);
+					rawReadBuffer.erase(0, trailerEnd + 4);
 					if (trailerEnd == 0)
 						break ;
 				}
@@ -175,8 +174,8 @@ namespace http
 					handleParseResult(UNDEFINED, INCOMPLETE);
 					return (false);
 				}
-				this->_body.append(rawReadBuffer.substr(0, chunkSize));
-				rawReadBuffer.erase(0, chunkSize + 2);
+				this->_body.append(rawReadBuffer.substr(pos + 2, chunkSize));
+				rawReadBuffer.erase(0, pos + 2 + chunkSize + 2);
 			}
 		}
 		if (this->_isChunked)
