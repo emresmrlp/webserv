@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 15:57:46 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 11:18:07 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ namespace core
 
 	void Connection::resetForNextRequest()
 	{
+		this->_sentBytes = 0;
 		this->_readBuffer.clear();
 		this->_writeBuffer.clear();
 
@@ -109,10 +110,14 @@ namespace core
 		this->_config = config;
 	}
 	
+	std::size_t Connection::getSentBytes() const
+	{
+		return (this->_sentBytes);
+	}
+
 	void Connection::eraseResponseBuffer(std::size_t bytesSent)
 	{
-		if (bytesSent <= this->_writeBuffer.length())
-			this->_writeBuffer.erase(0, bytesSent);
+		this->_sentBytes += bytesSent;
 	}
 
 	Connection::~Connection()

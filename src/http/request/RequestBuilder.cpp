@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 15:17:44 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 11:46:06 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ namespace http
 		return (handleParseResult(UNDEFINED, INCOMPLETE));	
 	}
 
-	bool RequestBuilder::buildBody( std::string &rawReadBuffer)
+	bool RequestBuilder::buildBody(std::string &rawReadBuffer)
 	{
 		if (this->_isChunked == false)
 		{

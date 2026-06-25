@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 12:51:51 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 12:38:34 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ namespace config
 			throw std::runtime_error("Location block missing execute path");
 		//if (!util::isDirExist(_executePath))
 		//	throw std::runtime_error("Location directory is invalid");
-		//if (_maxHeaderSize < 1024 || _maxHeaderSize > 10485760)
-		//	throw std::runtime_error("client_max_header_size must be between 1KB (1.024 bytes) and 10MB (10.485.760 bytes)");
+		//if (_maxHeaderSize < 1024 || _maxHeaderSize > 8192)
+		//	throw std::runtime_error("client_max_header_size must be between 1KB (1.024 bytes) and 8KB (8.192 bytes)");
 		//if (_maxBodySize < 1024 || _maxBodySize > 2147483648)
 		//	throw std::runtime_error("client_max_body_size must be between 1KB (1.024 bytes) and 2GB (2.147.483.648 bytes)");
 		if (_allowedMethods.empty())

@@ -22,7 +22,6 @@ namespace http
             StatusResponse(const config::ConfigServer &config, const Request *request, http::StatusCode status);
             ~StatusResponse();
         private:
-            void initHeaders();
             void createDefaultBody();
     };
 }

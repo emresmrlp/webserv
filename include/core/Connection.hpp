@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/16 11:26:07 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 11:15:49 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ namespace core
 			int						getFd() const;
 			core::ConnectionState	getState() const;
 			const std::string		&getResponseBuffer() const;
+			std::size_t				getSentBytes() const;
 
 			void					setState(ConnectionState state);
 			void					setConfig(const config::ConfigServer *config);
@@ -69,6 +70,7 @@ namespace core
 			http::RequestBuilder		_requestBuilder;
 
 			core::ConnectionState		_state;
+			std::size_t					_sentBytes;
 
 			const config::ConfigServer	*_config;
 	};

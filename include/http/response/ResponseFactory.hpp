@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:41:51 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:17:57 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 12:58:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define RESPONSEFACTORY_HPP
 # include "StatusCode.hpp"
 # include "ConfigServer.hpp"
-# include "iostream"
+# include <iostream>
 
 namespace http
 {
@@ -31,6 +31,7 @@ namespace http
             http::IResponse *createSuccessResponseWithPath(const config::ConfigServer *config, http::Request *request, const std::string &path);
             http::IResponse *createStatusResponse(const config::ConfigServer *config, http::Request *request, http::StatusCode statusCode);
         	http::IResponse *createRedirectResponse(const config::ConfigServer *config, std::pair<int, std::string> redirectPair);
+            http::IResponse *createCGIResponse(const config::ConfigServer *config, http::Request *request, const std::string &path);
     };
 }
 

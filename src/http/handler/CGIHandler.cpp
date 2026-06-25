@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 01:17:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 12:58:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ namespace http
 		
 		ParsedURI URI = this->parseURI(util::getRelativeConfigPath(config, configLoc) + request->getPath());
 
+		if (access(URI.scriptPath.c_str(), F_OK) != 0)
+			return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
+		if (access(URI.scriptPath.c_str(), X_OK) != 0)
+			return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
+
 		std::vector<std::string> envValues = this->buildEnv(config, request, URI);
 		std::vector<char *> envp((envValues.size() + 1), NULL);
 		for (size_t i = 0; i < envValues.size(); i++)
@@ -48,7 +53,7 @@ namespace http
 		if (outputResult.status == false)
 			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
 
-		return (this->_factory.createSuccessResponseWithPath(config, request, outputResult.output));
+		return (this->_factory.createCGIResponse(config, request, outputResult.output));
 	}
 
 	CGIResult CGIHandler::prepareInput(http::Request *request) const
@@ -180,6 +185,7 @@ namespace http
 		envValues.push_back("SCRIPT_NAME=" + URI.scriptPath);
 		envValues.push_back("GATEWAY_INTERFACE=CGI/1.1");
 		envValues.push_back("SERVER_SOFTWARE=YECS-BME-Webserv/1.0");
+		envValues.push_back("REDIRECT_STATUS=200");
 		if (URI.pathInfo == "")
 		{
 			envValues.push_back("REQUEST_URI=" + URI.scriptPath + URI.pathInfo);

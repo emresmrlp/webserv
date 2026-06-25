@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/10 12:45:32 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 12:38:46 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace config
 		_root(""),
 		_httpVersion("HTTP/1.1"),
 		_signature("YECS-BME ADI ORTAKLIGI"),
-		_maxHeaderSize(1048576),
+		_maxHeaderSize(8192),
 		_maxBodySize(1048576)
 	{ }
 

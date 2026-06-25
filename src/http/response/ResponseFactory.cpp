@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:07:42 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:18:01 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 12:58:16 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "SuccessResponse.hpp"
 #include "RedirectResponse.hpp"
 #include "AutoIndexResponse.hpp"
+#include "CGIResponse.hpp"
 
 namespace http
 {
@@ -45,5 +46,9 @@ namespace http
 	http::IResponse *ResponseFactory::createAutoIndexResponse(const config::ConfigServer *config, http::Request *request)
 	{
 		return (new AutoIndexResponse(*config, request));
+	}
+	http::IResponse *ResponseFactory::createCGIResponse(const config::ConfigServer *config, http::Request *request, const std::string &path)
+	{
+		return (new CGIResponse(*config, request, path));
 	}
 }
