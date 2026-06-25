@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 18:36:43 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 19:03:56 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace http
 		
 		std::string relativePath = request->getPath().substr(configLoc->getExecutePath().length());
 		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + "/" + relativePath;
-		ParsedURI URI = this->parseURI(resolvedPath);
+		ParsedURI URI = this->parseURI(util::getFixedRoute(resolvedPath));
 
 		std::cout << "! DEBUG: p: " << URI.pathInfo << std::endl;
 		std::cout << "! DEBUG: s " << URI.scriptPath << std::endl;

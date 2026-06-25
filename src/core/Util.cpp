@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:41:15 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 21:11:16 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 19:06:20 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,20 @@ namespace util
 		if (dotPos == std::string::npos)
 			return (std::string(""));
 		return (literalPath.substr(dotPos));
+	}
+
+	const std::string getFixedRoute(const std::string &route)
+	{
+		std::string fixedRoute = route;
+		if (fixedRoute.empty())
+			return (fixedRoute);
+		std::size_t pos;
+		while (fixedRoute.find("//") != std::string::npos)
+		{
+			pos = fixedRoute.find("//");
+			fixedRoute.replace(pos, 2, "/");
+		}
+		return (fixedRoute);
 	}
 
 	const std::string getMimeType(const std::string &path)
