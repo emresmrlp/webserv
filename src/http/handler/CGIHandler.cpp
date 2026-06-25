@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 12:58:33 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 14:30:41 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,11 @@ namespace http
 		CGIResult inputResult;
 		CGIResult outputResult;
 		
-		ParsedURI URI = this->parseURI(util::getRelativeConfigPath(config, configLoc) + request->getPath());
+		std::string relativePath = request->getPath().substr(configLoc->getExecutePath().length());
+		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + "/" + relativePath;
+		ParsedURI URI = this->parseURI(resolvedPath);
 
+		std::cout << "! DEBUG: uri " << URI.scriptPath << std::endl;
 		if (access(URI.scriptPath.c_str(), F_OK) != 0)
 			return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
 		if (access(URI.scriptPath.c_str(), X_OK) != 0)
