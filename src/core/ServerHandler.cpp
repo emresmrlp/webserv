@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 11:19:43 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 20:22:05 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ namespace core
 		if (remaining == 0)
 			return ;
 		
-		ssize_t bytesSent = send(this->_pollFds[i].fd, response.c_str() + conn->getSentBytes(), response.length(), 0);
+		ssize_t bytesSent = send(this->_pollFds[i].fd, response.c_str() + conn->getSentBytes(), remaining, 0);
 		if (bytesSent > 0)
 		{
 			if (static_cast<std::size_t>(bytesSent) == remaining)
@@ -233,7 +233,7 @@ namespace core
 				std::cout << "Write success. FD: " << this->_pollFds[i].fd << std::endl; 
 			}
 			else
-				conn->eraseResponseBuffer(bytesSent);
+				conn->setSentBytes(conn->getSentBytes() + bytesSent);
 		}
 		else if (bytesSent < 0)
 			this->closeConnection(i);

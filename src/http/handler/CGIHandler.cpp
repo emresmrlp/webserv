@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 19:03:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 20:25:39 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,21 @@ namespace http
 				close(inputFd);
 			}
 			else
-				close(STDIN_FILENO);
+			{
+				int devNullFd = open("/dev/null", O_RDONLY);
+                if (devNullFd != -1)
+                    exit(1);
+				if (dup2(devNullFd, STDIN_FILENO) == -1)
+					exit(1);
+				close(devNullFd);
+			}
 
         	int outputFd = open(tmpOutFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0600);
 			if (outputFd == -1)
 				exit(1);
 			if (dup2(outputFd, STDOUT_FILENO) == -1)
+				exit(1);
+			if (dup2(outputFd, STDERR_FILENO) == -1)
 				exit(1);
 			close(outputFd);
 
