@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 14:30:41 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/25 14:52:18 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ namespace http
 		CGIResult outputResult;
 		
 		std::string relativePath = request->getPath().substr(configLoc->getExecutePath().length());
-		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + "/" + relativePath;
+		std::string resolvedPath = util::getRelativeConfigPath(config, configLoc) + relativePath;
 		ParsedURI URI = this->parseURI(resolvedPath);
 
-		std::cout << "! DEBUG: uri " << URI.scriptPath << std::endl;
+		std::cout << "! DEBUG: p: " << URI.pathInfo << std::endl;
+		std::cout << "! DEBUG: s " << URI.scriptPath << std::endl;
+		std::cout << "! DEBUG: q: " << URI.queryString << std::endl;
 		if (access(URI.scriptPath.c_str(), F_OK) != 0)
 			return (this->_factory.createStatusResponse(config, request, http::NOT_FOUND));
 		if (access(URI.scriptPath.c_str(), X_OK) != 0)
@@ -47,9 +49,14 @@ namespace http
 		for (size_t i = 0; i < envValues.size(); i++)
 			envp[i] = (const_cast<char *>(envValues[i].c_str()));
 
-		inputResult = this->prepareInput(request);
-		if (inputResult.status == false)
-			return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
+		inputResult.output = "";
+		inputResult.status = true;
+		if (request->getMethod() != "GET" && request->getMethod() != "HEAD")
+		{
+			inputResult = this->prepareInput(request);
+			if (inputResult.status == false)
+				return (this->_factory.createStatusResponse(config, request, http::INTERNAL_SERVER_ERROR));
+		}
 
 		std::string interpreterPath = configLoc->getCgiPass(util::getExtension(URI.scriptPath));
 		outputResult = this->executeCgi(URI.scriptPath, interpreterPath, inputResult.output, &envp[0]);
@@ -95,6 +102,8 @@ namespace http
 		result.status = false;
 		result.output = "";
 
+		bool	hasInput = !tmpInFile.empty();
+
 		static unsigned long cgiOutCounter = 0;
 		std::string tmpOutFile = "tmp/cgiTmpOut_" + util::toString(cgiOutCounter++);
 		std::ofstream file(tmpOutFile.c_str(), std::ios::binary);
@@ -105,17 +114,21 @@ namespace http
 		pid_t pid = fork();
 		if (pid == -1)
 		{
-			std::remove(tmpInFile.c_str());
+			if (hasInput)
+				std::remove(tmpInFile.c_str());
 			return (result);
 		}
 		if (pid == 0)
 		{
-			int inputFd = open(tmpInFile.c_str(), O_RDONLY);
-			if (inputFd == -1)
-				exit(1);
-			if (dup2(inputFd, STDIN_FILENO) == -1)
-				exit(1);
-			close(inputFd);
+			if (hasInput)
+			{
+				int inputFd = open(tmpInFile.c_str(), O_RDONLY);
+				if (inputFd == -1)
+					exit(1);
+				if (dup2(inputFd, STDIN_FILENO) == -1)
+					exit(1);
+				close(inputFd);
+			}
 
         	int outputFd = open(tmpOutFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0600);
 			if (outputFd == -1)
@@ -137,7 +150,8 @@ namespace http
 		int status;
 		waitpid(pid, &status, 0);
 
-		std::remove(tmpInFile.c_str());
+		if (hasInput)
+			std::remove(tmpInFile.c_str());
 		result.status = true;
 		result.output = tmpOutFile;
 		return (result);
