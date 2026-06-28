@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 20:25:48 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 22:59:04 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,11 @@ namespace core
 
 	void Connection::process()
 	{
-		std::cout << "+ Connection -> process called. State: " << this->_state << std::endl;
 		if (this->_state != READING)
 			return ;
 
 		http::ParseResult parseResult;
 		parseResult = this->_requestBuilder.parse(this->_readBuffer, this->_config);
-		std::cout << "+ Connection -> RequestBuilder process result: " << parseResult.parseStatus << std::endl;
 		if (parseResult.parseStatus == http::INCOMPLETE)
 			return ;
 		this->_request = this->_requestBuilder.build();
@@ -45,7 +43,6 @@ namespace core
 
 	void Connection::handleTimeout()
 	{
-		std::cout << "! DEBUG: TIMEOUT" << std::endl;
 		if (!this->_config)
 		{
 			this->setState(CLOSING);
@@ -79,7 +76,6 @@ namespace core
 		}
 		
 		this->_requestBuilder.reset();
-		std::cout << "Connection reset success." << std::endl;
 		this->_state = READING;
 	}
 

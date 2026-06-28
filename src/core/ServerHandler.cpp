@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 20:22:05 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 23:10:02 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,27 +67,6 @@ namespace core
 				this->_pollFds.push_back(pollFd);
 			}
 		}
-
-		// ! DEBUGGING
-		for (size_t i = 0; i < this->_servers.size(); i++)
-		{
-			std::cout << "Server " << i + 1 << ": " << std::endl;
-			uint32_t ip_net = this->_servers[i]->getAddr().ip;
-			uint32_t ip_host = ((ip_net & 0x000000FFu) << 24) |
-						((ip_net & 0x0000FF00u) << 8)  |
-						((ip_net & 0x00FF0000u) >> 8)  |
-						((ip_net & 0xFF000000u) >> 24);
-			std::cout << "  IP: " << ((ip_host >> 24) & 0xFF) << "." << ((ip_host >> 16) & 0xFF) << "." << ((ip_host >> 8) & 0xFF) << "." << (ip_host & 0xFF) << std::endl;
-			uint16_t port_net = this->_servers[i]->getAddr().port;
-			uint16_t port_host = (uint16_t)(((port_net & 0x00FFu) << 8) | ((port_net & 0xFF00u) >> 8));
-			std::cout << "  Port: " << port_host << std::endl;
-			std::cout << "  Server Names: ";
-			const std::vector<std::string> &serverNames = this->_servers[i]->getConfig().getServerNames();
-			for (size_t j = 0; j < serverNames.size(); j++)
-				std::cout << serverNames[j] << (j < serverNames.size() - 1 ? ", " : "");
-			std::cout << std::endl;
-		}
-		// ! END OF DEBUGGING
 	}
 
 	void ServerHandler::signalHandler(int)
@@ -106,7 +85,7 @@ namespace core
 
 			socketCount = poll(&(this->_pollFds[0]), this->_pollFds.size(), 30000);
 
-			if (socketCount < 0) // ? if poll error occured
+			if (socketCount < 0)
 			{
 				if (ServerHandler::_running == false)
 				{
@@ -115,7 +94,7 @@ namespace core
 				}
 				throw std::runtime_error("ServerHandler(Fatal Error): poll failure.");
 			}
-			if (socketCount == 0) // ? if no active sockets
+			if (socketCount == 0)
 			{
 				for (std::size_t i = 0; i < this->_pollFds.size(); i++)
 				{
@@ -141,26 +120,21 @@ namespace core
 
 	void ServerHandler::dispatch(std::size_t i)
 	{
-		// ? is a server socket? (server socket only listen, cant pollout)
-		if (i < this->_servers.size()) // ? if smaller, it means this is a server
+		if (i < this->_servers.size())
 		{
 			if (this->_pollFds[i].revents & POLLIN)
 				this->acceptConnection(i);
 			return ;
 		}
-
-		// ? connection error control
+		
 		if (this->_pollFds[i].revents & (POLLERR | POLLHUP))
 		{
 			this->closeConnection(i);
 			return ;
 		}
 
-		// ? connection socket ->
-		// ? POLLIN meaning is reading socket
 		if (this->_pollFds[i].revents & POLLIN)
 			this->readConnection(i);
-		// ? POLLOUT meaning is writing socket
 		if (this->_pollFds[i].revents & POLLOUT)
 			this->writeConnection(i);
 	}
@@ -179,7 +153,6 @@ namespace core
 
 	void ServerHandler::readConnection(std::size_t i) // ? read request
 	{
-		std::cout << "Read occured" << std::endl;
 		Connection *conn = this->_connnections[i - this->_servers.size()];
 
 		if (conn->getState() == core::CLOSING)
@@ -230,7 +203,6 @@ namespace core
 				}
 				conn->resetForNextRequest();
 				this->_pollFds[i].events &= ~POLLOUT; // ? (~) meaining opposite (0010) -> (1101)
-				std::cout << "Write success. FD: " << this->_pollFds[i].fd << std::endl; 
 			}
 			else
 				conn->setSentBytes(conn->getSentBytes() + bytesSent);
@@ -241,37 +213,35 @@ namespace core
 
 	void ServerHandler::acceptConnection(std::size_t i)
 	{
-		// ? accept new connection
 		int connFd = accept(this->_pollFds[i].fd, NULL, NULL);
 		if (connFd < 0)
 			return ;
 
-		// ? set fd settings to non blocking server
 		if (fcntl(connFd, F_SETFL, O_NONBLOCK) < 0)
 		{
 			close(connFd);
 			return ;
 		}
 
-		// ? create pollfd for connection
 		struct pollfd connPollFd;
 		connPollFd.fd = connFd;
-		connPollFd.events = POLLIN; // ? this case, just reading
+		connPollFd.events = POLLIN;
 		connPollFd.revents = 0;
 		this->_pollFds.push_back(connPollFd);
 
-		// ? create connection object
 		Connection *newConn = new Connection(connFd);
 		newConn->setConfig(&(this->_servers[i]->getConfig()));
 		this->_connnections.push_back(newConn);
 
-		std::cout << "New connection created! FD:" << connFd << std::endl;
+		std::cout << "\033[32m" << "[WebServ/YECS-BME] Connection (FD: " << connFd << ") created." << "\033[0m" << std::endl;
 	}
 
 	void ServerHandler::closeConnection(std::size_t i)
 	{
 		int connIdx = i - this->_servers.size();
 
+		int oldFd = this->_pollFds[i].fd;
+		
 		if (i >= this->_pollFds.size())
 			return ;
 		if(this->_pollFds[i].fd >= 0)
@@ -285,6 +255,7 @@ namespace core
 
 		this->_pollFds.erase(this->_pollFds.begin() + i);
 		this->_connnections.erase(this->_connnections.begin() + connIdx);
+		std::cout << "\033[31m" << "[WebServ/YECS-BME] Connection (FD:" << oldFd << ") closed." << "\033[0m" << std::endl;
 	}
 
 	HostAddr ServerHandler::resolveHostAddr(const std::string &ip, int port)

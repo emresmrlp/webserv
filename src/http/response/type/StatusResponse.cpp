@@ -25,8 +25,6 @@ namespace http
 
 		std::string errorPage = this->_config.getRoot() + "/" + this->_config.getErrorPage(static_cast<int>(status));
 
-		std::cout << "! DEBUG: errorpage: " << errorPage << std::endl;
-
 		if (util::isFileExist(errorPage))
 			this->createBody(errorPage);
 		else

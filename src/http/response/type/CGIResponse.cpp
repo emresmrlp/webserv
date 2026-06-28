@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 10:34:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 19:59:32 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 22:59:26 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ namespace http
                 this->addHeader(key, value);
             else
             {
-                std::cout << "! DEBUG: value: " << value << std::endl;
                 value.substr(0, value.find_first_of(" "));
                 this->_statusCode = static_cast<http::StatusCode>(std::atoi(value.c_str()));
             }
