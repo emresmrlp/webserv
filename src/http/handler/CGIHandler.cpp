@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 20:31:11 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 09:49:08 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,29 @@ namespace http
 		}
 		if (request->getMethod() == "POST" || request->getMethod() == "PUT")
 			envValues.push_back("CONTENT_LENGTH=" + util::toString(request->getBody().size()));
+		
+		std::vector<std::pair<std::string, std::string> > headers;
+		headers = request->getAllHeaders();
+		for (std::size_t i = 0; i < headers.size(); i++)
+		{
+			std::string key = headers[i].first;
+			std::string value = headers[i].second;
+			std::string lowerKey = key;
+			util::toLowerCase(lowerKey);
+
+			if (lowerKey == "content-type")
+			{
+				envValues.push_back("CONTENT_TYPE=" + value);
+				continue;
+			}
+			else if (lowerKey == "content-length")
+				continue;
+			else
+			{
+				util::toUpperCaseSnake(key);
+				envValues.push_back("HTTP_" + key + "=" + value);
+			}
+		}
 		return (envValues);
 	}
 }

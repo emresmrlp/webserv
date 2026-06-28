@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:40:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 19:03:36 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 09:38:28 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ namespace util
 {
 	std::string			toString(std::size_t size);
 	void				toLowerCase(std::string &str);
+	void				toUpperCaseSnake(std::string &str);
 	bool				isFileExist(const std::string &path);
 	bool				isDirExist(const std::string &path);
 	size_t				parseByte(std::string str);

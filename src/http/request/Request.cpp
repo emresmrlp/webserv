@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 08:21:24 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/03/27 18:47:43 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 09:48:52 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,11 @@ namespace http
 		if (values.empty())
 			return (false);
 		return (true);
+	}
+
+	const std::vector<std::pair<std::string, std::string> > &Request::getAllHeaders() const
+	{
+		return (this->_headers);
 	}
 
     const std::string	&Request::getMethod() const { return (this->_method); }
