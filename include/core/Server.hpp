@@ -6,19 +6,14 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:36:01 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/05/31 15:32:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 00:41:06 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
-# include <unistd.h>
-# include <iostream>
-# include <netdb.h>
-# include <sstream>
-# include <cstring>
-# include "Types.hpp"
 # include "ConfigServer.hpp"
+# include "Types.hpp"
 
 namespace core
 {

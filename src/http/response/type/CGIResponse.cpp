@@ -6,33 +6,17 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 10:34:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 22:59:26 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:56:54 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/******************************************************************************/
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CGIResponse.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/05 17:08:48 by ysumeral         ###   ########.fr       */
-/*                                                                            */
-/******************************************************************************/
-
 #include "CGIResponse.hpp"
-#include "StatusCode.hpp"
-#include <iostream>
-#include "Request.hpp"
-#include <iomanip>
-#include <sstream>
-#include <dirent.h>
-#include <map>
-#include "Util.hpp"
 #include <cstdio>
+#include <cstdlib>
 #include <fstream>
+#include <vector>
+#include "StatusCode.hpp"
+#include "Util.hpp"
 
 namespace http
 {

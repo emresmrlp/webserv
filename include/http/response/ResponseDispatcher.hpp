@@ -6,21 +6,27 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 12:25:40 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 20:32:19 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:46:09 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEDISPATCHER_HPP
 # define RESPONSEDISPATCHER_HPP
-# include "Server.hpp"
-# include "Request.hpp"
-# include "IResponse.hpp"
-# include "ResponseFactory.hpp"
-# include "IMethodHandler.hpp"
 # include <map>
+# include <string>
+
+namespace config
+{
+	class ConfigServer;
+}
 
 namespace http
-{	
+{
+	class IMethodHandler;
+	class IResponse;
+	class Request;
+	class ResponseFactory;
+
 	class ResponseDispatcher
 	{
 		public:

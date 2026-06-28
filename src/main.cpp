@@ -6,18 +6,18 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/14 15:49:14 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/16 11:41:49 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:31:24 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <signal.h>
+#include <exception> 
 #include <iostream>
-#include "AResponseBase.hpp"
+#include <string>
+#include <vector>
 #include "ConfigServer.hpp"
-#include "Server.hpp"
-#include "ServerHandler.hpp"
-#include "Connection.hpp"
 #include "Parser.hpp"
-#include "signal.h"
+#include "ServerHandler.hpp"
 
 int main(int argc, char **argv)
 {
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
         return (1);
     }
     
-    signal(SIGPIPE, SIG_IGN); // ? want to write on closed pipe -> ignore
+    signal(SIGPIPE, SIG_IGN);
 
     config::Parser parser(argv[1]);
     try

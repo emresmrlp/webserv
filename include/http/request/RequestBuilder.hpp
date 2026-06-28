@@ -6,16 +6,21 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:47:02 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 13:53:49 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:29:05 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUESTBUILDER_HPP
 # define REQUESTBUILDER_HPP
 # include <string>
-# include <vector>
-# include "Server.hpp"
+# include <utility>
+# include <vector> 
 # include "StatusCode.hpp"
+
+namespace config
+{
+	class ConfigServer;
+}
 
 namespace http
 {

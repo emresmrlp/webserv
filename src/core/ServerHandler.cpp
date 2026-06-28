@@ -6,21 +6,27 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 23:37:19 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:31:18 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ServerHandler.hpp"
-#include "ConfigLocation.hpp"
-#include "ConfigServer.hpp"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <cstring>
-#include <cstdlib>
 #include <fcntl.h>
+#include <netdb.h>
+#include <netinet/in.h> 
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h> 
+#include <string>
 #include <csignal>
+#include <cstring>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 #include <vector>
+#include "ConfigServer.hpp"
+#include "Connection.hpp"
+#include "Server.hpp"
+#include "ServerHandler.hpp"
 
 namespace core
 {
@@ -46,7 +52,7 @@ namespace core
 	{
 		HostAddr addr;
 		typedef std::vector<config::ConfigServer>::const_iterator ConfigIt;
-		typedef std::vector<config::ListenTarget>::const_iterator ListenIt; // ? ConfigServer->ListenTarget iterator
+		typedef std::vector<config::ListenTarget>::const_iterator ListenIt;
 
 		for (ConfigIt it = _configs.begin(); it != _configs.end(); it++)
 		{
@@ -60,7 +66,7 @@ namespace core
 				newServer->setup();
 				this->_servers.push_back(newServer);
 
-				struct pollfd pollFd;
+				struct ::pollfd pollFd;
 				pollFd.fd = newServer->getListenFd();
 				pollFd.events = POLLIN;
 				pollFd.revents = 0;
@@ -151,7 +157,7 @@ namespace core
 		return (false);
 	}
 
-	void ServerHandler::readConnection(std::size_t i) // ? read request
+	void ServerHandler::readConnection(std::size_t i)
 	{
 		Connection *conn = this->_connnections[i - this->_servers.size()];
 
@@ -172,13 +178,13 @@ namespace core
 					<< conn->getFd() << ")." << "\033[0m" << std::endl;
 			conn->process();
 			if (conn->getState() == core::WRITING)
-				this->_pollFds[i].events |= POLLOUT; // ? ready to writeConnection function
+				this->_pollFds[i].events |= POLLOUT;
 		}
-		else if (bytesRead <= 0) // ? connection is closed (== 0) or error occured (< 0)
+		else if (bytesRead <= 0)
 			this->closeConnection(i);
 	}
 
-	void ServerHandler::writeConnection(std::size_t i) // ? send response
+	void ServerHandler::writeConnection(std::size_t i)
 	{
 		Connection *conn = this->_connnections[i - this->_servers.size()];
 
@@ -206,7 +212,7 @@ namespace core
 					return ;
 				}
 				conn->resetForNextRequest();
-				this->_pollFds[i].events &= ~POLLOUT; // ? (~) meaining opposite (0010) -> (1101)
+				this->_pollFds[i].events &= ~POLLOUT;
 			}
 			else
 			{
@@ -268,12 +274,12 @@ namespace core
 	{
 		HostAddr hostAddr;
 
-		struct addrinfo filter;
-		struct addrinfo *res;
+		struct ::addrinfo filter;
+		struct ::addrinfo *res;
 
-		std::memset(&filter, 0, sizeof(filter)); // ? for cleaning garbage values
+		std::memset(&filter, 0, sizeof(filter));
 		filter.ai_family = AF_INET;
-		filter.ai_socktype = SOCK_STREAM; // ? for TCP Protocol (handshake)
+		filter.ai_socktype = SOCK_STREAM;
 
 		std::ostringstream portStream;
 		portStream << port;
@@ -281,7 +287,7 @@ namespace core
 		if (getaddrinfo(ip.c_str(), portStream.str().c_str(), &filter, &res) != 0)
 			throw std::runtime_error("Address resolving problem occured.");
 
-		struct sockaddr_in *addr = reinterpret_cast<struct sockaddr_in *>(res->ai_addr); // ? addrinfo address
+		struct sockaddr_in *addr = reinterpret_cast<struct sockaddr_in *>(res->ai_addr);
 
 		hostAddr.ip = addr->sin_addr.s_addr;
 		hostAddr.port = addr->sin_port;

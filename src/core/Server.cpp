@@ -6,11 +6,18 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:32 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 23:33:05 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 00:41:19 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <string>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <cstring>
+#include <iostream>
+#include <stdexcept>
 
 namespace core
 {

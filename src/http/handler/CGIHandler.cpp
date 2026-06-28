@@ -6,19 +6,26 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 22:59:16 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:44:18 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CGIHandler.hpp"
-#include "ResponseFactory.hpp"
-#include <cstdio>
-#include <unistd.h>
+#include <stdio.h>
 #include <cstdlib>
-#include "Util.hpp"
 #include <fcntl.h>
+#include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
+#include <cstdio>
 #include <fstream>
+#include <utility>
+#include "ConfigLocation.hpp"
+#include "ConfigServer.hpp"
+#include "Request.hpp"
+#include "ResponseFactory.hpp"
+#include "StatusCode.hpp"
+#include "Util.hpp"
 
 namespace http
 {

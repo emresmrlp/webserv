@@ -6,14 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/16 12:18:46 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 02:01:03 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RedirectResponse.hpp"
-#include <vector>
-#include <iostream>
-#include <sys/stat.h>
+#include <cstddef>
+#include "StatusCode.hpp"
 
 namespace http
 {

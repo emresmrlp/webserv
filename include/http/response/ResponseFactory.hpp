@@ -6,15 +6,20 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 08:41:51 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 12:58:14 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:49:03 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEFACTORY_HPP
 # define RESPONSEFACTORY_HPP
+# include <string>
+# include <utility>
 # include "StatusCode.hpp"
-# include "ConfigServer.hpp"
-# include <iostream>
+
+namespace config
+{
+    class ConfigServer;
+}
 
 namespace http
 {

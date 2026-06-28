@@ -6,16 +6,21 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:07:42 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 12:58:16 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:53:35 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResponseFactory.hpp"
-#include "StatusResponse.hpp"
-#include "SuccessResponse.hpp"
-#include "RedirectResponse.hpp"
 #include "AutoIndexResponse.hpp"
 #include "CGIResponse.hpp"
+#include "RedirectResponse.hpp"
+#include "StatusResponse.hpp"
+#include "SuccessResponse.hpp"
+
+namespace config
+{
+	class ConfigServer;
+}
 
 namespace http
 {

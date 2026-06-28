@@ -6,16 +6,20 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 23:30:59 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:24:24 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Connection.hpp"
-#include "SuccessResponse.hpp"
-#include "StatusResponse.hpp"
-#include <iostream>
+#include "IResponse.hpp"
 #include "Request.hpp"
 #include "ResponseDispatcher.hpp"
+#include "StatusCode.hpp"
+
+namespace config
+{
+	class ConfigServer;
+}
 
 namespace core
 {

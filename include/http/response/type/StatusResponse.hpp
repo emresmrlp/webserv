@@ -13,6 +13,8 @@
 #ifndef ERRORRESPONSE_HPP
 # define ERRORRESPONSE_HPP
 # include "AResponseBase.hpp"
+# include "ConfigServer.hpp"
+# include "StatusCode.hpp"
 
 namespace http
 {
@@ -25,4 +27,5 @@ namespace http
             void createDefaultBody();
     };
 }
+
 #endif

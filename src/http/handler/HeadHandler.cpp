@@ -6,13 +6,13 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/13 20:22:59 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 00:26:31 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HeadHandler.hpp"
 #include "IResponse.hpp"
-#include <iostream>
+
 namespace http
 {
 	HeadHandler::HeadHandler(ResponseFactory &factory) : _getHandler(factory) {}

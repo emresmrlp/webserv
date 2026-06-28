@@ -6,17 +6,21 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:40:45 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 09:38:28 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:31:47 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTIL_HPP
 # define UTIL_HPP
-# include <string>
 # define CRLF "\r\n"
 # define DOUBLE_CRLF "\r\n\r\n"
-#include "ConfigServer.hpp"
-#include "ConfigLocation.hpp"
+# include <cstddef>
+# include <string>
+namespace config
+{
+	class ConfigLocation;
+	class ConfigServer;
+}
 
 namespace util
 {

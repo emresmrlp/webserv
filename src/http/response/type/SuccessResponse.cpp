@@ -11,13 +11,9 @@
 /* ************************************************************************** */
 
 #include "SuccessResponse.hpp"
-#include "StatusCode.hpp"
-#include <iostream>
 #include "Request.hpp"
-#include <iomanip>
-#include <sstream>
+#include "StatusCode.hpp"
 #include "Util.hpp"
-#include <map>
 
 namespace http
 {

@@ -11,13 +11,12 @@
 /******************************************************************************/
 
 #include "AutoIndexResponse.hpp"
-#include "StatusCode.hpp"
-#include <iostream>
-#include "Request.hpp"
-#include <iomanip>
-#include <sstream>
 #include <dirent.h>
-#include <map>
+#include <cstddef>
+#include <sstream>
+#include <string>
+#include "Request.hpp"
+#include "StatusCode.hpp"
 #include "Util.hpp"
 
 namespace http

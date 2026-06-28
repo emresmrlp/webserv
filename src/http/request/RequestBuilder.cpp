@@ -6,15 +6,17 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 10:09:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 10:22:16 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:32:37 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RequestBuilder.hpp"
+#include <cstdlib>
+#include <vector>
+#include "ConfigLocation.hpp"
+#include "ConfigServer.hpp"
 #include "Request.hpp"
 #include "Util.hpp"
-#include <vector>
-#include <iostream>
 
 namespace http
 {
@@ -208,10 +210,10 @@ namespace http
 			return (false);
 		}		
 
-        if (this->_path.find("/../") != std::string::npos // if "root/../pictures"
-			|| this->_path.substr(0, 3) == "../" // if "../pictures"
-			|| this->_path == ".." // if ".."
-			|| (this->_path.length() >= 3 && this->_path.substr(this->_path.length() - 3) == "/..")) // if "root/pictures/.."
+        if (this->_path.find("/../") != std::string::npos
+			|| this->_path.substr(0, 3) == "../"
+			|| this->_path == ".."
+			|| (this->_path.length() >= 3 && this->_path.substr(this->_path.length() - 3) == "/.."))
 		{
             handleParseResult(FORBIDDEN, ERROR);
 			return (false);
@@ -227,10 +229,9 @@ namespace http
 
 	bool RequestBuilder::buildHeaderLine(std::string &line)
 	{
-		// control line has "key: value" : seperator
 		std::size_t sep = line.find(":");
-		if (sep == std::string::npos // ":" seperator does not exist
-			|| sep == 0) // ": value" state
+		if (sep == std::string::npos
+			|| sep == 0)
 		{
 			handleParseResult(BAD_REQUEST, ERROR);
 			return (false);
@@ -238,20 +239,19 @@ namespace http
 		std::string key = line.substr(0, sep);
 		std::string value = line.substr(sep + 1);
 		if (key.find_first_of(" \t") != std::string::npos
-			|| key.find(" ") != std::string::npos) // "k ey: value" state
+			|| key.find(" ") != std::string::npos)
 		{
 			handleParseResult(BAD_REQUEST, ERROR);
 			return (false);
 		}
 		std::size_t firstSpace = value.find_first_not_of(" \t");
-		if (firstSpace == std::string::npos) // if string only " ", "\t" or " \t"
+		if (firstSpace == std::string::npos)
 			value = "";
 		else
 		{
-			std::size_t lastSpace = value.find_last_not_of(" \t"); //"key:  value  " is "value  " so we need to delete last spaces.
+			std::size_t lastSpace = value.find_last_not_of(" \t");
 			value = value.substr(firstSpace, lastSpace + 1);
 		}
-		// add header
 		this->addHeader(key, value);
 		return (true);
 	}

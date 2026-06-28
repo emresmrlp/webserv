@@ -6,17 +6,22 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 06:30:43 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 23:29:38 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:23:36 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONNECTION_HPP
 # define CONNECTION_HPP
+# include <cstddef>
 # include <string>
-# include <exception>
 # include "RequestBuilder.hpp"
-# include "ResponseFactory.hpp"
 # include "ResponseDispatcher.hpp"
+# include "ResponseFactory.hpp"
+
+namespace config
+{
+	class ConfigServer;
+}
 
 namespace http
 {

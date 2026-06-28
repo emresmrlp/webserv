@@ -6,13 +6,15 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 18:18:54 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:59:11 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CGIRESPONSE_HPP
 # define CGIRESPONSE_HPP
+# include <string>
 # include "AResponseBase.hpp"
+# include "ConfigServer.hpp"
 
 namespace http
 {

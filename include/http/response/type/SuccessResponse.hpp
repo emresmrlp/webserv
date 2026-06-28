@@ -12,7 +12,10 @@
 
 #ifndef SUCCESSRESPONSE_HPP
 # define SUCCESSRESPONSE_HPP
+# include <string>
 # include "AResponseBase.hpp"
+# include "ConfigServer.hpp"
+# include "StatusCode.hpp"
 
 namespace http
 {

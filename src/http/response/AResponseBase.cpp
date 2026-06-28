@@ -6,16 +6,15 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:31:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 22:59:19 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 02:02:50 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AResponseBase.hpp"
-#include "Util.hpp"
 #include <fstream>
-#include "Server.hpp"
-#include <iostream>
-#include <ctime>
+#include <sstream>
+#include "Request.hpp"
+#include "Util.hpp"
 
 namespace http
 {
@@ -161,22 +160,14 @@ namespace http
 			case 200: return "OK";
 			case 201: return "Created";
 			case 204: return "No Content";
-			case 301: return "Moved Permanently";
-			case 302: return "Found";
-			case 304: return "Not Modified";
 			case 400: return "Bad Request";
-			case 401: return "Unauthorized";
 			case 403: return "Forbidden";
 			case 404: return "Not Found";
 			case 405: return "Method Not Allowed";
 			case 408: return "Request Timeout";
 			case 413: return "Payload Too Large";
-			case 414: return "URI Too Long";
 			case 500: return "Internal Server Error";
 			case 501: return "Not Implemented";
-			case 502: return "Bad Gateway";
-			case 503: return "Service Unavailable";
-			case 504: return "Gateway Timeout";
 			case 505: return "HTTP Version Not Supported";
 			default:  return "Unknown Status";
 		}

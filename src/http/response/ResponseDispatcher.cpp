@@ -6,26 +6,30 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 11:44:26 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 20:58:24 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:48:00 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResponseDispatcher.hpp"
-#include "StatusCode.hpp"
-#include "Request.hpp"
-#include "Server.hpp"
-#include <sys/stat.h>
-#include <string>
-#include <Util.hpp>
+#include <utility>
+#include "Util.hpp"
+#include "CGIHandler.hpp"
+#include "ConfigLocation.hpp"
+#include "ConfigServer.hpp"
+#include "DeleteHandler.hpp"
 #include "GetHandler.hpp"
 #include "HeadHandler.hpp"
+#include "IMethodHandler.hpp"
 #include "PostHandler.hpp"
-#include "DeleteHandler.hpp"
 #include "PutHandler.hpp"
-#include "CGIHandler.hpp"
+#include "Request.hpp"
+#include "ResponseFactory.hpp"
+#include "StatusCode.hpp"
 
 namespace http
 {
+	class IResponse;
+	
 	ResponseDispatcher::ResponseDispatcher(ResponseFactory &factory)
 		: _factory(factory)
 	{

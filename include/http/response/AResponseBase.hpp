@@ -6,22 +6,22 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 13:00:13 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 11:40:45 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:54:28 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ARESPONSEBASE_HPP
 # define ARESPONSEBASE_HPP
 # include <string>
-# include <sstream>
+# include <utility>
 # include <vector>
-# include "Server.hpp"
-# include "Request.hpp"
-# include "StatusCode.hpp"
+# include "ConfigServer.hpp"
 # include "IResponse.hpp"
+# include "StatusCode.hpp"
 
 namespace http
 {	
+	class Request;
 	class AResponseBase : public http::IResponse
 	{
 		public:
@@ -31,7 +31,7 @@ namespace http
 		protected:
 			AResponseBase(const config::ConfigServer &config, const http::Request *request);
 			http::StatusCode									_statusCode;
-			std::vector<std::pair<std::string, std::string> >	_headers; 		// multi-header support -> vector<pair<>> (Cookie session?)
+			std::vector<std::pair<std::string, std::string> >	_headers;
 			std::string											_body;
 			config::ConfigServer								_config;
 			std::string											_signature;

@@ -6,13 +6,20 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 16:53:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 20:33:13 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 01:42:53 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CGIHANDLER_HPP
 # define CGIHANDLER_HPP
+# include <string>
+# include <vector>
 # include "IMethodHandler.hpp"
+
+namespace config
+{
+	class ConfigServer;
+}
 
 namespace http
 {
@@ -29,6 +36,7 @@ namespace http
 		std::string queryString;
 	};
 
+	class Request;
 	class IResponse;
 	class ResponseFactory;
 
