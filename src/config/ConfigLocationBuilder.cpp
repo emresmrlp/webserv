@@ -12,6 +12,7 @@
 
 #include "../../include/config/ConfigLocationBuilder.hpp"
 #include "../../include/config/ConfigLocation.hpp"
+#include <sstream>
 
 namespace config
 {
@@ -22,8 +23,8 @@ namespace config
 		_returnRedirection(std::make_pair(0, "/")),
 		_autoIndex(false),
 		_hasRedirection(false),
-		_maxHeaderSize(0),
-		_maxBodySize(0)
+		_maxHeaderSize(8192),
+		_maxBodySize(314572800)
 	{ }
 
 	ConfigLocationBuilder& ConfigLocationBuilder::setExecutePath(const std::string& executePath) { _executePath = executePath; return (*this); }
@@ -86,12 +87,18 @@ namespace config
 	{
 		if (_executePath.empty())
 			throw std::runtime_error("Location block missing execute path");
-		//if (!util::isDirExist(_executePath))
-		//	throw std::runtime_error("Location directory is invalid");
-		//if (_maxHeaderSize < 1024 || _maxHeaderSize > 8192)
-		//	throw std::runtime_error("client_max_header_size must be between 1KB (1.024 bytes) and 8KB (8.192 bytes)");
-		//if (_maxBodySize < 1024 || _maxBodySize > 2147483648)
-		//	throw std::runtime_error("client_max_body_size must be between 1KB (1.024 bytes) and 2GB (2.147.483.648 bytes)");
+		if (_maxHeaderSize > 8192)
+		{
+			std::ostringstream	ss;
+			ss << "client_max_header_size must be between 1 byte and 8KB (8.192 bytes): " << _maxHeaderSize;
+			throw std::runtime_error(ss.str());
+		}
+		if (_maxBodySize > 314572800)
+		{
+			std::ostringstream	ss;
+			ss << "client_max_body_size must be between 1 byte and 300MB (314.572.800 bytes): " << _maxBodySize;
+			throw std::runtime_error(ss.str());
+		}
 		if (_allowedMethods.empty())
 		{
 			_allowedMethods.push_back("GET");

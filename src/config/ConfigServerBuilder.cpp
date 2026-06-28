@@ -22,7 +22,7 @@ namespace config
 		_httpVersion("HTTP/1.1"),
 		_signature("YECS-BME ADI ORTAKLIGI"),
 		_maxHeaderSize(8192),
-		_maxBodySize(1048576)
+		_maxBodySize(314572800)
 	{ }
 
 	ConfigServerBuilder&	ConfigServerBuilder::setRoot(const std::string& root) { _root = root; return (*this); }
@@ -108,10 +108,18 @@ namespace config
 			throw std::runtime_error("Root must be set for each server");
 		if (!util::isDirExist(_root))
 			throw std::runtime_error("Root directory is invalid");
-		if (_maxHeaderSize < 1024 || _maxHeaderSize > 10485760)
-			throw std::runtime_error("client_max_header_size must be between 1KB (1.024 bytes) and 10MB (10.485.760 bytes)");
-		if (_maxBodySize < 1024 || _maxBodySize > 2147483648)
-			throw std::runtime_error("client_max_body_size must be between 1KB (1.024 bytes) and 2GB (2.147.483.648 bytes)");
+		if (_maxHeaderSize > 8192)
+		{
+			std::ostringstream	ss;
+			ss << "client_max_header_size must be between 1 byte and 8KB (8.192 bytes): " << _maxHeaderSize;
+			throw std::runtime_error(ss.str());
+		}
+		if (_maxBodySize > 314572800)
+		{
+			std::ostringstream	ss;
+			ss << "client_max_body_size must be between 1 byte and 300MB (314.572.800 bytes): " << _maxBodySize;
+			throw std::runtime_error(ss.str());
+		}
 		if (_listens.empty())
 		{
 			addListen("0.0.0.0:8080");
