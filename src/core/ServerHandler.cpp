@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:30 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 23:10:02 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 23:37:19 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,8 @@ namespace core
 		{
 			std::string rawData(buffer, bytesRead);
 			conn->appendRequestBuffer(rawData);
+			std::cout << "\033[33m" << "[WebServ/YECS-BME] Read " << rawData.size() << " bytes on connection (FD: "
+					<< conn->getFd() << ")." << "\033[0m" << std::endl;
 			conn->process();
 			if (conn->getState() == core::WRITING)
 				this->_pollFds[i].events |= POLLOUT; // ? ready to writeConnection function
@@ -194,6 +196,8 @@ namespace core
 		ssize_t bytesSent = send(this->_pollFds[i].fd, response.c_str() + conn->getSentBytes(), remaining, 0);
 		if (bytesSent > 0)
 		{
+			std::cout << "\033[33m" << "[WebServ/YECS-BME] Send " << bytesSent << " bytes to connection (FD: "
+				<< conn->getFd() << ")." << "\033[0m" << std::endl;
 			if (static_cast<std::size_t>(bytesSent) == remaining)
 			{
 				if (conn->getState() == core::TIMEOUT)
@@ -205,7 +209,9 @@ namespace core
 				this->_pollFds[i].events &= ~POLLOUT; // ? (~) meaining opposite (0010) -> (1101)
 			}
 			else
+			{
 				conn->setSentBytes(conn->getSentBytes() + bytesSent);
+			}
 		}
 		else if (bytesSent < 0)
 			this->closeConnection(i);

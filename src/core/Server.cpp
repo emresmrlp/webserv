@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:35:32 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 23:10:24 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 23:33:05 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ namespace core
 		if (listen(this->_listenFd, 128) < 0)
 			throw std::runtime_error("Listen failed.");
 		
-		std::cout << "\033[33m" << "[WebServ/YECS-BME] Server (FD: " << this->_listenFd << ") listening." << "\033[0m" << std::endl;
+		std::cout << "\033[32m" << "[WebServ/YECS-BME] Server (FD: " << this->_listenFd << ") listening." << "\033[0m" << std::endl;
 	}
 
 	const HostAddr &Server::getAddr() const
