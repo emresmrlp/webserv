@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:02:59 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/24 11:23:27 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 10:05:14 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace http
 
 		if (configLoc->getUploadPath().empty())
 			return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
-		if (request->getBody().size() > config->getMaxBodySize())
+		if (request->getBody().size() > configLoc->getMaxBodySize())
 			return (this->_factory.createStatusResponse(config, request, http::PAYLOAD_TOO_LARGE));
 
 		if (request->getPath() == "/")

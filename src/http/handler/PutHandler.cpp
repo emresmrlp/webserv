@@ -6,7 +6,7 @@
 /*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 17:03:06 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/23 03:49:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/28 10:05:10 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace http
 
 		if (util::isDirExist(fileName))
 			return (this->_factory.createStatusResponse(config, request, http::FORBIDDEN));
-		if (request->getBody().size() > config->getMaxBodySize())
+		if (request->getBody().size() > configLoc->getMaxBodySize())
 			return (this->_factory.createStatusResponse(config, request, http::PAYLOAD_TOO_LARGE));
 
 		std::ofstream	file(fileName.c_str(), std::ios::binary);
