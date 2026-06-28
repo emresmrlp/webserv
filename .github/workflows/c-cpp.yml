@@ -1,20 +1,62 @@
-name: Make Tests
+name: Make and Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch: 
-    
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
-  build:
+  make-and-test:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - name: depends
-      run: sudo apt-get update
-    - name: c++ env
-      run: sudo apt-get install build-essential
-    - name: make
-      run: make
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies & Build
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential netcat-openbsd
+        make
+
+    - name: Run WebServ and Tests
+      id: test_step
+      shell: bash
+      run: |
+        chmod +x ./tester ./cgi_tester
+        
+        ./webserv test.conf > server_output.txt 2>&1 &
+        SERVER_PID=$!
+        
+        echo "Waiting for webserv to start..."
+        for i in {1..10}; do
+          if nc -z localhost 8080; then
+            echo "webserv / YECS-BME is up and listening on port 8080."
+            break
+          fi
+          sleep 1
+        done
+        
+        echo "Running tester..."
+        ./tester http://localhost:8080 > tester_output.txt 2>&1
+        TEST_EXIT_CODE=$?
+        
+        cat tester_output.txt
+        
+        echo "Stopping webserv..."
+        kill $SERVER_PID || true  
+        
+        exit $TEST_EXIT_CODE
+
+    - name: Upload debug artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: webserv-test-logs
+        path: |
+          server_output.txt
+          tester_output.txt
+        if-no-files-found: ignore
+        retention-days: 1
