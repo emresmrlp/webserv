@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigLocation.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:23:04 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/29 00:21:16 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:20:21 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/config/ConfigLocation.hpp"
-#include "../../include/config/ConfigLocationBuilder.hpp"
+#include "ConfigLocation.hpp"
+#include "ConfigLocationBuilder.hpp"
+#include <algorithm>
 
 namespace config
 {
@@ -66,24 +67,4 @@ namespace config
 	std::size_t 			ConfigLocation::getMaxHeaderSize() const { return _maxHeaderSize; }
 	
 	std::size_t 			ConfigLocation::getMaxBodySize() const { return _maxBodySize; }
-
-
-	// ! DEBUGGING
-	void ConfigLocation::print() const
-	{
-		std::cout << "      Execute Path:       " << this->_executePath << "\n";
-		std::cout << "      Root Path:          " << this->_rootPath << "\n";
-		if (this->hasRedirection())
-			std::cout << "      Return Redirection: " << this->_returnRedirection.second << " (" << this->_returnRedirection.first << ")\n";
-		std::cout << "      Auto Index:         " << (this->_autoIndex ? "on" : "off") << "\n";
-		std::cout << "      Allowed Methods:    [";
-		for (size_t i = 0; i < this->_allowedMethods.size(); i++)
-		{
-			std::cout << this->_allowedMethods[i];
-			if (i + 1 < this->_allowedMethods.size())
-				std::cout << ", ";
-		}
-		std::cout << "]\n";
-	}
-	// ! END OF DEBUGGING
 }

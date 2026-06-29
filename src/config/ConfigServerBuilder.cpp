@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServerBuilder.cpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/25 15:07:56 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:31:19 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 #include "ConfigServer.hpp"
 #include "ConfigLocation.hpp"
 #include "Util.hpp"
+#include <cstdlib>
+#include <algorithm>
+#include <sstream>
+#include <stdexcept>
 
 namespace config
 {
@@ -28,8 +32,6 @@ namespace config
 	ConfigServerBuilder&	ConfigServerBuilder::setRoot(const std::string& root) { _root = root; return (*this); }
 
 	ConfigServerBuilder&	ConfigServerBuilder::setHttpVersion(const std::string& version) { _httpVersion = version; return (*this); }
-
-	// ConfigServerBuilder&	ConfigServerBuilder::setSignature(const std::string& signature) { _signature = signature; }
 
 	ConfigServerBuilder&	ConfigServerBuilder::setMaxHeaderSize(const std::string& str) { _maxHeaderSize = util::parseByte(str); return (*this); }
 
@@ -121,19 +123,9 @@ namespace config
 			throw std::runtime_error(ss.str());
 		}
 		if (_listens.empty())
-		{
 			addListen("0.0.0.0:8080");
-			// ! DEBUGGING
-			std::cerr << "# listen cannot be empty, automatically added 0.0.0.0:8080" << std::endl;
-			// ! END OF DEBUGGING
-		}
 		if (_serverNames.empty())
-		{
 			addServerName("");
-			// ! DEBUGGING
-			std::cerr << "# server_names cannot be empty, automatically added \"\"" << std::endl;
-			// ! END OF DEBUGGING
-		}
 		if (_locations.empty())
 			throw std::runtime_error("No location found for the server");
 		return (ConfigServer(*this));

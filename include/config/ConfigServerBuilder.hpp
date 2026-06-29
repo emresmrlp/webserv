@@ -6,21 +6,19 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:23 by beldemir          #+#    #+#             */
-/*   Updated: 2026/06/07 18:03:58 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:31:03 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGSERVERBUILDER_HPP
 # define CONFIGSERVERBUILDER_HPP
+# include "ConfigLocation.hpp"
+# include "ConfigServer.hpp"
 # include <string>
 # include <vector>
 # include <map>
 # include <cstdlib>
 # include <cctype>
-# include <stdexcept>
-# include <algorithm>
-# include <sstream>
-# include <iostream>
 
 namespace config
 {
@@ -52,7 +50,6 @@ namespace config
 
 			ConfigServerBuilder&	setRoot(const std::string& root);
 			ConfigServerBuilder&	setHttpVersion(const std::string& version);
-			// ConfigServerBuilder&	setSignature(const std::string& signature);
 			ConfigServerBuilder&	setMaxHeaderSize(const std::string& str);
 			ConfigServerBuilder&	setMaxBodySize(const std::string& str);
 			ConfigServerBuilder&	addServerName(const std::string& serverName);

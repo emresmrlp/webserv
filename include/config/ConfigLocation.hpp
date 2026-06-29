@@ -6,16 +6,17 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:18:05 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 18:10:53 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:20:02 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGLOCATION_HPP
 # define CONFIGLOCATION_HPP
+# include <cstddef>
+# include <utility>
 # include <string>
 # include <vector>
 # include <map>
-# include <algorithm>
 
 namespace config
 {
@@ -51,8 +52,6 @@ namespace config
 
 			size_t							getMaxHeaderSize()						const;
 			size_t							getMaxBodySize()						const;
-
-			void	print() const;
 	};
 }
 

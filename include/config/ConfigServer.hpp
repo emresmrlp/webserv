@@ -3,26 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:11 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/10 12:45:09 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:11:42 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGSERVER_HPP
 # define CONFIGSERVER_HPP
 # include "ConfigLocation.hpp"
+# include <cstddef>
 # include <string>
 # include <vector>
 # include <map>
 
 namespace config
 {
-	class	ConfigLocation;
-
-	class	ConfigLocationBuilder;
-
 	class	ConfigServerBuilder;
 
 	struct	ListenTarget
@@ -63,8 +60,6 @@ namespace config
 			const std::map<int, std::string>&	getErrorPages()				const;
 		
 			const ConfigLocation*				getLocation(const std::string& str)	const;
-
-			void	print() const;
 	};
 }
 

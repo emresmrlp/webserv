@@ -3,16 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:19 by beldemir          #+#    #+#             */
-/*   Updated: 2026/06/10 12:45:49 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:26:00 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parser.hpp"
 #include "ConfigServerBuilder.hpp"
 #include "ConfigLocationBuilder.hpp"
+#include <cstdlib>
+#include <exception>
+#include <sstream>
+#include <stdexcept>
 
 namespace	config
 {
@@ -104,6 +108,9 @@ namespace	config
 					locationBuilder.addCgiPass(ext, thisStr()), next();
 				}
 			}
+			else
+				throw std::runtime_error(EXPECTED_VALUE);
+			
 			if (isType(SEMICOLON))
 				next();
 			else if (!isType(CLOSE_BLOCK))
@@ -184,8 +191,6 @@ namespace	config
 				{
 					next();
 					_servers.push_back(parseServer());
-					if (PARSER_DEBUG_MODE)
-						_servers.at(_servers.size() - 1).print();
 				}
 				else
 					next();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/29 00:26:34 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:11:33 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,47 +78,4 @@ namespace config
 		
 		return bestMatch;
 	}
-	
-	// ! DEBUGGING
-	void ConfigServer::print() const
-    {
-        std::cout << "=================== CONFIG SERVER ===================\n";
-        std::cout << "Listens:            [";
-		for (size_t i = 0; i < this->_listens.size(); ++i)
-		{
-			std::cout << this->_listens[i].host << ":";
-			std::cout << this->_listens[i].port;
-			if (this->_listens[i].isDefault)
-				std::cout << "(default)";
-			if (i + 1 < this->_listens.size())
-				std::cout << ", ";
-		}
-		std::cout << "]\n";
-        std::cout << "HTTP Version:       " << this->_httpVersion << "\n";
-        std::cout << "Signature:          " << this->_signature << "\n";
-        std::cout << "Root:               " << this->_root << "\n";
-		for (std::map<int, std::string>::const_iterator it = _errorPages.begin(); it != _errorPages.end(); ++it) {
-			std::cout << "Error Page " << it->first << ":     " << it->second << std::endl;
-		}
-        std::cout << "Max Header Size:    " << this->_maxHeaderSize << " bytes\n";
-        std::cout << "Max Body Size:      " << this->_maxBodySize << " bytes\n";
-        
-        std::cout << "Server Names:       [";
-        for (size_t i = 0; i < this->_serverNames.size(); ++i)
-        {
-            std::cout << this->_serverNames[i];
-            if (i + 1 < this->_serverNames.size())
-                std::cout << ", ";
-        }
-        std::cout << "]\n";
-
-        std::cout << "Locations Count:    " << this->_locations.size() << "\n";
-        for (size_t i = 0; i < this->_locations.size(); ++i)
-        {
-            std::cout << "  Location #" << i + 1 << ":\n";
-			this->_locations[i].print();
-        }
-        std::cout << "=====================================================\n" << std::endl;
-    }
-	// ! END OF DEBUGGING
 }

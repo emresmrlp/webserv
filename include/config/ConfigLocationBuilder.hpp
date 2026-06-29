@@ -6,19 +6,18 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:18:05 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 18:05:57 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:22:24 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGLOCATIONBUILDER_HPP
 # define CONFIGLOCATIONBUILDER_HPP
+# include "Util.hpp"
 # include <string>
 # include <vector>
 # include <map>
-# include <stdexcept>
-# include <algorithm>
-# include <iostream>
-# include "Util.hpp"
+# include <cstddef>
+# include <utility>
 
 namespace config
 {

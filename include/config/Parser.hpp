@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:23 by beldemir          #+#    #+#             */
-/*   Updated: 2026/05/19 13:24:52 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:26:07 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,11 @@
 # include "ConfigLocation.hpp"
 # include <vector>
 # include <string>
-# include <exception>
 # include <cstdlib>
-# include <sstream>
 
 # define EXPECTED_OPEN_BLOCK "Expected {"
 # define EXPECTED_VALUE "Expected a value"
 # define EXPECTED_PATH "Expected a path starting with '/'"
-
-# define PARSER_DEBUG_MODE false // !!delete
 
 namespace	config
 {

@@ -6,19 +6,15 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:11 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/07 18:15:13 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:27:10 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENIZE_HPP
 # define TOKENIZE_HPP
-# include <iostream>
 # include <vector>
-# include <fstream>
-# include <sstream>
-# include <exception>
-# include <sys/stat.h>
-# include "Util.hpp"
+# include <cstddef>
+# include <string>
 
 namespace config
 {

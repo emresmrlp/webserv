@@ -6,13 +6,15 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/29 10:31:31 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 11:23:07 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/config/ConfigLocationBuilder.hpp"
-#include "../../include/config/ConfigLocation.hpp"
+#include "ConfigLocationBuilder.hpp"
+#include "ConfigLocation.hpp"
 #include <sstream>
+#include <algorithm>
+#include <stdexcept>
 
 namespace config
 {
@@ -106,9 +108,6 @@ namespace config
 			_allowedMethods.push_back("DELETE");
 			_allowedMethods.push_back("HEAD");
 			_allowedMethods.push_back("PUT");
-			// ! DEBUGGING
-			std::cerr << "### No allowed methods specified, automatically added all." << std::endl;
-			// ! END OF DEBUGGING
 		}
 		return (ConfigLocation(*this));
 	}
