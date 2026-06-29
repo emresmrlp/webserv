@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/11 19:39:19 by beldemir          #+#    #+#             */
-/*   Updated: 2026/06/29 11:26:00 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 12:22:12 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,13 @@ namespace	config
 		ConfigLocationBuilder	locationBuilder;
 
 		if (isType(VALUE) && thisStr()[0] == '/')
-			locationBuilder.setExecutePath(thisStr()), next();
+		{
+			if (thisStr().size() > 1 && thisStr()[thisStr().size() - 1] == '/')
+				locationBuilder.setExecutePath(thisStr().erase(thisStr().size() - 1));
+			else
+				locationBuilder.setExecutePath(thisStr());
+			next();
+		}
 		else
 			throw std::runtime_error(EXPECTED_PATH);
 
@@ -129,6 +135,7 @@ namespace	config
 
 		next();
 
+		bool	hasRoot = false;
 		while (!isType(CLOSE_BLOCK) && !isType(END_OF_FILE))
 		{
 			if (isType(KEYWORD))
@@ -141,7 +148,10 @@ namespace	config
 
 				if (key == "location")
 				{
-					serverBuilder.addLocation(parseLocation());
+					ConfigLocation loc = parseLocation();
+					if (loc.getExecutePath() == "/")
+						hasRoot = true;
+					serverBuilder.addLocation(loc);
 					continue ;
 				}
 				else if (key == "listen")
@@ -174,6 +184,8 @@ namespace	config
 				next();
 		}
 		next();
+		if (hasRoot == false)
+			throw std::runtime_error("\"location /\" not defined");
 		return (serverBuilder.build());
 	}
 
