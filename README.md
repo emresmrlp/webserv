@@ -2,43 +2,39 @@
 
 # webserv
 
-A non-blocking, event-driven HTTP/1.1 server written from scratch in C++98, inspired by NGINX's configuration philosophy.
+A simple HTTP/1.1 server written in C++98. It does not block operations (non-blocking) and uses a configuration file that looks like NGINX.
 
 ## Description
 
-**webserv** is a 42 School project whose goal is to implement an HTTP server compliant enough with the HTTP/1.1 protocol (RFC 9112) to serve static files, handle file uploads, and execute CGI scripts, all without relying on any external HTTP library.
+**webserv** is a 42 School project. Our goal was to write our own HTTP server from scratch. We didn't use any external HTTP libraries. It follows the HTTP/1.1 rules It can share static files, accept file uploads, and run CGI scripts (like Python or PHP).
 
-The server is configured through a single NGINX-style configuration file describing one or more virtual servers, each with its own listen address(es), routes (`location` blocks), error pages, body/header size limits, and CGI bindings. Internally, the project is split into clearly separated layers, each with a single responsibility:
-
+We organized our code into different folders to keep it clean:
 - **`config/`** — Tokenizes and parses the configuration file into immutable `ConfigServer` / `ConfigLocation` objects (built via the Builder pattern).
-- **`core/`** — Owns the `poll()`-based event loop, socket lifecycle, and per-connection state machine (non-blocking I/O only, single-threaded).
+- **`core/`** — Runs the server loop using poll(). It handles all connections without stopping other operations.
 - **`http/request/`** — Incrementally parses raw TCP bytes into a `Request` object, supporting both `Content-Length` and chunked transfer encoding.
 - **`http/handler/`** — One handler per HTTP method (`GET`, `POST`, `PUT`, `DELETE`, `HEAD`, CGI) implementing the Strategy pattern behind a common `IMethodHandler` interface.
 - **`http/response/`** — Builds and serializes HTTP responses (static files, redirects, autoindex, error pages, CGI output) behind a common `IResponse` interface.
 
 ### Key features
 
-- Multiple virtual servers and multiple `listen` directives per server
+- Multiple `listen` directives per server
 - Static file serving with custom `index`, `autoindex` (directory listing), and custom error pages
-- `GET`, `HEAD`, `POST`, `PUT`, `DELETE` methods, restrictable per route
+- Supports `GET`, `HEAD`, `POST`, `PUT` and `DELETE`
 - File upload support
-- CGI execution (e.g. Python, PHP) with proper `SCRIPT_NAME` / `PATH_INFO` / `QUERY_STRING` environment setup (RFC 3875)
+- Can run CGI scripts (like Python and PHP).
 - Chunked transfer encoding (request side)
-- Keep-alive connections
-- Configurable client body/header size limits and HTTP redirections per route
+- Configurable connection body/header size limits and HTTP redirections
 
 ## Instructions
 
 ### Requirements
 
-- A C++98-compatible compiler (`c++`/`g++`/`clang++`)
+- A C++98-compatible compiler
 - `make`
-- Linux (the project is developed and tested primarily on the 42 cluster / x86 Linux; behavior on other UNIX-like systems is not guaranteed)
 
 ### Compilation
 
 ```bash
-git clone https://github.com/emresmrlp/webserv.git
 cd webserv
 make
 ```
@@ -63,82 +59,67 @@ Sample configuration files are provided in the [`conf/`](./conf) directory. For 
 ./webserv conf/default.conf
 ```
 
-If no configuration file is given, the server falls back to a default configuration.
-
 Once running, the server can be reached with any HTTP client, for instance:
 
 ```bash
 curl http://localhost:<port>/
 ```
 
-or simply by visiting `http://localhost:<port>/` in a browser. Static assets served by default are located under [`www/`](./www) and [`www2/`](./www2).
-
 ### Configuration file syntax (overview)
-
-The configuration format loosely follows NGINX conventions:
-
-```nginx
+```
 server {
-    listen 8080;
-    server_name example.local;
+    listen 127.0.0.1:8080;
+    listen 127.0.0.1:8081;
+    listen 127.0.0.1:8082;
     root www;
-    index index.html;
-
-    location / {
-        allow_methods GET POST;
+    server_name localhost 127.0.0.1;
+    client_max_body_size 10m;
+    location /
+    {
+        root www;
+        allowed_methods GET;
         autoindex on;
-    }
-
-    location /upload {
-        allow_methods POST DELETE;
-        upload_path www/uploads;
-    }
-
-    location /cgi-bin {
+        index index.html;
+        cgi_pass .bla ./cgi_tester;
         cgi_pass .py /usr/bin/python3;
     }
-
-    error_page 404 /errors/404.html;
+    location /post_body
+    {
+        client_max_body_size 100;
+        root www;
+        allowed_methods POST;
+        cgi_pass .bla ./cgi_tester;
+        cgi_pass .py /usr/bin/python3;
+    }
+    location /directory/
+    {
+        root YoupiBanane;
+        allowed_methods GET;
+        autoindex off;
+        index youpi.bad_extension;
+        cgi_pass .bla ./cgi_tester;
+        cgi_pass .py /usr/bin/python3;
+    }
 }
 ```
 
-See [`conf/`](./conf) for complete, working examples.
-
-### Testing
-
-Two test binaries are provided at the project root:
-
-- `tester` — general HTTP conformance tests
-- `cgi_tester` — CGI-specific tests
-
-```bash
-./tester
-./cgi_tester
-```
-
-> Note: these test binaries are built for x86 Linux; they may not run on ARM-based machines (e.g. Apple Silicon) without an x86 emulation layer (such as UTM).
-
-Continuous integration (build checks via GitHub Actions) is configured under [`.github/workflows`](./.github/workflows).
-
 ## Resources
 
-### Protocol & standards references
+### References
 
 - [RFC 9110 — HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110)
 - [RFC 9112 — HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112)
 - [RFC 3875 — The Common Gateway Interface (CGI) Version 1.1](https://www.rfc-editor.org/rfc/rfc3875)
 - [MDN — HTTP Overview](https://developer.mozilla.org/en-US/docs/Web/HTTP)
-- [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/)
 - [`poll(2)` man page](https://man7.org/linux/man-pages/man2/poll.2.html)
-- [NGINX documentation](https://nginx.org/en/docs/) (used as a reference for the configuration file philosophy)
+- [Design Patterns (refactoring.guru)](https://refactoring.guru/design-patterns)
+- [Mermaid JS For Architecture](https://mermaid.js.org/)
+- [NGINX Documentation](https://nginx.org/en/docs/) (used as a reference for the configuration file style)
 
-### AI usage
+### AI Usage
 
-AI (Claude, Anthropic) was used as a support and learning tool throughout the project, specifically for:
+- **Design Pattern Guidance** — To learn how to organize our code better using patterns (like Builder, Strategy, and Factory) before we started writing it.
+- **Debugging** — To find and fix hard problems. For example, fixing connection errors in our server loop, reading data that comes in pieces (chunked data), and making sure CGI scripts get the right information.
+- **Documentation** — To help us write this README file.
+- **GitHub Actions** — To create automatic tests that check our code every time we upload it to GitHub.
 
-- **Design pattern guidance** — discussing and validating the use of the Builder pattern (`ConfigServerBuilder` / `ConfigLocationBuilder`), the Strategy pattern (`IMethodHandler` and its concrete handlers), and the Factory pattern (`ResponseFactory`) before implementation.
-- **Debugging** — investigating and resolving issues such as file descriptor leaks and double-close bugs in the `poll()` event loop, index invalidation during connection removal, chunked transfer-encoding parsing edge cases, and CGI environment variable construction (`SCRIPT_NAME`, `PATH_INFO`, `QUERY_STRING`).
-- **Documentation** — drafting the architecture overview (layer breakdown, design pattern usage, request lifecycle) summarized in this README, based on the project's actual source and header files.
-- **GitHub Actions** — drafting and adjusting the CI workflow configuration under [`.github/workflows`](./.github/workflows).
-
-All AI-assisted code, explanations, and suggestions were reviewed, tested, and adapted by the team before being integrated into the project. No code was used without understanding it.
