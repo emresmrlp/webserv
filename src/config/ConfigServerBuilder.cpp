@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/29 12:29:13 by beldemir         ###   ########.fr       */
+/*   Updated: 2026/06/29 13:32:24 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,6 @@ namespace config
 	{
 		if (_root.empty())
 			throw std::runtime_error("Root must be set for each server");
-		if (!util::isDirExist(_root))
-			throw std::runtime_error("Root directory is invalid");
 		if (_maxHeaderSize > 8192)
 		{
 			std::ostringstream	ss;
