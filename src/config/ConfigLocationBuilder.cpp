@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigLocationBuilder.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 15:06:16 by ysumeral          #+#    #+#             */
-/*   Updated: 2026/06/28 10:22:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2026/06/29 10:31:31 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ namespace config
 
 	ConfigLocationBuilder&	ConfigLocationBuilder::addAllowedMethod(const std::string& method)
 	{
-		if (method != "GET" && method != "POST" && method != "DELETE")
-			throw std::invalid_argument("Invalid allowed_method: must be GET, POST or DELETE");
+		if (method != "GET" && method != "POST" && method != "DELETE" && method != "PUT" && method != "HEAD")
+			throw std::invalid_argument("Invalid allowed_method: must be GET, POST, DELETE, PUT or HEAD");
 		if (std::find(_allowedMethods.begin(), _allowedMethods.end(), method) != _allowedMethods.end())
 			throw std::invalid_argument("Invalid allowed_method input: methods must only appear once");
 		_allowedMethods.push_back(method);
